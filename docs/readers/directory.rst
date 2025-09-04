@@ -1,5 +1,5 @@
 File Directory
 ============================================
 
-.. automodule:: pineflow.core.readers.directory
+.. automodule:: beekeeper.core.readers.directory
     :members:

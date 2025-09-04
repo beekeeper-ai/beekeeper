@@ -2,5 +2,5 @@ Sentence Chunker
 ============================================
 
 
-.. automodule:: pineflow.core.text_chunkers.sentence
+.. automodule:: beekeeper.core.text_chunkers.sentence
     :members:

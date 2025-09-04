@@ -3,7 +3,7 @@ PDF
 
 .. code-block:: bash
 
-    pip install pineflow-readers-file
+    pip install beekeeper-readers-file
 
-.. automodule:: pineflow.readers.file.pdf
+.. automodule:: beekeeper.readers.file.pdf
     :members:

@@ -3,8 +3,8 @@ Docling
 
 .. code-block:: bash
 
-    pip install pineflow-readers-docling
+    pip install beekeeper-readers-docling
 
-.. automodule:: pineflow.readers.docling.base
+.. automodule:: beekeeper.readers.docling.base
     :members:
 

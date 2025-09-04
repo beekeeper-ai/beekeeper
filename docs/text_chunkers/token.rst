@@ -2,5 +2,5 @@ Token Text Chunker
 ============================================
 
 
-.. automodule:: pineflow.core.text_chunkers.token
+.. automodule:: beekeeper.core.text_chunkers.token
     :members:

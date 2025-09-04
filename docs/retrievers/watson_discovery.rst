@@ -3,7 +3,7 @@ IBM Watson Discovery
 
 .. code-block:: bash
 
-    pip install pineflow-retrievers-watson-discovery
+    pip install beekeeper-retrievers-watson-discovery
 
-.. automodule:: pineflow.retrievers.watson_discovery
+.. automodule:: beekeeper.retrievers.watson_discovery
     :members:

@@ -3,7 +3,7 @@ Chroma
 
 .. code-block:: bash
 
-    pip install pineflow-vector-stores-chroma
+    pip install beekeeper-vector-stores-chroma
 
-.. automodule:: pineflow.vector_stores.chroma
+.. automodule:: beekeeper.vector_stores.chroma
     :members:

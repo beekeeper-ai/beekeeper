@@ -2,5 +2,5 @@ Semantic Chunker
 ============================================
 
 
-.. automodule:: pineflow.core.text_chunkers.semantic
+.. automodule:: beekeeper.core.text_chunkers.semantic
     :members:

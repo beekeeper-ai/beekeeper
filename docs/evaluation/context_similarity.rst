@@ -2,5 +2,5 @@ Context Similarity
 ============================================
 
 
-.. automodule:: pineflow.core.evaluation.context_similarity
+.. automodule:: beekeeper.core.evaluation.context_similarity
     :members:

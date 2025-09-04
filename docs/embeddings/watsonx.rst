@@ -3,8 +3,8 @@ IBM watsonx.ai
 
 .. code-block:: bash
 
-    pip install pineflow-embeddings-watsonx
+    pip install beekeeper-embeddings-watsonx
 
-.. automodule:: pineflow.embeddings.watsonx
+.. automodule:: beekeeper.embeddings.watsonx
     :members:
 

@@ -3,7 +3,7 @@ Docx
 
 .. code-block:: bash
 
-    pip install pineflow-readers-file
+    pip install beekeeper-readers-file
 
-.. automodule:: pineflow.readers.file.docx
+.. automodule:: beekeeper.readers.file.docx
     :members:

@@ -3,8 +3,8 @@ LiteLLM
 
 .. code-block:: bash
 
-    pip install pineflow-llms-litellm
+    pip install beekeeper-llms-litellm
 
-.. automodule:: pineflow.llms.litellm
+.. automodule:: beekeeper.llms.litellm
     :members:
     :exclude-members: model_config

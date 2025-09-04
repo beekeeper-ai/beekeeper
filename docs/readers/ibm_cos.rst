@@ -3,7 +3,7 @@ IBM Cloud Object Storage
 
 .. code-block:: bash
 
-    pip install pineflow-readers-ibm-cos
+    pip install beekeeper-readers-ibm-cos
 
-.. automodule:: pineflow.readers.ibm_cos
+.. automodule:: beekeeper.readers.ibm_cos
     :members:

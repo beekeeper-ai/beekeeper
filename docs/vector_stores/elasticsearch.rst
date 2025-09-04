@@ -3,7 +3,7 @@ Elasticsearch
 
 .. code-block:: bash
 
-    pip install pineflow-vector-stores-elasticsearch
+    pip install beekeeper-vector-stores-elasticsearch
 
-.. automodule:: pineflow.vector_stores.elasticsearch
+.. automodule:: beekeeper.vector_stores.elasticsearch
     :members:

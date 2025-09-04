@@ -3,7 +3,7 @@ HTML
 
 .. code-block:: bash
 
-    pip install pineflow-readers-file
+    pip install beekeeper-readers-file
 
-.. automodule:: pineflow.readers.file.html
+.. automodule:: beekeeper.readers.file.html
     :members:

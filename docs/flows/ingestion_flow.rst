@@ -1,7 +1,7 @@
 Ingestion Flow
 ============================================
 
-.. autoclass:: pineflow.core.flows.IngestionFlow
+.. autoclass:: beekeeper.core.flows.IngestionFlow
    :members:
 
 Enums
