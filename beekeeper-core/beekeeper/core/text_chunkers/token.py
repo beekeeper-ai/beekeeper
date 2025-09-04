@@ -1,8 +1,8 @@
 from typing import List
 
-from pineflow.core.document import Document
-from pineflow.core.text_chunkers.base import BaseTextChunker
-from pineflow.core.text_chunkers.utils import (
+from beekeeper.core.document import Document
+from beekeeper.core.text_chunkers.base import BaseTextChunker
+from beekeeper.core.text_chunkers.utils import (
     merge_splits,
     split_by_char,
     split_by_fns,
@@ -24,7 +24,7 @@ class TokenTextChunker(BaseTextChunker):
     Example:
         .. code-block:: python
 
-            from pineflow.core.text_chunkers import TokenTextChunker
+            from beekeeper.core.text_chunkers import TokenTextChunker
 
             text_chunker = TokenTextChunker()
     """
@@ -62,7 +62,7 @@ class TokenTextChunker(BaseTextChunker):
             .. code-block:: python
 
                 chunks = text_chunker.from_text(
-                    "Pineflow is a data framework to load any data in one line of code and connect with AI applications."
+                    "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
                 )
         """
         splits = self._split(text)

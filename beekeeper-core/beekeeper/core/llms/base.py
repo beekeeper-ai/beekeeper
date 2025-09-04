@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, List, Optional
 
-from pineflow.core.llms.types import ChatMessage, ChatResponse, GenerateResponse
-from pineflow.core.monitors import BaseMonitor
+from beekeeper.core.llms.types import ChatMessage, ChatResponse, GenerateResponse
+from beekeeper.core.monitors import BaseMonitor
 from pydantic import BaseModel
 
 

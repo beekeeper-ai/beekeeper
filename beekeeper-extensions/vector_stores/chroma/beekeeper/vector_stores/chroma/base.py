@@ -2,9 +2,9 @@ import uuid
 from logging import getLogger
 from typing import List, Literal
 
-from pineflow.core.document import Document, DocumentWithScore
-from pineflow.core.embeddings import BaseEmbedding
-from pineflow.core.vector_stores import BaseVectorStore
+from beekeeper.core.document import Document, DocumentWithScore
+from beekeeper.core.embeddings import BaseEmbedding
+from beekeeper.core.vector_stores import BaseVectorStore
 
 logger = getLogger(__name__)
 
@@ -23,8 +23,8 @@ class ChromaVectorStore(BaseVectorStore):
     Example:
         .. code-block:: python
 
-            from pineflow.embeddings.huggingface import HuggingFaceEmbedding
-            from pineflow.vector_stores.chroma import ChromaVectorStore
+            from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
+            from beekeeper.vector_stores.chroma import ChromaVectorStore
 
             embedding = HuggingFaceEmbedding()
             vector_db = ChromaVectorStore(embed_model=embedding)

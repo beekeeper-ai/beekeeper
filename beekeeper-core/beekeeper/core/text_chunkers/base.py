@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from pineflow.core.document.schema import Document, TransformerComponent
+from beekeeper.core.document.schema import Document, TransformerComponent
 
 
 class BaseTextChunker(TransformerComponent, ABC):

@@ -1,3 +1,3 @@
-from pineflow.core.document.schema import Document, DocumentWithScore
+from beekeeper.core.document.schema import Document, DocumentWithScore
 
 __all__ = ["Document", "DocumentWithScore"]

@@ -2,9 +2,9 @@ import uuid
 from logging import getLogger
 from typing import List, Literal
 
-from pineflow.core.document import Document, DocumentWithScore
-from pineflow.core.embeddings import BaseEmbedding
-from pineflow.core.vector_stores.base import BaseVectorStore
+from beekeeper.core.document import Document, DocumentWithScore
+from beekeeper.core.embeddings import BaseEmbedding
+from beekeeper.core.vector_stores.base import BaseVectorStore
 
 logger = getLogger(__name__)
 
@@ -29,12 +29,12 @@ class ElasticsearchVectorStore(BaseVectorStore):
     Example:
         .. code-block:: python
 
-            from pineflow.embeddings.huggingface import HuggingFaceEmbedding
-            from pineflow.vector_stores.elasticsearch import ElasticsearchVectorStore
+            from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
+            from beekeeper.vector_stores.elasticsearch import ElasticsearchVectorStore
 
             embedding = HuggingFaceEmbedding()
             es_vector_store = ElasticsearchVectorStore(
-                index_name="pineflow-index",
+                index_name="beekeeper-index",
                 url="http://localhost:9200",
                 embed_model=embedding,
             )

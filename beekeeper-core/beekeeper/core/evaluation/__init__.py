@@ -1,4 +1,4 @@
-from pineflow.core.evaluation.context_similarity import (
+from beekeeper.core.evaluation.context_similarity import (
     ContextSimilarityEvaluator,
 )
 

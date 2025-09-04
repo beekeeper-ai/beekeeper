@@ -2,10 +2,10 @@ import re
 from typing import List, Literal, Tuple
 
 import numpy as np
-from pineflow.core.document import Document
-from pineflow.core.embeddings import BaseEmbedding
-from pineflow.core.text_chunkers.base import BaseTextChunker
-from pineflow.core.utils.pairwise import cosine_similarity
+from beekeeper.core.document import Document
+from beekeeper.core.embeddings import BaseEmbedding
+from beekeeper.core.text_chunkers.base import BaseTextChunker
+from beekeeper.core.utils.pairwise import cosine_similarity
 from pydantic.v1 import BaseModel
 
 
@@ -26,8 +26,8 @@ class SemanticChunker(BaseTextChunker, BaseModel):
     Example:
         .. code-block:: python
 
-            from pineflow.core.text_chunkers import SemanticChunker
-            from pineflow.embeddings.huggingface import HuggingFaceEmbedding
+            from beekeeper.core.text_chunkers import SemanticChunker
+            from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
 
             embedding = HuggingFaceEmbedding()
             text_chunker = SemanticChunker(embed_model=embedding)

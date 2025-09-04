@@ -1,1 +1,1 @@
-# Pineflow vector_stores extension - Chroma
+# Beekeeper vector_stores extension - Chroma

@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import List, Optional
 
-from pineflow.core.document.schema import Document, TransformerComponent
-from pineflow.core.readers.base import BaseReader
-from pineflow.core.vector_stores.base import BaseVectorStore
+from beekeeper.core.document.schema import Document, TransformerComponent
+from beekeeper.core.readers.base import BaseReader
+from beekeeper.core.vector_stores.base import BaseVectorStore
 
 
 class DocStrategy(Enum):
@@ -33,9 +33,9 @@ class IngestionFlow:
     Example:
         .. code-block:: python
 
-            from pineflow.core.flows import IngestionFlow
-            from pineflow.core.text_chunkers import TokenTextChunker
-            from pineflow.embeddings.huggingface import HuggingFaceEmbedding
+            from beekeeper.core.flows import IngestionFlow
+            from beekeeper.core.text_chunkers import TokenTextChunker
+            from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
 
             ingestion_flow = IngestionFlow(
                 transformers=[

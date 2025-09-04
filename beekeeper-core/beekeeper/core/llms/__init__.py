@@ -1,5 +1,5 @@
-from pineflow.core.llms.base import BaseLLM
-from pineflow.core.llms.types import (
+from beekeeper.core.llms.base import BaseLLM
+from beekeeper.core.llms.types import (
     ChatMessage,
     ChatResponse,
     GenerateResponse,

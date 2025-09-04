@@ -3,16 +3,16 @@ import os
 from pathlib import Path
 from typing import List, Optional, Type
 
-from pineflow.core.document import Document
-from pineflow.core.readers import BaseReader
+from beekeeper.core.document import Document
+from beekeeper.core.readers import BaseReader
 
 
 def _loading_default_supported_readers():
     try:
-        from pineflow.readers.file import DocxReader, HTMLReader, PDFReader
+        from beekeeper.readers.file import DocxReader, HTMLReader, PDFReader
     except ImportError:
         raise ImportError(
-            "pineflow-readers-file package not found, please install it with `pip install pineflow-readers-file`",
+            "beekeeper-readers-file package not found, please install it with `pip install beekeeper-readers-file`",
         )
 
     return {
@@ -38,7 +38,7 @@ class DirectoryReader(BaseReader):
     Example:
         .. code-block:: python
 
-            from pineflow.core.readers import DirectoryReader
+            from beekeeper.core.readers import DirectoryReader
 
             directory_reader = DirectoryReader()
     """

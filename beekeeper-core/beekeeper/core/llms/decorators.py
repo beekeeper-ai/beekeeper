@@ -4,8 +4,8 @@ import time
 from logging import getLogger
 from typing import Callable
 
-from pineflow.core.llms.types import ChatMessage
-from pineflow.core.monitors.types import PayloadRecord
+from beekeeper.core.llms.types import ChatMessage
+from beekeeper.core.monitors.types import PayloadRecord
 
 logger = getLogger(__name__)
 

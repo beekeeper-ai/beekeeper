@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
 
-from pineflow.core.document.schema import Document
+from beekeeper.core.document.schema import Document
 
 
 class BaseVectorStore(ABC):

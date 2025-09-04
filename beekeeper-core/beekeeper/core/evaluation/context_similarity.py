@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 import numpy as np
-from pineflow.core.embeddings import BaseEmbedding, SimilarityMode
+from beekeeper.core.embeddings import BaseEmbedding, SimilarityMode
 from pydantic.v1 import BaseModel
 
 
@@ -20,8 +20,8 @@ class ContextSimilarityEvaluator(BaseModel):
     Example:
         .. code-block:: python
 
-            from pineflow.core.evaluation import ContextSimilarityEvaluator
-            from pineflow.embeddings.huggingface import HuggingFaceEmbedding
+            from beekeeper.core.evaluation import ContextSimilarityEvaluator
+            from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
 
             embedding = HuggingFaceEmbedding()
             ctx_sim_evaluator = ContextSimilarityEvaluator(embed_model=embedding)

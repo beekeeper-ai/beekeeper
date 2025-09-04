@@ -1,4 +1,4 @@
-from pineflow.core.prompts.utils import SafeFormatter
+from beekeeper.core.prompts.utils import SafeFormatter
 from pydantic import BaseModel
 
 
@@ -12,7 +12,7 @@ class PromptTemplate(BaseModel):
     Example:
         .. code-block:: python
 
-            from pineflow.core.prompts import PromptTemplate
+            from beekeeper.core.prompts import PromptTemplate
 
             PromptTemplate("Summarize the following text: {input_text}")
     """

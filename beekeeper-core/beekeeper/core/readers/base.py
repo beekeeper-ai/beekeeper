@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from pineflow.core.document import Document
+from beekeeper.core.document import Document
 from pydantic.v1 import BaseModel
 
 

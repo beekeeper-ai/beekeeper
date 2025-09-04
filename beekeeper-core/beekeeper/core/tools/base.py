@@ -16,7 +16,7 @@ class ToolInputSchema(BaseModel):
 
 
 class BaseTool(ABC, BaseModel):
-    """Interface that Pineflow tools must implement."""
+    """Interface that Beekeeper tools must implement."""
 
     name: str
     description: str

@@ -3,8 +3,8 @@ from enum import Enum
 from typing import List
 
 import numpy as np
-from pineflow.core.document.schema import Document, TransformerComponent
-from pineflow.core.utils.pairwise import cosine_similarity
+from beekeeper.core.document.schema import Document, TransformerComponent
+from beekeeper.core.utils.pairwise import cosine_similarity
 
 Embedding = List[float]
 
