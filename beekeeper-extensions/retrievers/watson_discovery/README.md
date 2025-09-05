@@ -1,1 +1,1 @@
-# Pineflow retrievers extension - Watson Discovery
+# Beekeeper retrievers extension - Watson Discovery
