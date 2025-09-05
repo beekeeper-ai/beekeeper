@@ -1,1 +1,1 @@
-# Pineflow embeddings extension - watsonx
+# Beekeeper embeddings extension - watsonx

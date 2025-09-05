@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pineflow-embeddings-huggingface"
-version = "0.7.1"
-description = "pineflow embeddings huggingface extension"
+name = "beekeeper-embeddings-huggingface"
+version = "1.0.0"
+description = "beekeeper embeddings huggingface extension"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "MIT" }
 readme = "README.md"
@@ -14,14 +14,14 @@ dependencies = [
     "accelerate>=1.7.0,<2.0.0",
     "sentence-transformers>=4.1.0,<5.0.0",
     "torch==2.2.2",
-    "pineflow-core>=0.7.2,<0.8.0",
+    "beekeeper-core>=1.0.0,<2.0.0",
 ]
 
 [tool.hatch.build.targets.sdist]
-include = ["pineflow/"]
+include = ["beekeeper/"]
 
 [tool.hatch.build.targets.wheel]
-include = ["pineflow/"]
+include = ["beekeeper/"]
 
 [project.optional-dependencies]
 dev = [

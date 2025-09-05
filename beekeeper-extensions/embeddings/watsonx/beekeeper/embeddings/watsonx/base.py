@@ -1,7 +1,7 @@
 from typing import Any, List, Optional
 
-from pineflow.core.document import Document
-from pineflow.core.embeddings import BaseEmbedding, Embedding
+from beekeeper.core.document import Document
+from beekeeper.core.embeddings import BaseEmbedding, Embedding
 from pydantic.v1 import BaseModel, PrivateAttr
 
 
@@ -26,7 +26,7 @@ class WatsonxEmbedding(BaseModel, BaseEmbedding):
 
     .. code-block:: python
 
-        from pineflow.embeddings.watsonx import WatsonxEmbedding
+        from beekeeper.embeddings.watsonx import WatsonxEmbedding
 
         watsonx_embedding = WatsonxEmbedding(
             api_key="your_api_key",
@@ -86,7 +86,7 @@ class WatsonxEmbedding(BaseModel, BaseEmbedding):
             .. code-block:: python
 
                 embedded_query = watsonx_embedding.get_text_embedding(
-                    "Pineflow is a data framework to load any data in one line of code and connect with AI applications."
+                    "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
                 )
         """
         return self.get_texts_embedding([query])[0]

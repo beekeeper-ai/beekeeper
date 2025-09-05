@@ -1,1 +1,1 @@
-# Pineflow embeddings extension - huggingface
+# Beekeeper embeddings extension - huggingface

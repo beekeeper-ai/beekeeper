@@ -1,3 +1,3 @@
-from pineflow.embeddings.watsonx.base import WatsonxEmbedding
+from beekeeper.embeddings.watsonx.base import WatsonxEmbedding
 
 __all__ = ["WatsonxEmbedding"]
