@@ -1,0 +1,25 @@
+name: Linting
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: set up Python
+        run: uv python install 3.10
+      
+      - name: install dependencies (dev)
+        run: uv sync --locked --extra dev
+
+      - name: run linter
+        shell: bash
+        run: uv run ruff check .

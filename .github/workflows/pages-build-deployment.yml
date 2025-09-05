@@ -1,0 +1,44 @@
+name: Deploy Sphinx documentation to Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  pages:
+    runs-on: ubuntu-22.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: install uv
+      uses: astral-sh/setup-uv@v6
+
+    - name: set up Python
+      run: uv python install 3.10
+
+    - name: install dependencies (all)
+      run: uv sync --locked --all-extras
+
+    - name: clean previous build
+      run: uv run make clean
+      working-directory: docs
+
+    - name: running sphinx build
+      run: uv run sphinx-build -b html ./docs ./sphinx-pages
+
+    - name: setup pages
+      uses: actions/configure-pages@v4
+      
+    - name: upload pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./sphinx-pages
+    - id: deployment
+      name: deploy to github pages
+      uses: actions/deploy-pages@v4
