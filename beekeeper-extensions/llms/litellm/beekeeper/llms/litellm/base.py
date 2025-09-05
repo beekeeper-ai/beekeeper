@@ -1,7 +1,7 @@
 from typing import Any, Dict, List
 
-from pineflow.core.llms import BaseLLM, ChatMessage, ChatResponse, GenerateResponse
-from pineflow.core.llms.decorators import llm_chat_observer
+from beekeeper.core.llms import BaseLLM, ChatMessage, ChatResponse, GenerateResponse
+from beekeeper.core.llms.decorators import llm_chat_observer
 from pydantic import Field
 
 import litellm

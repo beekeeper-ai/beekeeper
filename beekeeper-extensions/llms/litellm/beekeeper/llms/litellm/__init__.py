@@ -1,3 +1,3 @@
-from pineflow.llms.litellm.base import LiteLLM
+from beekeeper.llms.litellm.base import LiteLLM
 
 __all__ = ["LiteLLM"]
