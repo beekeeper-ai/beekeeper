@@ -1441,7 +1441,7 @@ class WatsonxCustomMetric:
     ) -> str:
         custom_metrics_integrated_system = self._wos_client.integrated_systems.add(
             name=name,
-            description="Integrated system created by beekeeper-ai.",
+            description="Integrated system created by Beekeeper.",
             type="custom_metrics_provider",
             credentials=credentials.to_dict(),
             connection={"display_name": name, "endpoint": endpoint},
