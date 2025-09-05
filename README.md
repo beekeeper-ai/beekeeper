@@ -4,7 +4,7 @@
 ## Installation 
 
 ```bash
-pip install beekeeper
+pip install beekeeper-ai
 ```
 
 ## 📄 Documentation
