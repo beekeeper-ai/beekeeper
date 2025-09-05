@@ -1,4 +1,4 @@
-from pineflow.monitors.watsonx.base import (
+from beekeeper.observers.watsonx.base import (
     CloudPakforDataCredentials,
     IntegratedSystemCredentials,
     WatsonxCustomMetric,

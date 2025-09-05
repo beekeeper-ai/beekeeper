@@ -1,1 +1,1 @@
-# Pineflow monitors extension - watsonx
+# Beekeeper monitors extension - watsonx

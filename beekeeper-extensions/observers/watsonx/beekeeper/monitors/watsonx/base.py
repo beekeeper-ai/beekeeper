@@ -8,9 +8,9 @@ from typing import Any, Dict, List, Literal, Optional, Union
 
 import certifi
 from deprecated import deprecated
-from pineflow.core.monitors import ModelMonitor
-from pineflow.core.monitors.types import PayloadRecord
-from pineflow.core.prompts.utils import extract_template_vars
+from beekeeper.core.monitors import ModelMonitor
+from beekeeper.core.monitors.types import PayloadRecord
+from beekeeper.core.prompts.utils import extract_template_vars
 from pydantic.v1 import BaseModel
 
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
@@ -249,7 +249,7 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
     Example:
         .. code-block:: python
 
-            from pineflow.monitors.watsonx import (
+            from beekeeper.observers.watsonx import (
                 WatsonxExternalPromptMonitor,
                 CloudPakforDataCredentials,
             )
@@ -657,8 +657,8 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
                         {
                             "context1": "value_context1",
                             "context2": "value_context1",
-                            "input_query": "What's Pineflow?",
-                            "generated_text": "Pineflow is a data framework to make AI easier to work with.",
+                            "input_query": "What's Beekeeper Framework?",
+                            "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
                             "input_token_count": 25,
                             "generated_token_count": 150,
                         }
@@ -773,7 +773,7 @@ class WatsonxPromptMonitor(ModelMonitor):
     Example:
         .. code-block:: python
 
-            from pineflow.monitors.watsonx import (
+            from beekeeper.observers.watsonx import (
                 WatsonxPromptMonitor,
                 CloudPakforDataCredentials,
             )
@@ -1145,8 +1145,8 @@ class WatsonxPromptMonitor(ModelMonitor):
                         {
                             "context1": "value_context1",
                             "context2": "value_context1",
-                            "input_query": "What's Pineflow?",
-                            "generated_text": "Pineflow is a data framework to make AI easier to work with.",
+                            "input_query": "What's Beekeeper Framework?",
+                            "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
                             "input_token_count": 25,
                             "generated_token_count": 150,
                         }
@@ -1255,7 +1255,7 @@ class WatsonxLocalMetric(BaseModel):
     Example:
         .. code-block:: python
 
-            from pineflow.monitors.watsonx import WatsonxLocalMetric
+            from beekeeper.observers.watsonx import WatsonxLocalMetric
 
             WatsonxLocalMetric(name="context_quality", data_type="double")
     """
@@ -1279,7 +1279,7 @@ class WatsonxMetricThreshold(BaseModel):
     Example:
         .. code-block:: python
 
-            from pineflow.monitors.watsonx import WatsonxMetricThreshold
+            from beekeeper.observers.watsonx import WatsonxMetricThreshold
 
             WatsonxMetricThreshold(threshold_type="lower_limit", default_value=0.8)
     """
@@ -1304,7 +1304,7 @@ class WatsonxMetric(BaseModel):
     Example:
         .. code-block:: python
 
-            from pineflow.monitors.watsonx import WatsonxMetric, WatsonxMetricThreshold
+            from beekeeper.observers.watsonx import WatsonxMetric, WatsonxMetricThreshold
 
             WatsonxMetric(
                 name="context_quality",
@@ -1362,7 +1362,7 @@ class WatsonxCustomMetric:
     Example:
         .. code-block:: python
 
-            from pineflow.monitors.watsonx import (
+            from beekeeper.observers.watsonx import (
                 WatsonxCustomMetric,
                 CloudPakforDataCredentials,
             )
@@ -1441,7 +1441,7 @@ class WatsonxCustomMetric:
     ) -> str:
         custom_metrics_integrated_system = self._wos_client.integrated_systems.add(
             name=name,
-            description="Integrated system created from Pineflow.",
+            description="Integrated system created by beekeeper-ai.",
             type="custom_metrics_provider",
             credentials=credentials.to_dict(),
             connection={"display_name": name, "endpoint": endpoint},
@@ -1593,7 +1593,7 @@ class WatsonxCustomMetric:
         Example:
             .. code-block:: python
 
-                from pineflow.monitors.watsonx import (
+                from beekeeper.observers.watsonx import (
                     WatsonxMetric,
                     IntegratedSystemCredentials,
                     WatsonxMetricThreshold,
@@ -1788,7 +1788,7 @@ class WatsonxCustomMetric:
         Example:
             .. code-block:: python
 
-                from pineflow.monitors.watsonx import WatsonxLocalMetric
+                from beekeeper.observers.watsonx import WatsonxLocalMetric
 
                 wxgov_client.add_local_metric_definition(
                     name="Custom LLM Local Metric",
