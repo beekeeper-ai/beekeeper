@@ -1,1 +1,1 @@
-# Pineflow readers extension - IBM Cloud Object Storage
+# Beekeeper readers extension - IBM Cloud Object Storage

@@ -2,8 +2,8 @@ from datetime import datetime
 from logging import getLogger
 from typing import List, Optional
 
-from pineflow.core.document import Document
-from pineflow.core.readers import BaseReader
+from beekeeper.core.document import Document
+from beekeeper.core.readers import BaseReader
 
 logger = getLogger(__name__)
 
@@ -29,7 +29,7 @@ class WatsonDiscoveryReader(BaseReader):
     Example:
         .. code-block:: python
 
-            from pineflow.readers.watson_discovery import WatsonDiscoveryReader
+            from beekeeper.readers.watson_discovery import WatsonDiscoveryReader
 
             discovery_reader = WatsonDiscoveryReader(
                 url="your_url", api_key="your_api_key", project_id="your_project_id"

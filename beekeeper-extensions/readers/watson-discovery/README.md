@@ -1,1 +1,1 @@
-# Pineflow readers extension - Watson Discovery
+# Beekeeper readers extension - Watson Discovery

@@ -3,8 +3,8 @@ import os
 from pathlib import Path
 from typing import List
 
-from pineflow.core.document import Document
-from pineflow.core.readers import BaseReader
+from beekeeper.core.document import Document
+from beekeeper.core.readers import BaseReader
 
 logging.getLogger("pypdf").setLevel(logging.ERROR)
 

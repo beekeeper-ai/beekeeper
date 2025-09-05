@@ -3,22 +3,22 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pineflow-readers-ibm-cos"
-version = "0.7.1"
-description = "pineflow readers ibm cloud object storage extension"
+name = "beekeeper-readers-ibm-cos"
+version = "1.0.0"
+description = "beekeeper readers ibm cloud object storage extension"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "MIT" }
 readme = "README.md"
 dependencies = [
     "ibm-cos-sdk>=2.14.2,<3.0.0",
-    "pineflow-core>=0.7.2,<0.8.0",
+    "beekeeper-core>=1.0.0,<2.0.0",
 ]
 
 [tool.hatch.build.targets.sdist]
-include = ["pineflow/"]
+include = ["beekeeper/"]
 
 [tool.hatch.build.targets.wheel]
-include = ["pineflow/"]
+include = ["beekeeper/"]
 
 [project.optional-dependencies]
 dev = [

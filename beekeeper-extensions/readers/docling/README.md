@@ -1,1 +1,1 @@
-# Pineflow readers extension - Docling
+# Beekeeper readers extension - Docling

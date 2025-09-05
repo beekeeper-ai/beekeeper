@@ -4,8 +4,8 @@ import os
 import tempfile
 from typing import List
 
-from pineflow.core.document import Document
-from pineflow.core.readers import BaseReader, DirectoryReader
+from beekeeper.core.document import Document
+from beekeeper.core.readers import BaseReader, DirectoryReader
 
 
 class IBMCOSReader(BaseReader):
@@ -21,7 +21,7 @@ class IBMCOSReader(BaseReader):
     Example:
         .. code-block:: python
 
-            from pineflow.readers.ibm_cos import IBMCOSReader
+            from beekeeper.readers.ibm_cos import IBMCOSReader
 
             cos_reader = IBMCOSReader(
                 bucket="your_bucket",
