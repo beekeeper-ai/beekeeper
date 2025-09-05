@@ -1,3 +1,3 @@
-from beekeeper.core.document.schema import Document, DocumentWithScore
+from beekeeper.core.document.base import Document, DocumentWithScore
 
 __all__ = ["Document", "DocumentWithScore"]

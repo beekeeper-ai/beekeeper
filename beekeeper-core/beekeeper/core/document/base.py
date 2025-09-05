@@ -50,12 +50,6 @@ class BaseDocument(ABC, BaseModel):
         """Get hash."""
 
 
-class TransformerComponent:
-    @abstractmethod
-    def __call__(self, documents: List[BaseDocument]) -> List[BaseDocument]:
-        """Transform documents."""
-
-
 class Document(BaseDocument):
     """Generic interface for data document."""
 

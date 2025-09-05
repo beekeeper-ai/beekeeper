@@ -1,9 +1,10 @@
 from enum import Enum
 from typing import List, Optional
 
-from beekeeper.core.document.schema import Document, TransformerComponent
-from beekeeper.core.readers.base import BaseReader
-from beekeeper.core.vector_stores.base import BaseVectorStore
+from beekeeper.core.document import Document
+from beekeeper.core.readers import BaseReader
+from beekeeper.core.schema import TransformerComponent
+from beekeeper.core.vector_stores import BaseVectorStore
 
 
 class DocStrategy(Enum):

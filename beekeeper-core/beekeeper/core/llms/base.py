@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, List, Optional
 
 from beekeeper.core.llms.types import ChatMessage, ChatResponse, GenerateResponse
-from beekeeper.core.monitors import BaseMonitor
+from beekeeper.core.observers import BaseObserver
 from pydantic import BaseModel
 
 
@@ -10,7 +10,7 @@ class BaseLLM(ABC, BaseModel):
     """An interface for LLMs."""
 
     model_config = {"arbitrary_types_allowed": True}
-    callback_manager: Optional[BaseMonitor] = None
+    callback_manager: Optional[BaseObserver] = None
 
     @classmethod
     def class_name(cls) -> str:

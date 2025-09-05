@@ -1,19 +1,19 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from beekeeper.core.monitors.types import PayloadRecord
+from beekeeper.core.observers.types import PayloadRecord
 from beekeeper.core.prompts import PromptTemplate
 
 
-class BaseMonitor(ABC):
+class BaseObserver(ABC):
     """An interface for observability."""
 
     @classmethod
     def class_name(cls) -> str:
-        return "BaseMonitor"
+        return "BaseObserver"
 
 
-class ModelMonitor(BaseMonitor):
+class ModelObserver(BaseObserver):
     """An interface for model observability."""
 
     def __init__(self, prompt_template: Optional[PromptTemplate] = None) -> None:
@@ -21,16 +21,16 @@ class ModelMonitor(BaseMonitor):
 
     @classmethod
     def class_name(cls) -> str:
-        return "ModelMonitor"
+        return "ModelObserver"
 
     @abstractmethod
     def __call__(self, payload: PayloadRecord) -> None:
-        """ModelMonitor."""
+        """ModelObserver."""
 
 
-class TelemetryMonitor(BaseMonitor):
+class TelemetryObserver(BaseObserver):
     """An interface for telemetry observability."""
 
     @classmethod
     def class_name(cls) -> str:
-        return "TelemetryMonitor"
+        return "TelemetryObserver"

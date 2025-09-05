@@ -3,7 +3,8 @@ from enum import Enum
 from typing import List
 
 import numpy as np
-from beekeeper.core.document.schema import Document, TransformerComponent
+from beekeeper.core.document import Document
+from beekeeper.core.schema import TransformerComponent
 from beekeeper.core.utils.pairwise import cosine_similarity
 
 Embedding = List[float]

@@ -1,3 +1,3 @@
-from beekeeper.core.monitors.base import BaseMonitor, ModelMonitor
+from beekeeper.core.observers.base import BaseObserver, ModelObserver
 
-__all__ = (["BaseMonitor", "ModelMonitor"],)
+__all__ = (["BaseObserver", "ModelObserver"],)
