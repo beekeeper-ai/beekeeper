@@ -1,8 +1,8 @@
 ============================================
-LLMs
+Schema
 ============================================
 
 .. toctree::
-    :maxdepth: 4
+    :maxdepth: 2
     
-     LiteLLM <litellm>
+     Document <document>

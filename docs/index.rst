@@ -20,7 +20,7 @@ Beekeeper is a data framework to load any data in one line of code and connect w
     Retrievers <retrievers/index>
     Text Chunkers <text_chunkers/index>
     Vector Stores <vector_stores/index>
-    Schema <schema>
+    Schema <schema/document>
 
 .. toctree::
     :hidden:

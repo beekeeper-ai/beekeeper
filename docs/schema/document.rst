@@ -1,8 +1,8 @@
 ============================================
-Schema
+Document
 ============================================
 
-Base schema for data structures.
+Base document data structures.
 
-.. automodule:: beekeeper.core.document.schema
+.. automodule:: beekeeper.core.document
     :members:

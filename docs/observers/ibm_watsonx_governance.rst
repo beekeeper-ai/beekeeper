@@ -7,7 +7,7 @@ IBM watsonx.governance
 
 
 Observers
-------------------------
+----------------------------
 
 .. autoclass:: beekeeper.observers.watsonx.WatsonxPromptObserver
     :members:
@@ -16,13 +16,13 @@ Observers
     :members:
 
 watsonx Custom Metrics
-------------------------
+----------------------------
 
 .. autoclass:: beekeeper.observers.watsonx.WatsonxCustomMetric
     :members:
 
 watsonx Credentials
-------------------------
+----------------------------
 
 .. autoclass:: beekeeper.observers.watsonx.CloudPakforDataCredentials
     :members:
@@ -31,7 +31,7 @@ watsonx Credentials
     :members:
 
 watsonx Supporting Classes
-------------------------
+----------------------------
 
 .. autoclass:: beekeeper.observers.watsonx.WatsonxMetric
     :members:
