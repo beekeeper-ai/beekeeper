@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Beekeeper Documentation
+    url: https://leonardofurnielis.github.io/beekeeper
+    about: Please review the latest documentation before posting an issue.
