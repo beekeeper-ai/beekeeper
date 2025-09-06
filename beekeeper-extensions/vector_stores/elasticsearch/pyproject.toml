@@ -7,8 +7,9 @@ name = "beekeeper-vector-stores-elasticsearch"
 version = "1.0.0"
 description = "beekeeper vector_stores elasticsearch extension"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
-license = { text = "MIT" }
+license = { text = "Apache-2.0" }
 readme = "README.md"
+requires-python = ">=3.10,<4.0"
 dependencies = [
     "elasticsearch>=8.18.1,<9.0.0",
     "beekeeper-core>=1.0.0,<2.0.0",

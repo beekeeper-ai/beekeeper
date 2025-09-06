@@ -4,7 +4,7 @@ from typing import List, Literal
 
 from beekeeper.core.document import Document, DocumentWithScore
 from beekeeper.core.embeddings import BaseEmbedding
-from beekeeper.core.vector_stores.base import BaseVectorStore
+from beekeeper.core.vector_stores import BaseVectorStore
 
 logger = getLogger(__name__)
 
