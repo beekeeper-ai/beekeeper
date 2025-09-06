@@ -7,9 +7,8 @@ import warnings
 from typing import Any, Dict, List, Literal, Optional, Union
 
 import certifi
-from deprecated import deprecated
-from beekeeper.core.monitors import ModelMonitor
-from beekeeper.core.monitors.types import PayloadRecord
+from beekeeper.core.observers import ModelObserver
+from beekeeper.core.observers.types import PayloadRecord
 from beekeeper.core.prompts.utils import extract_template_vars
 from pydantic.v1 import BaseModel
 
@@ -228,13 +227,13 @@ class IntegratedSystemCredentials(BaseModel):
         return integrated_system_creds
 
 
-# ===== Monitor Classes =====
-class WatsonxExternalPromptMonitor(ModelMonitor):
+# ===== Observer Classes =====
+class WatsonxExternalPromptObserver(ModelObserver):
     """
     Provides functionality to interact with IBM watsonx.governance for monitoring external LLMs.
 
     Note:
-        One of the following parameters is required to create a prompt monitor:
+        One of the following parameters is required to create a prompt observer:
         `project_id` or `space_id`, but not both.
 
     Args:
@@ -250,12 +249,12 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
         .. code-block:: python
 
             from beekeeper.observers.watsonx import (
-                WatsonxExternalPromptMonitor,
+                WatsonxExternalPromptObserver,
                 CloudPakforDataCredentials,
             )
 
             # watsonx.governance (IBM Cloud)
-            wxgov_client = WatsonxExternalPromptMonitor(
+            wxgov_client = WatsonxExternalPromptObserver(
                 api_key="API_KEY", space_id="SPACE_ID"
             )
 
@@ -268,7 +267,7 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
                 instance_id="openshift",
             )
 
-            wxgov_client = WatsonxExternalPromptMonitor(
+            wxgov_client = WatsonxExternalPromptObserver(
                 space_id="SPACE_ID", cpd_creds=cpd_creds
             )
     """
@@ -410,7 +409,7 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
 
         return wml_client.deployments.get_uid(created_deployment)
 
-    def add_prompt_monitor(
+    def add_prompt_observer(
         self,
         name: str,
         model_id: str,
@@ -429,13 +428,13 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
         detached_prompt_url: str = None,
         detached_prompt_additional_info: Dict = None,
         prompt_variables: List[str] = None,
-        locale: str = None,
+        locale: str = "en",
         input_text: str = None,
         context_fields: List[str] = None,
         question_field: str = None,
     ) -> Dict:
         """
-        Creates a Detached/External Prompt Template Asset and sets up monitors for a given prompt template asset.
+        Creates a Detached/External Prompt Template Asset and sets up observer for a given prompt template asset.
 
         Args:
             name (str): The name of the External Prompt Template Asset.
@@ -459,7 +458,7 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
         Example:
             .. code-block:: python
 
-                wxgov_client.add_prompt_monitor(
+                wxgov_client.add_prompt_observer(
                     name="Detached prompt (model AWS Anthropic)",
                     model_id="anthropic.claude-v2",
                     task_id="retrieval_augmented_generation",
@@ -571,7 +570,7 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
         if self._container_type == "space":
             deployment_id = self._create_deployment_pta(detached_pta_id, name, model_id)
 
-        monitors = {
+        observers = {
             "generative_ai_quality": {
                 "parameters": {"min_sample_size": 10, "metrics_configuration": {}},
             },
@@ -580,7 +579,7 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
         max_attempt_execute_prompt_setup = 0
         while max_attempt_execute_prompt_setup < 2:
             try:
-                generative_ai_monitor_details = (
+                generative_ai_observer_details = (
                     self._wos_client.wos.execute_prompt_setup(
                         prompt_template_asset_id=detached_pta_id,
                         space_id=self.space_id,
@@ -594,7 +593,7 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
                         data_input_locale=[locale],
                         generated_output_locale=[locale],
                         input_data_type="unstructured_text",
-                        supporting_monitors=monitors,
+                        supporting_monitors=observers,
                         background_mode=False,
                     ).result
                 )
@@ -629,12 +628,12 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
                     max_attempt_execute_prompt_setup = 2
                     raise
 
-        generative_ai_monitor_details = generative_ai_monitor_details._to_dict()
+        generative_ai_observer_details = generative_ai_observer_details._to_dict()
 
         return {
             "detached_prompt_template_asset_id": detached_pta_id,
             "deployment_id": deployment_id,
-            "subscription_id": generative_ai_monitor_details["subscription_id"],
+            "subscription_id": generative_ai_observer_details["subscription_id"],
         }
 
     def store_payload_records(
@@ -753,12 +752,12 @@ class WatsonxExternalPromptMonitor(ModelMonitor):
             self.store_payload_records([{**payload.model_dump(), **template_vars}])
 
 
-class WatsonxPromptMonitor(ModelMonitor):
+class WatsonxPromptObserver(ModelObserver):
     """
     Provides functionality to interact with IBM watsonx.governance for monitoring IBM watsonx.ai LLMs.
 
     Note:
-        One of the following parameters is required to create a prompt monitor:
+        One of the following parameters is required to create a prompt observer:
         `project_id` or `space_id`, but not both.
 
     Args:
@@ -774,12 +773,12 @@ class WatsonxPromptMonitor(ModelMonitor):
         .. code-block:: python
 
             from beekeeper.observers.watsonx import (
-                WatsonxPromptMonitor,
+                WatsonxPromptObserver,
                 CloudPakforDataCredentials,
             )
 
             # watsonx.governance (IBM Cloud)
-            wxgov_client = WatsonxPromptMonitor(api_key="API_KEY", space_id="SPACE_ID")
+            wxgov_client = WatsonxPromptObserver(api_key="API_KEY", space_id="SPACE_ID")
 
             # watsonx.governance (CP4D)
             cpd_creds = CloudPakforDataCredentials(
@@ -790,7 +789,7 @@ class WatsonxPromptMonitor(ModelMonitor):
                 instance_id="openshift",
             )
 
-            wxgov_client = WatsonxPromptMonitor(
+            wxgov_client = WatsonxPromptObserver(
                 space_id="SPACE_ID", cpd_creds=cpd_creds
             )
     """
@@ -931,7 +930,7 @@ class WatsonxPromptMonitor(ModelMonitor):
 
         return wml_client.deployments.get_uid(created_deployment)
 
-    def add_prompt_monitor(
+    def add_prompt_observer(
         self,
         name: str,
         model_id: str,
@@ -945,13 +944,13 @@ class WatsonxPromptMonitor(ModelMonitor):
         description: str = "",
         model_parameters: Dict = None,
         prompt_variables: List[str] = None,
-        locale: str = None,
+        locale: str = "en",
         input_text: str = None,
         context_fields: List[str] = None,
         question_field: str = None,
     ) -> Dict:
         """
-        Creates an IBM Prompt Template Asset and sets up monitors for the given prompt template asset.
+        Creates an IBM Prompt Template Asset and sets up observer for the given prompt template asset.
 
         Args:
             name (str): The name of the Prompt Template Asset.
@@ -970,7 +969,7 @@ class WatsonxPromptMonitor(ModelMonitor):
         Example:
             .. code-block:: python
 
-                wxgov_client.add_prompt_monitor(
+                wxgov_client.add_prompt_observer(
                     name="IBM prompt template",
                     model_id="ibm/granite-3-2b-instruct",
                     task_id="retrieval_augmented_generation",
@@ -1059,7 +1058,7 @@ class WatsonxPromptMonitor(ModelMonitor):
         if self._container_type == "space":
             deployment_id = self._create_deployment_pta(pta_id, name, model_id)
 
-        monitors = {
+        observers = {
             "generative_ai_quality": {
                 "parameters": {"min_sample_size": 10, "metrics_configuration": {}},
             },
@@ -1068,7 +1067,7 @@ class WatsonxPromptMonitor(ModelMonitor):
         max_attempt_execute_prompt_setup = 0
         while max_attempt_execute_prompt_setup < 2:
             try:
-                generative_ai_monitor_details = (
+                generative_ai_observer_details = (
                     self._wos_client.wos.execute_prompt_setup(
                         prompt_template_asset_id=pta_id,
                         space_id=self.space_id,
@@ -1082,7 +1081,7 @@ class WatsonxPromptMonitor(ModelMonitor):
                         data_input_locale=[locale],
                         generated_output_locale=[locale],
                         input_data_type="unstructured_text",
-                        supporting_monitors=monitors,
+                        supporting_monitors=observers,
                         background_mode=False,
                     ).result
                 )
@@ -1117,12 +1116,12 @@ class WatsonxPromptMonitor(ModelMonitor):
                     max_attempt_execute_prompt_setup = 2
                     raise
 
-        generative_ai_monitor_details = generative_ai_monitor_details._to_dict()
+        generative_ai_observer_details = generative_ai_observer_details._to_dict()
 
         return {
             "prompt_template_asset_id": pta_id,
             "deployment_id": deployment_id,
-            "subscription_id": generative_ai_monitor_details["subscription_id"],
+            "subscription_id": generative_ai_observer_details["subscription_id"],
         }
 
     def store_payload_records(
@@ -1245,7 +1244,7 @@ class WatsonxPromptMonitor(ModelMonitor):
 # ===== Supporting Classes =====
 class WatsonxLocalMetric(BaseModel):
     """
-    Provides the IBM watsonx.governance local monitor metric definition.
+    Provides the IBM watsonx.governance local observer metric definition.
 
     Args:
         name (str): The name of the metric.
@@ -1293,7 +1292,7 @@ class WatsonxMetricThreshold(BaseModel):
 
 class WatsonxMetric(BaseModel):
     """
-    Defines the IBM watsonx.governance global monitor metric.
+    Defines the IBM watsonx.governance global observer metric.
 
     Args:
         name (str): The name of the metric.
@@ -1304,7 +1303,10 @@ class WatsonxMetric(BaseModel):
     Example:
         .. code-block:: python
 
-            from beekeeper.observers.watsonx import WatsonxMetric, WatsonxMetricThreshold
+            from beekeeper.observers.watsonx import (
+                WatsonxMetric,
+                WatsonxMetricThreshold,
+            )
 
             WatsonxMetric(
                 name="context_quality",
@@ -1335,17 +1337,17 @@ class WatsonxMetric(BaseModel):
             MetricThreshold,
         )
 
-        monitor_metric = {
+        observer_metric = {
             "name": self.name,
             "applies_to": ApplicabilitySelection(problem_type=self.applies_to),
         }
 
         if self.thresholds is not None:
-            monitor_metric["thresholds"] = [
+            observer_metric["thresholds"] = [
                 MetricThreshold(**threshold.to_dict()) for threshold in self.thresholds
             ]
 
-        return monitor_metric
+        return observer_metric
 
 
 # ===== Metric Classes =====
@@ -1452,7 +1454,7 @@ class WatsonxCustomMetric:
     def _add_monitor_definitions(
         self,
         name: str,
-        monitor_metrics: List[WatsonxMetric],
+        metrics: List[WatsonxMetric],
         schedule: bool,
     ):
         from ibm_watson_openscale.base_classes.watson_open_scale_v2 import (
@@ -1463,9 +1465,7 @@ class WatsonxCustomMetric:
             ScheduleStartTime,
         )
 
-        _monitor_metrics = [
-            MonitorMetricRequest(**metric.to_dict()) for metric in monitor_metrics
-        ]
+        _metrics = [MonitorMetricRequest(**metric.to_dict()) for metric in metrics]
         _monitor_runtime = None
         _monitor_schedule = None
 
@@ -1483,7 +1483,7 @@ class WatsonxCustomMetric:
 
         custom_monitor_details = self._wos_client.monitor_definitions.add(
             name=name,
-            metrics=_monitor_metrics,
+            metrics=_metrics,
             tags=[],
             schedule=_monitor_schedule,
             applies_to=ApplicabilitySelection(input_data_type=["unstructured_text"]),
@@ -1573,19 +1573,19 @@ class WatsonxCustomMetric:
     def add_metric_definition(
         self,
         name: str,
-        monitor_metrics: List[WatsonxMetric],
+        metrics: List[WatsonxMetric],
         integrated_system_url: str,
         integrated_system_credentials: IntegratedSystemCredentials,
         schedule: bool = False,
     ):
         """
-        Creates a custom monitor definition for IBM watsonx.governance.
+        Creates a custom observer definition for IBM watsonx.governance.
 
         This must be done before using custom metrics.
 
         Args:
             name (str): The name of the custom metric group.
-            monitor_metrics (List[WatsonxMetric]): A list of metrics to be measured.
+            metrics (List[WatsonxMetric]): A list of metrics to be measured.
             schedule (bool, optional): Enable or disable the scheduler. Defaults to `False`.
             integrated_system_url (str): The URL of the external metric provider.
             integrated_system_credentials (IntegratedSystemCredentials): The credentials for the integrated system.
@@ -1601,7 +1601,7 @@ class WatsonxCustomMetric:
 
                 wxgov_client.add_metric_definition(
                     name="Custom Metric - Custom LLM Quality",
-                    monitor_metrics=[
+                    metrics=[
                         WatsonxMetric(
                             name="context_quality",
                             applies_to=[
@@ -1629,11 +1629,11 @@ class WatsonxCustomMetric:
 
         external_monitor_id = self._add_monitor_definitions(
             name,
-            monitor_metrics,
+            metrics,
             schedule,
         )
 
-        # Associate the external monitor with the integrated system
+        # Associate the external observer with the integrated system
         payload = [
             {
                 "op": "add",
@@ -1649,24 +1649,24 @@ class WatsonxCustomMetric:
             "monitor_definition_id": external_monitor_id,
         }
 
-    def add_monitor_instance(
+    def add_observer_instance(
         self,
         integrated_system_id: str,
         monitor_definition_id: str,
         subscription_id: str,
     ):
         """
-        Enables a custom monitor for the specified subscription and monitor definition.
+        Enables a custom observer for the specified subscription and monitor definition.
 
         Args:
             integrated_system_id (str): The ID of the integrated system.
             monitor_definition_id (str): The ID of the custom metric monitor instance.
-            subscription_id (str): The ID of the subscription to associate the monitor with.
+            subscription_id (str): The ID of the subscription to associate the observer with.
 
         Example:
             .. code-block:: python
 
-                wxgov_client.add_monitor_instance(
+                wxgov_client.add_observer_instance(
                     integrated_system_id="019667ca-5687-7838-8d29-4ff70c2b36b0",
                     monitor_definition_id="custom_llm_quality",
                     subscription_id="0195e95d-03a4-7000-b954-b607db10fe9e",
@@ -1714,15 +1714,15 @@ class WatsonxCustomMetric:
     def publish_metrics(
         self,
         monitor_instance_id: str,
-        monitor_run_id: str,
+        run_id: str,
         records_request: Dict[str, Union[float, int]],
     ):
         """
-        Publishes computed custom metrics for a specific global monitor instance.
+        Publishes computed custom metrics for a specific global observer instance.
 
         Args:
             monitor_instance_id (str): The unique ID of the monitor instance.
-            monitor_run_id (str): The ID of the monitor run that generated the metrics.
+            run_id (str): The ID of the observer run that generated the metrics.
             records_request (Dict[str | float | int]): Dict containing the metrics to be published.
 
         Example:
@@ -1730,7 +1730,7 @@ class WatsonxCustomMetric:
 
                 wxgov_client.publish_metrics(
                     monitor_instance_id="01966801-f9ee-7248-a706-41de00a8a998",
-                    monitor_run_id="RUN_ID",
+                    run_id="RUN_ID",
                     records_request={"context_quality": 0.914, "sensitivity": 0.85},
                 )
         """
@@ -1743,7 +1743,7 @@ class WatsonxCustomMetric:
             timestamp=datetime.datetime.now(datetime.timezone.utc).strftime(
                 "%Y-%m-%dT%H:%M:%S.%fZ",
             ),
-            run_id=monitor_run_id,
+            run_id=run_id,
             metrics=[records_request],
         )
 
@@ -1766,7 +1766,7 @@ class WatsonxCustomMetric:
 
         return run.update(
             monitor_instance_id=monitor_instance_id,
-            monitoring_run_id=monitor_run_id,
+            monitoring_run_id=run_id,
             json_patch_operation=patch_payload,
         ).result
 
@@ -1774,7 +1774,7 @@ class WatsonxCustomMetric:
     def add_local_metric_definition(
         self,
         name: str,
-        monitor_metrics: List[WatsonxLocalMetric],
+        metrics: List[WatsonxLocalMetric],
         subscription_id: str,
     ) -> str:
         """
@@ -1782,7 +1782,7 @@ class WatsonxCustomMetric:
 
         Args:
             name (str): The name of the custom transaction metric group.
-            monitor_metrics (List[WatsonxLocalMetric]): A list of metrics to be monitored at the local (transaction) level.
+            metrics (List[WatsonxLocalMetric]): A list of metrics to be monitored at the local (transaction) level.
             subscription_id (str): The IBM watsonx.governance subscription ID associated with the metric definition.
 
         Example:
@@ -1793,7 +1793,7 @@ class WatsonxCustomMetric:
                 wxgov_client.add_local_metric_definition(
                     name="Custom LLM Local Metric",
                     subscription_id="019674ca-0c38-745f-8e9b-58546e95174e",
-                    monitor_metrics=[
+                    metrics=[
                         WatsonxLocalMetric(name="context_quality", data_type="double")
                     ],
                 )
@@ -1807,9 +1807,7 @@ class WatsonxCustomMetric:
 
         target = Target(target_id=subscription_id, target_type="subscription")
         data_mart_id = self._get_existing_data_mart()
-        monitor_metrics = [
-            SparkStructFieldPrimitive(**metric.to_dict()) for metric in monitor_metrics
-        ]
+        metrics = [SparkStructFieldPrimitive(**metric.to_dict()) for metric in metrics]
 
         schema_fields = [
             SparkStructFieldPrimitive(
@@ -1829,7 +1827,7 @@ class WatsonxCustomMetric:
             ),
         ]
 
-        schema_fields.extend(monitor_metrics)
+        schema_fields.extend(metrics)
 
         data_schema = SparkStruct(type="struct", fields=schema_fields)
 
@@ -1845,27 +1843,10 @@ class WatsonxCustomMetric:
             background_mode=False,
         ).result.metadata.id
 
-    @deprecated(
-        version="0.7.1",
-        reason="'store_payload_records' is deprecated and will be removed, use 'publish_local_metrics'.",
-    )
-    def store_payload_records(
-        self,
-        metric_instance_id: str,
-        records_request: List[Dict],
-        custom_local_metric_id: str = None,  # deprecated, use 'metric_instance_id'
-    ):
-        return self.publish_local_metrics(
-            metric_instance_id,
-            records_request,
-            custom_local_metric_id,
-        )
-
     def publish_local_metrics(
         self,
         metric_instance_id: str,
         records_request: List[Dict],
-        custom_local_metric_id: str = None,  # deprecated, use 'metric_instance_id'
     ):
         """
         Publishes computed custom metrics for a specific transaction record.
@@ -1889,17 +1870,6 @@ class WatsonxCustomMetric:
                     ],
                 )
         """
-        # START deprecated params message
-        if custom_local_metric_id is not None:
-            warnings.warn(
-                "'custom_local_metric_id' is deprecated and will be removed. "
-                "Please use 'metric_instance_id' instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            if metric_instance_id is None:
-                metric_instance_id = custom_local_metric_id
-        # END deprecated params message
         return self._wos_client.data_sets.store_records(
             data_set_id=metric_instance_id,
             request_body=records_request,
@@ -1908,7 +1878,6 @@ class WatsonxCustomMetric:
     def list_local_metrics(
         self,
         metric_instance_id: str,
-        custom_local_metric_id: str,  # deprecated, use 'metric_instance_id'
     ):
         """
         Lists records from a custom local metric definition.
@@ -1923,15 +1892,4 @@ class WatsonxCustomMetric:
                     metric_instance_id="0196ad47-c505-73c0-9d7b-91c082b697e3"
                 )
         """
-        # START deprecated params message
-        if custom_local_metric_id is not None:
-            warnings.warn(
-                "'custom_local_metric_id' is deprecated and will be removed. "
-                "Please use 'metric_instance_id' instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            if metric_instance_id is None:
-                metric_instance_id = custom_local_metric_id
-        # END deprecated params message
         return self._get_dataset_data(metric_instance_id)
