@@ -638,21 +638,21 @@ class WatsonxExternalPromptObserver(ModelObserver):
 
     def store_payload_records(
         self,
-        records_request: List[Dict],
+        request_records: List[Dict],
         subscription_id: str = None,
     ) -> List[str]:
         """
         Stores records to the payload logging system.
 
         Args:
-            records_request (List[Dict]): A list of records to be logged, where each record is represented as a dictionary.
+            request_records (List[Dict]): A list of records to be logged, where each record is represented as a dictionary.
             subscription_id (str, optional): The subscription ID associated with the records being logged.
 
         Example:
             .. code-block:: python
 
                 wxgov_client.store_payload_records(
-                    records_request=[
+                    request_records=[
                         {
                             "context1": "value_context1",
                             "context2": "value_context1",
@@ -730,7 +730,7 @@ class WatsonxExternalPromptObserver(ModelObserver):
             .metadata.id
         )
 
-        payload_data = _convert_payload_format(records_request, feature_fields)
+        payload_data = _convert_payload_format(request_records, feature_fields)
 
         self._wos_client.data_sets.store_records(
             data_set_id=payload_data_set_id,
@@ -1126,21 +1126,21 @@ class WatsonxPromptObserver(ModelObserver):
 
     def store_payload_records(
         self,
-        records_request: List[Dict],
+        request_records: List[Dict],
         subscription_id: str = None,
     ) -> List[str]:
         """
         Stores records to the payload logging system.
 
         Args:
-            records_request (List[Dict]): A list of records to be logged. Each record is represented as a dictionary.
+            request_records (List[Dict]): A list of records to be logged. Each record is represented as a dictionary.
             subscription_id (str, optional): The subscription ID associated with the records being logged.
 
         Example:
             .. code-block:: python
 
                 wxgov_client.store_payload_records(
-                    records_request=[
+                    request_records=[
                         {
                             "context1": "value_context1",
                             "context2": "value_context1",
@@ -1219,7 +1219,7 @@ class WatsonxPromptObserver(ModelObserver):
             .metadata.id
         )
 
-        payload_data = _convert_payload_format(records_request, feature_fields)
+        payload_data = _convert_payload_format(request_records, feature_fields)
 
         self._wos_client.data_sets.store_records(
             data_set_id=payload_data_set_id,
@@ -1715,7 +1715,7 @@ class WatsonxCustomMetric:
         self,
         monitor_instance_id: str,
         run_id: str,
-        records_request: Dict[str, Union[float, int]],
+        request_records: Dict[str, Union[float, int]],
     ):
         """
         Publishes computed custom metrics for a specific global observer instance.
@@ -1723,7 +1723,7 @@ class WatsonxCustomMetric:
         Args:
             monitor_instance_id (str): The unique ID of the monitor instance.
             run_id (str): The ID of the observer run that generated the metrics.
-            records_request (Dict[str | float | int]): Dict containing the metrics to be published.
+            request_records (Dict[str | float | int]): Dict containing the metrics to be published.
 
         Example:
             .. code-block:: python
@@ -1731,7 +1731,7 @@ class WatsonxCustomMetric:
                 wxgov_client.publish_metrics(
                     monitor_instance_id="01966801-f9ee-7248-a706-41de00a8a998",
                     run_id="RUN_ID",
-                    records_request={"context_quality": 0.914, "sensitivity": 0.85},
+                    request_records={"context_quality": 0.914, "sensitivity": 0.85},
                 )
         """
         from ibm_watson_openscale.base_classes.watson_open_scale_v2 import (
@@ -1744,7 +1744,7 @@ class WatsonxCustomMetric:
                 "%Y-%m-%dT%H:%M:%S.%fZ",
             ),
             run_id=run_id,
-            metrics=[records_request],
+            metrics=[request_records],
         )
 
         self._wos_client.monitor_instances.add_measurements(
@@ -1846,21 +1846,21 @@ class WatsonxCustomMetric:
     def publish_local_metrics(
         self,
         metric_instance_id: str,
-        records_request: List[Dict],
+        request_records: List[Dict],
     ):
         """
         Publishes computed custom metrics for a specific transaction record.
 
         Args:
             metric_instance_id (str): The unique ID of the custom transaction metric.
-            records_request (List[Dict]): A list of dictionaries containing the records to be stored.
+            request_records (List[Dict]): A list of dictionaries containing the records to be stored.
 
         Example:
             .. code-block:: python
 
                 wxgov_client.publish_local_metrics(
                     metric_instance_id="0196ad39-1b75-7e77-bddb-cc5393d575c2",
-                    records_request=[
+                    request_records=[
                         {
                             "scoring_id": "304a9270-44a1-4c4d-bfd4-f756541011f8",
                             "run_id": "RUN_ID",
@@ -1872,7 +1872,7 @@ class WatsonxCustomMetric:
         """
         return self._wos_client.data_sets.store_records(
             data_set_id=metric_instance_id,
-            request_body=records_request,
+            request_body=request_records,
         ).result
 
     def list_local_metrics(
