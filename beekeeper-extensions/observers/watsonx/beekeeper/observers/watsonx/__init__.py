@@ -2,18 +2,18 @@ from beekeeper.observers.watsonx.base import (
     CloudPakforDataCredentials,
     IntegratedSystemCredentials,
     WatsonxCustomMetric,
-    WatsonxExternalPromptMonitor,
+    WatsonxExternalPromptObserver,
     WatsonxLocalMetric,
     WatsonxMetric,
     WatsonxMetricThreshold,
-    WatsonxPromptMonitor,
+    WatsonxPromptObserver,
 )
 
 __all__ = [
     "CloudPakforDataCredentials",
     "IntegratedSystemCredentials",
-    "WatsonxExternalPromptMonitor",
-    "WatsonxPromptMonitor",
+    "WatsonxExternalPromptObserver",
+    "WatsonxPromptObserver",
     "WatsonxLocalMetric",
     "WatsonxMetricThreshold",
     "WatsonxMetric",
