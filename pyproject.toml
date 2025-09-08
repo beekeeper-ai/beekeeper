@@ -35,7 +35,8 @@ docs = [
 ]
 
 [project.urls]
-Repository = "https://github.com/leonardofurnielis/beekeeper"
+Documentation = "https://beekeeper-ai.github.io/beekeeper"
+Repository = "https://github.com/beekeeper-ai/beekeeper"
 
 [tool.hatch.build.targets.sdist]
 include = ["_beekeeper/beekeeper"]

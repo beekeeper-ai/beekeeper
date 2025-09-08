@@ -14,4 +14,6 @@ pip install beekeeper-ai
 
 ## 📄 Documentation
 
+The documentation can be found Click [here](https://beekeeper-ai.github.io/beekeeper/)!
+
 Please check it out for overview of the interfaces, components, integrations and other resources!

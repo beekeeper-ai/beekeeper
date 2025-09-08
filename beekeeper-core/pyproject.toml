@@ -30,7 +30,7 @@ dev = [
 ]
 
 [project.urls]
-Repository = "https://github.com/leonardofurnielis/beekeeper"
+Repository = "https://github.com/beekeeper-ai/beekeeper"
 
 [tool.hatch.build.targets.sdist]
 include = ["beekeeper/"]
