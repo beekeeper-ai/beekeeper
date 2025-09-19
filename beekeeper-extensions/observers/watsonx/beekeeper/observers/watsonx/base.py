@@ -141,7 +141,7 @@ class CloudPakforDataCredentials(BaseModel):
         )
 
     def to_dict(self) -> Dict[str, Any]:
-        cpd_creds = Dict([(k, v) for k, v in self.__dict__.items()])  # noqa: C404
+        cpd_creds = dict([(k, v) for k, v in self.__dict__.items()])  # noqa: C404
 
         if "instance_id" in cpd_creds and self.instance_id.lower() not in [
             "icp",
