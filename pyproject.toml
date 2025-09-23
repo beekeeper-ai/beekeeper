@@ -17,7 +17,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Application Frameworks",
 ]
 dependencies = [
-    "beekeeper-core>=1.0.0,<2.0.0",
+    "beekeeper-core>=1.0.1,<2.0.0",
     "beekeeper-embeddings-huggingface>=1.0.0,<2.0.0",
     "beekeeper-llms-litellm>=1.0.0,<2.0.0",
     "beekeeper-readers-file>=1.0.0,<2.0.0",
