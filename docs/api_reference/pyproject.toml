@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "beekeeper-docs"
 version = "1.0.1"
 description = "Beekeeper API Documentation"
-requires-python = ">=3.11"
+requires-python = ">=3.10,<4.0"
 dependencies = [
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.6.20",
