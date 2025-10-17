@@ -24,6 +24,7 @@ jobs:
 
     - name: install dependencies
       run: uv sync --locked
+      working-directory: docs/api_reference
 
     - name: build mkdocs
       run: uv run mkdocs build --strict
