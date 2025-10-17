@@ -1,1 +1,1 @@
-::: beekeeper.readers.file
+::: beekeeper.core.readers.directory

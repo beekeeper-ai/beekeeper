@@ -1,4 +1,4 @@
-name: Deploy Sphinx documentation to Pages
+name: Deploy Mkdocs to Pages
 
 on:
   push:
@@ -20,17 +20,18 @@ jobs:
       uses: astral-sh/setup-uv@v6
 
     - name: set up Python
-      run: uv python install 3.10
+      run: uv python install 3.11
 
     - name: install dependencies (all)
       run: uv sync --locked --all-extras
 
     - name: clean previous build
       run: uv run make clean
-      working-directory: docs
+      working-directory: docs/api_reference
 
-    - name: running sphinx build
-      run: uv run sphinx-build -b html ./docs ./sphinx-pages
+    - name: build mkdocs
+      run: uv run mkdocs build
+      working-directory: docs/api_reference
 
     - name: setup pages
       uses: actions/configure-pages@v4
@@ -38,7 +39,9 @@ jobs:
     - name: upload pages artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ./sphinx-pages
+        path: ./docs/api_reference/site
+        
     - id: deployment
       name: deploy to github pages
       uses: actions/deploy-pages@v4
+      

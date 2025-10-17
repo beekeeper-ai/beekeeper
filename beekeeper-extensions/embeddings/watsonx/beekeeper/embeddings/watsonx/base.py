@@ -12,7 +12,7 @@ class WatsonxEmbedding(BaseModel, BaseEmbedding):
     Note:
             One of these parameters is required: `project_id` or `space_id`. Not both.
 
-    See https://cloud.ibm.com/apidocs/watsonx-ai#endpoint-url for the watsonx.ai API endpoints.
+    See [https://cloud.ibm.com/apidocs/watsonx-ai#endpoint-url](https://cloud.ibm.com/apidocs/watsonx-ai#endpoint-url) for the watsonx.ai API endpoints.
 
     Attributes:
         model_name (str): IBM watsonx.ai model to be used. Defaults to `ibm/slate-30m-english-rtrvr`.
