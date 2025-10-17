@@ -23,7 +23,7 @@ jobs:
       run: uv python install 3.11
 
     - name: install dependencies
-      run: uv sync --locked
+      run: uv sync --locked --no-editable
       working-directory: docs/api_reference
 
     - name: build mkdocs
