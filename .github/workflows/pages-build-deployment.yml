@@ -1,4 +1,4 @@
-name: Deploy Mkdocs to Pages
+name: Deploy MkDocs to Pages
 
 on:
   push:
@@ -22,11 +22,11 @@ jobs:
     - name: set up Python
       run: uv python install 3.11
 
-    - name: install dependencies (all)
-      run: uv sync --locked --all-extras
+    - name: install dependencies
+      run: uv sync --locked
 
     - name: build mkdocs
-      run: uv run mkdocs build
+      run: uv run mkdocs build --strict
       working-directory: docs/api_reference
 
     - name: setup pages
