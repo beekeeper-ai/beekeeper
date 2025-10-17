@@ -1,20 +1,14 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
 
-[project]
+[tool.poetry]
 name = "beekeeper-docs"
-version = "1.0.1"
-requires-python = ">=3.10,<4.0"
-dependencies = [
-  "mkdocs>=1.6.1",
-  "mkdocs-material>=9.6.20",
-  "mkdocstrings[python]>=0.26.1",
-  "mkdocs-include-dir-to-nav>=1.2.0",
-]
+package-mode = false
 
-[tool.hatch.build.targets.wheel]
-packages = []
-
-[tool.hatch.build.targets.sdist]
-include = []
+[tool.poetry.dependencies]
+python = "^3.11"
+mkdocs = ">=1.6.1"
+mkdocs-material = ">=9.6.20"
+mkdocstrings = { version = ">=0.26.1", extras = ["python"] }
+mkdocs-include-dir-to-nav = ">=1.2.0"
