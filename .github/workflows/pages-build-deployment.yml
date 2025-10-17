@@ -6,7 +6,7 @@ on:
 
 jobs:
   pages:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -45,4 +45,3 @@ jobs:
     - id: deployment
       name: Deploy to github pages
       uses: actions/deploy-pages@v4
-      
