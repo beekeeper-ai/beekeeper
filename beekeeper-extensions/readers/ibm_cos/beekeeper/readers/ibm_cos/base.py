@@ -12,23 +12,23 @@ class IBMCOSReader(BaseReader):
     """
     IBM Cloud Object Storage bucket reader.
 
-    Args:
+    Attributes:
         bucket (str): Name of the bucket.
         ibm_api_key_id (str): IBM Cloud API key.
         ibm_service_instance_id (str): Service instance ID for the IBM COS.
         s3_endpoint_url (str): Endpoint for the IBM Cloud Object Storage service (S3 compatible).
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.readers.ibm_cos import IBMCOSReader
 
-            from beekeeper.readers.ibm_cos import IBMCOSReader
-
-            cos_reader = IBMCOSReader(
-                bucket="your_bucket",
-                ibm_api_key_id="your_api_key",
-                ibm_service_instance_id="your_instance_id",
-                s3_endpoint_url="your_api_url",
-            )
+        cos_reader = IBMCOSReader(
+            bucket="your_bucket",
+            ibm_api_key_id="your_api_key",
+            ibm_service_instance_id="your_instance_id",
+            s3_endpoint_url="your_api_url",
+        )
+        ```
     """
 
     def __init__(

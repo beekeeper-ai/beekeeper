@@ -9,16 +9,16 @@ class HuggingFaceEmbedding(BaseModel, BaseEmbedding):
     """
     HuggingFace `sentence_transformers` embedding models.
 
-    Args:
+    Attributes:
         model_name (str): Hugging Face model to be used. Defaults to `sentence-transformers/all-MiniLM-L6-v2`.
         device (str, optional): Device to run the model on. Supports `cpu` and `cuda`. Defaults to `cpu`.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
 
-            from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
-
-            embedding = HuggingFaceEmbedding()
+        embedding = HuggingFaceEmbedding()
+        ```
     """
 
     model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
@@ -40,11 +40,11 @@ class HuggingFaceEmbedding(BaseModel, BaseEmbedding):
             query (str): Input query to compute the embedding.
 
         Example:
-            .. code-block:: python
-
-                embedded_query = embedding.get_text_embedding(
-                    "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
-                )
+            ```python
+            embedded_query = embedding.get_text_embedding(
+                "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
+            )
+            ```
         """
         return self.get_texts_embedding([query])[0]
 

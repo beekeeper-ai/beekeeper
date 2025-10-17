@@ -13,7 +13,7 @@ class ElasticsearchVectorStore(BaseVectorStore):
     """
     Provides functionality to interact with Elasticsearch for storing and querying document embeddings.
 
-    Args:
+    Attributes:
         index_name (str): Name of the Elasticsearch index.
         url (str): Elasticsearch instance URL.
         embed_model (BaseEmbedding): Embedding model used to compute vectors.
@@ -27,17 +27,17 @@ class ElasticsearchVectorStore(BaseVectorStore):
         vector_field (str, optional): Name of the field containing vector embeddings. Defaults to `embedding`.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
+        from beekeeper.vector_stores.elasticsearch import ElasticsearchVectorStore
 
-            from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
-            from beekeeper.vector_stores.elasticsearch import ElasticsearchVectorStore
-
-            embedding = HuggingFaceEmbedding()
-            es_vector_store = ElasticsearchVectorStore(
-                index_name="beekeeper-index",
-                url="http://localhost:9200",
-                embed_model=embedding,
-            )
+        embedding = HuggingFaceEmbedding()
+        es_vector_store = ElasticsearchVectorStore(
+            index_name="beekeeper-index",
+            url="http://localhost:9200",
+            embed_model=embedding,
+        )
+        ```
     """
 
     def __init__(

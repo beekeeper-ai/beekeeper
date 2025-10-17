@@ -16,17 +16,17 @@ class TokenTextChunker(BaseTextChunker):
     This is the simplest splitting method. Designed to split input text into smaller chunks
     by looking at word tokens.
 
-    Args:
+    Attributes:
         chunk_size (int, optional): Size of each chunk. Default is `512`.
         chunk_overlap (int, optional): Amount of overlap between chunks. Default is `256`.
         separator (str, optional): Separators used for splitting into words. Default is `\\n\\n`.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.core.text_chunkers import TokenTextChunker
 
-            from beekeeper.core.text_chunkers import TokenTextChunker
-
-            text_chunker = TokenTextChunker()
+        text_chunker = TokenTextChunker()
+        ```
     """
 
     def __init__(
@@ -59,11 +59,11 @@ class TokenTextChunker(BaseTextChunker):
             List[str]: List of text chunks.
 
         Example:
-            .. code-block:: python
-
-                chunks = text_chunker.from_text(
-                    "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
-                )
+            ```python
+            chunks = text_chunker.from_text(
+                "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
+            )
+            ```
         """
         splits = self._split(text)
 

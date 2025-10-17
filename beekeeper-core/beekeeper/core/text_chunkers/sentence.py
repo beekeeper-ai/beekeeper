@@ -18,17 +18,17 @@ class SentenceChunker(BaseTextChunker):
     Designed to split input text into smaller chunks, particularly useful for processing
     large documents or texts. Tries to keep sentences and paragraphs together.
 
-    Args:
+    Attributes:
         chunk_size (int, optional): Size of each chunk. Default is `512`.
         chunk_overlap (int, optional): Amount of overlap between chunks. Default is `256`.
         separator (str, optional): Separator used for splitting text. Default is `" "`.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.core.text_chunkers import SentenceChunker
 
-            from beekeeper.core.text_chunkers import SentenceChunker
-
-            text_chunker = SentenceChunker()
+        text_chunker = SentenceChunker()
+        ```
     """
 
     def __init__(
@@ -64,11 +64,11 @@ class SentenceChunker(BaseTextChunker):
             List[str]: List of text chunks.
 
         Example:
-            .. code-block:: python
-
-                chunks = text_chunker.from_text(
-                    "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
-                )
+            ```python
+            chunks = text_chunker.from_text(
+                "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
+            )
+            ```
         """
         splits = self._split(text)
 

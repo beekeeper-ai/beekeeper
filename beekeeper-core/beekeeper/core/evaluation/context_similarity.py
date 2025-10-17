@@ -10,7 +10,7 @@ class ContextSimilarityEvaluator(BaseModel):
     Measures how much context has contributed to the answer’s.
     A higher value suggests a greater proportion of the context is present in the LLM's response.
 
-    Args:
+    Attributes:
         embed_model (BaseEmbedding): The embedding model used to compute vector representations.
         similarity_mode (str, optional): Similarity strategy to use. Supported options are
             `"cosine"`, `"dot_product"`, and `"euclidean"`. Defaults to `"cosine"`.
@@ -18,13 +18,13 @@ class ContextSimilarityEvaluator(BaseModel):
             whether a context segment "passes". Defaults to `0.8`.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.core.evaluation import ContextSimilarityEvaluator
+        from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
 
-            from beekeeper.core.evaluation import ContextSimilarityEvaluator
-            from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
-
-            embedding = HuggingFaceEmbedding()
-            ctx_sim_evaluator = ContextSimilarityEvaluator(embed_model=embedding)
+        embedding = HuggingFaceEmbedding()
+        ctx_sim_evaluator = ContextSimilarityEvaluator(embed_model=embedding)
+        ```
     """
 
     embed_model: BaseEmbedding
@@ -41,11 +41,11 @@ class ContextSimilarityEvaluator(BaseModel):
             generated_text (str): LLM response based on given context.
 
         Example:
-            .. code-block:: python
-
-                evaluation_result = ctx_sim_evaluator.evaluate(
-                    contexts=[], generated_text="<candidate>"
-                )
+            ```python
+            evaluation_result = ctx_sim_evaluator.evaluate(
+                contexts=[], generated_text="<candidate>"
+            )
+            ```
         """
         if not contexts or not generated_text:
             raise ValueError(

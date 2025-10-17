@@ -10,7 +10,7 @@ class HTMLReader(BaseReader):
     """
     Load a HTML file and extract text from a specific tag.
 
-    Args:
+    Attributes:
         tag (str): HTML tag to extract. Defaults to `section`.
     """
 

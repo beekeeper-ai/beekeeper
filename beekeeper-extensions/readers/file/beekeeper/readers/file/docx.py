@@ -13,7 +13,7 @@ class DocxReader(BaseReader):
         """
         Loads data from the specified file.
 
-        Args:
+        Attributes:
             input_file (str): File path to load.
 
         Returns:

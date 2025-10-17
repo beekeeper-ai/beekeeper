@@ -11,7 +11,7 @@ class JSONReader(BaseReader):
     """
     JSON reader.
 
-    Args:
+    Attributes:
         jq_schema (str, optional): jq schema to use to extract the data from the JSON.
     """
 

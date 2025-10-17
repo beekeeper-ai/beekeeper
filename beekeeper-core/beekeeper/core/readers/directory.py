@@ -29,18 +29,18 @@ class DirectoryReader(BaseReader):
     Reads files from a directory, optionally filtering by file extension and
     allowing recursive directory traversal.
 
-    Args:
+    Attributes:
         required_exts (List[str], optional): List of file extensions to filter by.
             Only files with these extensions will be loaded. Defaults to `None` (no filtering).
         recursive (bool, optional): Whether to recursively search subdirectories for files.
             Defaults to `False`.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.core.readers import DirectoryReader
 
-            from beekeeper.core.readers import DirectoryReader
-
-            directory_reader = DirectoryReader()
+        directory_reader = DirectoryReader()
+        ```
     """
 
     required_exts: List[str] = [".pdf", ".docx", ".html"]

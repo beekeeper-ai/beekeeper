@@ -13,9 +13,9 @@ class WatsonDiscoveryReader(BaseReader):
     Provides functionality to read documents from IBM Watson Discovery.
 
     For more information, see
-    `IBM Watson Discovery Getting Started <https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-getting-started>`_.
+    [IBM Watson Discovery Getting Started](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-getting-started)
 
-    Args:
+    Attributes:
         url (str): Watson Discovery instance URL.
         api_key (str): Watson Discovery API key.
         project_id (str): Watson Discovery project ID.
@@ -27,13 +27,13 @@ class WatsonDiscoveryReader(BaseReader):
             Defaults to `None`.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.readers.watson_discovery import WatsonDiscoveryReader
 
-            from beekeeper.readers.watson_discovery import WatsonDiscoveryReader
-
-            discovery_reader = WatsonDiscoveryReader(
-                url="your_url", api_key="your_api_key", project_id="your_project_id"
-            )
+        discovery_reader = WatsonDiscoveryReader(
+            url="your_url", api_key="your_api_key", project_id="your_project_id"
+        )
+        ```
     """
 
     def __init__(
@@ -68,9 +68,9 @@ class WatsonDiscoveryReader(BaseReader):
         Loads documents from Watson Discovery.
 
         Example:
-            .. code-block:: python
-
-                docs = discovery_reader.load_data()
+            ```python
+            docs = discovery_reader.load_data()
+            ```
         """
         from ibm_watson.discovery_v2 import QueryLargePassages
 

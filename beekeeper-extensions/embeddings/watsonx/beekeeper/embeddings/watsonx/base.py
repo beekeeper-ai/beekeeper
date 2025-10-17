@@ -14,7 +14,7 @@ class WatsonxEmbedding(BaseModel, BaseEmbedding):
 
     See https://cloud.ibm.com/apidocs/watsonx-ai#endpoint-url for the watsonx.ai API endpoints.
 
-    Args:
+    Attributes:
         model_name (str): IBM watsonx.ai model to be used. Defaults to `ibm/slate-30m-english-rtrvr`.
         api_key (str): watsonx API key.
         url (str): watsonx instance url.
@@ -22,10 +22,8 @@ class WatsonxEmbedding(BaseModel, BaseEmbedding):
         project_id (str, optional): watsonx project_id.
         space_id (str, optional): watsonx space_id.
 
-    **Example**
-
-    .. code-block:: python
-
+    Example:
+        ```python
         from beekeeper.embeddings.watsonx import WatsonxEmbedding
 
         watsonx_embedding = WatsonxEmbedding(
@@ -33,6 +31,7 @@ class WatsonxEmbedding(BaseModel, BaseEmbedding):
             url="your_instance_url",
             project_id="your_project_id",
         )
+        ```
     """
 
     model_name: str = "ibm/slate-30m-english-rtrvr"
@@ -83,11 +82,11 @@ class WatsonxEmbedding(BaseModel, BaseEmbedding):
             List[float]: The embedding vector corresponding to the input query.
 
         Example:
-            .. code-block:: python
-
-                embedded_query = watsonx_embedding.get_text_embedding(
-                    "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
-                )
+            ```python
+            embedded_query = watsonx_embedding.get_text_embedding(
+                "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
+            )
+            ```
         """
         return self.get_texts_embedding([query])[0]
 

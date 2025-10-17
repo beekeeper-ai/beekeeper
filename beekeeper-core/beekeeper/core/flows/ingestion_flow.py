@@ -22,7 +22,7 @@ class IngestionFlow:
     """
     An ingestion flow for processing and storing data.
 
-    Args:
+    Attributes:
         transformers (List[TransformerComponent]): A list of transformer components applied to the input documents.
         doc_strategy (DocStrategy): The strategy used for handling document duplicates.
             Defaults to `DocStrategy.DUPLICATE_ONLY`.
@@ -32,18 +32,18 @@ class IngestionFlow:
         vector_store (BaseVectorStore, optional): Vector store for saving processed documents
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.core.flows import IngestionFlow
+        from beekeeper.core.text_chunkers import TokenTextChunker
+        from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
 
-            from beekeeper.core.flows import IngestionFlow
-            from beekeeper.core.text_chunkers import TokenTextChunker
-            from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
-
-            ingestion_flow = IngestionFlow(
-                transformers=[
-                    TokenTextChunker(),
-                    HuggingFaceEmbedding(model_name="intfloat/multilingual-e5-small"),
-                ]
-            )
+        ingestion_flow = IngestionFlow(
+            transformers=[
+                TokenTextChunker(),
+                HuggingFaceEmbedding(model_name="intfloat/multilingual-e5-small"),
+            ]
+        )
+        ```
     """
 
     def __init__(
@@ -139,9 +139,9 @@ class IngestionFlow:
             documents: Set of documents to be transformed.
 
         Example:
-            .. code-block:: python
-
-                ingestion_flow.run(documents: List[Document])
+            ```python
+            ingestion_flow.run(documents: List[Document])
+            ```
         """
         documents_processed = []
         input_documents = self._read_documents(documents)
