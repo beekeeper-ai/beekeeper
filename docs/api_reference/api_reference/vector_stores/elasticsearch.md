@@ -1,0 +1,1 @@
+::: beekeeper.vector_stores.elasticsearch
