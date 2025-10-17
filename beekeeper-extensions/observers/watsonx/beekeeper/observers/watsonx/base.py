@@ -97,7 +97,7 @@ class CloudPakforDataCredentials(BaseModel):
     """
     Encapsulates the credentials required for IBM Cloud Pak for Data.
 
-    Args:
+    Attributes:
         url (str): The host URL of the Cloud Pak for Data environment.
         api_key (str, optional): The API key for the environment, if IAM is enabled.
         username (str, optional): The username for the environment.
@@ -158,7 +158,7 @@ class IntegratedSystemCredentials(BaseModel):
 
     Depending on the `auth_type`, only a subset of the properties is required.
 
-    Args:
+    Attributes:
         auth_type (str): The type of authentication. Currently supports "basic" and "bearer".
         username (str, optional): The username for Basic Authentication.
         password (str, optional): The password for Basic Authentication.
@@ -236,7 +236,7 @@ class WatsonxExternalPromptObserver(ModelObserver):
         One of the following parameters is required to create a prompt observer:
         `project_id` or `space_id`, but not both.
 
-    Args:
+    Attributes:
         api_key (str): The API key for IBM watsonx.governance.
         space_id (str, optional): The space ID in watsonx.governance.
         project_id (str, optional): The project ID in watsonx.governance.
@@ -246,30 +246,30 @@ class WatsonxExternalPromptObserver(ModelObserver):
         subscription_id (str, optional): The subscription ID associated with the records being logged.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.observers.watsonx import (
+            WatsonxExternalPromptObserver,
+            CloudPakforDataCredentials,
+        )
 
-            from beekeeper.observers.watsonx import (
-                WatsonxExternalPromptObserver,
-                CloudPakforDataCredentials,
-            )
+        # watsonx.governance (IBM Cloud)
+        wxgov_client = WatsonxExternalPromptObserver(
+            api_key="API_KEY", space_id="SPACE_ID"
+        )
 
-            # watsonx.governance (IBM Cloud)
-            wxgov_client = WatsonxExternalPromptObserver(
-                api_key="API_KEY", space_id="SPACE_ID"
-            )
+        # watsonx.governance (CP4D)
+        cpd_creds = CloudPakforDataCredentials(
+            url="CPD_URL",
+            username="USERNAME",
+            password="PASSWORD",
+            version="5.0",
+            instance_id="openshift",
+        )
 
-            # watsonx.governance (CP4D)
-            cpd_creds = CloudPakforDataCredentials(
-                url="CPD_URL",
-                username="USERNAME",
-                password="PASSWORD",
-                version="5.0",
-                instance_id="openshift",
-            )
-
-            wxgov_client = WatsonxExternalPromptObserver(
-                space_id="SPACE_ID", cpd_creds=cpd_creds
-            )
+        wxgov_client = WatsonxExternalPromptObserver(
+            space_id="SPACE_ID", cpd_creds=cpd_creds
+        )
+        ```
     """
 
     def __init__(
@@ -456,20 +456,20 @@ class WatsonxExternalPromptObserver(ModelObserver):
                 Applicable only for "retrieval_augmented_generation" task type.
 
         Example:
-            .. code-block:: python
-
-                wxgov_client.add_prompt_observer(
-                    name="Detached prompt (model AWS Anthropic)",
-                    model_id="anthropic.claude-v2",
-                    task_id="retrieval_augmented_generation",
-                    detached_model_provider="AWS Bedrock",
-                    detached_model_name="Anthropic Claude 2.0",
-                    detached_model_url="https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-claude.html",
-                    prompt_variables=["context1", "context2", "input_query"],
-                    input_text="Prompt text to be given",
-                    context_fields=["context1", "context2"],
-                    question_field="input_query",
-                )
+            ```python
+            wxgov_client.add_prompt_observer(
+                name="Detached prompt (model AWS Anthropic)",
+                model_id="anthropic.claude-v2",
+                task_id="retrieval_augmented_generation",
+                detached_model_provider="AWS Bedrock",
+                detached_model_name="Anthropic Claude 2.0",
+                detached_model_url="https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-claude.html",
+                prompt_variables=["context1", "context2", "input_query"],
+                input_text="Prompt text to be given",
+                context_fields=["context1", "context2"],
+                question_field="input_query",
+            )
+            ```
         """
         if (not (self.project_id or self.space_id)) or (
             self.project_id and self.space_id
@@ -649,21 +649,21 @@ class WatsonxExternalPromptObserver(ModelObserver):
             subscription_id (str, optional): The subscription ID associated with the records being logged.
 
         Example:
-            .. code-block:: python
-
-                wxgov_client.store_payload_records(
-                    request_records=[
-                        {
-                            "context1": "value_context1",
-                            "context2": "value_context1",
-                            "input_query": "What's Beekeeper Framework?",
-                            "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
-                            "input_token_count": 25,
-                            "generated_token_count": 150,
-                        }
-                    ],
-                    subscription_id="5d62977c-a53d-4b6d-bda1-7b79b3b9d1a0",
-                )
+            ```python
+            wxgov_client.store_payload_records(
+                request_records=[
+                    {
+                        "context1": "value_context1",
+                        "context2": "value_context1",
+                        "input_query": "What's Beekeeper Framework?",
+                        "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
+                        "input_token_count": 25,
+                        "generated_token_count": 150,
+                    }
+                ],
+                subscription_id="5d62977c-a53d-4b6d-bda1-7b79b3b9d1a0",
+            )
+            ```
         """
         from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
         from ibm_watson_openscale import APIClient as WosAPIClient
@@ -760,7 +760,7 @@ class WatsonxPromptObserver(ModelObserver):
         One of the following parameters is required to create a prompt observer:
         `project_id` or `space_id`, but not both.
 
-    Args:
+    Attributes:
         api_key (str): The API key for IBM watsonx.governance.
         space_id (str, optional): The space ID in watsonx.governance.
         project_id (str, optional): The project ID in watsonx.governance.
@@ -770,28 +770,28 @@ class WatsonxPromptObserver(ModelObserver):
         subscription_id (str, optional): The subscription ID associated with the records being logged.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.observers.watsonx import (
+            WatsonxPromptObserver,
+            CloudPakforDataCredentials,
+        )
 
-            from beekeeper.observers.watsonx import (
-                WatsonxPromptObserver,
-                CloudPakforDataCredentials,
-            )
+        # watsonx.governance (IBM Cloud)
+        wxgov_client = WatsonxPromptObserver(api_key="API_KEY", space_id="SPACE_ID")
 
-            # watsonx.governance (IBM Cloud)
-            wxgov_client = WatsonxPromptObserver(api_key="API_KEY", space_id="SPACE_ID")
+        # watsonx.governance (CP4D)
+        cpd_creds = CloudPakforDataCredentials(
+            url="CPD_URL",
+            username="USERNAME",
+            password="PASSWORD",
+            version="5.0",
+            instance_id="openshift",
+        )
 
-            # watsonx.governance (CP4D)
-            cpd_creds = CloudPakforDataCredentials(
-                url="CPD_URL",
-                username="USERNAME",
-                password="PASSWORD",
-                version="5.0",
-                instance_id="openshift",
-            )
-
-            wxgov_client = WatsonxPromptObserver(
-                space_id="SPACE_ID", cpd_creds=cpd_creds
-            )
+        wxgov_client = WatsonxPromptObserver(
+            space_id="SPACE_ID", cpd_creds=cpd_creds
+        )
+        ```
     """
 
     def __init__(
@@ -967,17 +967,17 @@ class WatsonxPromptObserver(ModelObserver):
                 Applicable only for the `retrieval_augmented_generation` task type.
 
         Example:
-            .. code-block:: python
-
-                wxgov_client.add_prompt_observer(
-                    name="IBM prompt template",
-                    model_id="ibm/granite-3-2b-instruct",
-                    task_id="retrieval_augmented_generation",
-                    prompt_variables=["context1", "context2", "input_query"],
-                    input_text="Prompt text to be given",
-                    context_fields=["context1", "context2"],
-                    question_field="input_query",
-                )
+            ```python
+            wxgov_client.add_prompt_observer(
+                name="IBM prompt template",
+                model_id="ibm/granite-3-2b-instruct",
+                task_id="retrieval_augmented_generation",
+                prompt_variables=["context1", "context2", "input_query"],
+                input_text="Prompt text to be given",
+                context_fields=["context1", "context2"],
+                question_field="input_query",
+            )
+            ```
         """
         if (not (self.project_id or self.space_id)) or (
             self.project_id and self.space_id
@@ -1137,21 +1137,21 @@ class WatsonxPromptObserver(ModelObserver):
             subscription_id (str, optional): The subscription ID associated with the records being logged.
 
         Example:
-            .. code-block:: python
-
-                wxgov_client.store_payload_records(
-                    request_records=[
-                        {
-                            "context1": "value_context1",
-                            "context2": "value_context1",
-                            "input_query": "What's Beekeeper Framework?",
-                            "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
-                            "input_token_count": 25,
-                            "generated_token_count": 150,
-                        }
-                    ],
-                    subscription_id="5d62977c-a53d-4b6d-bda1-7b79b3b9d1a0",
-                )
+            ```python
+            wxgov_client.store_payload_records(
+                request_records=[
+                    {
+                        "context1": "value_context1",
+                        "context2": "value_context1",
+                        "input_query": "What's Beekeeper Framework?",
+                        "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
+                        "input_token_count": 25,
+                        "generated_token_count": 150,
+                    }
+                ],
+                subscription_id="5d62977c-a53d-4b6d-bda1-7b79b3b9d1a0",
+            )
+            ```
         """
         from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
         from ibm_watson_openscale import APIClient as WosAPIClient
@@ -1246,17 +1246,17 @@ class WatsonxLocalMetric(BaseModel):
     """
     Provides the IBM watsonx.governance local observer metric definition.
 
-    Args:
+    Attributes:
         name (str): The name of the metric.
         data_type (str): The data type of the metric. Currently supports "string", "integer", "double", and "timestamp".
         nullable (bool, optional): Indicates whether the metric can be null. Defaults to `False`.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.observers.watsonx import WatsonxLocalMetric
 
-            from beekeeper.observers.watsonx import WatsonxLocalMetric
-
-            WatsonxLocalMetric(name="context_quality", data_type="double")
+        WatsonxLocalMetric(name="context_quality", data_type="double")
+        ```
     """
 
     name: str
@@ -1271,16 +1271,16 @@ class WatsonxMetricThreshold(BaseModel):
     """
     Defines the metric threshold for IBM watsonx.governance.
 
-    Args:
+    Attributes:
         threshold_type (str): The threshold type. Can be either `lower_limit` or `upper_limit`.
         default_value (float): The metric threshold value.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.observers.watsonx import WatsonxMetricThreshold
 
-            from beekeeper.observers.watsonx import WatsonxMetricThreshold
-
-            WatsonxMetricThreshold(threshold_type="lower_limit", default_value=0.8)
+        WatsonxMetricThreshold(threshold_type="lower_limit", default_value=0.8)
+        ```
     """
 
     threshold_type: Literal["lower_limit", "upper_limit"]
@@ -1294,29 +1294,29 @@ class WatsonxMetric(BaseModel):
     """
     Defines the IBM watsonx.governance global observer metric.
 
-    Args:
+    Attributes:
         name (str): The name of the metric.
         applies_to (List[str]): A list of task types that the metric applies to. Currently supports:
             "summarization", "generation", "question_answering", "extraction", and "retrieval_augmented_generation".
         thresholds (List[WatsonxMetricThreshold]): A list of metric thresholds associated with the metric.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.observers.watsonx import (
+            WatsonxMetric,
+            WatsonxMetricThreshold,
+        )
 
-            from beekeeper.observers.watsonx import (
-                WatsonxMetric,
-                WatsonxMetricThreshold,
-            )
-
-            WatsonxMetric(
-                name="context_quality",
-                applies_to=["retrieval_augmented_generation", "summarization"],
-                thresholds=[
-                    WatsonxMetricThreshold(
-                        threshold_type="lower_limit", default_value=0.75
-                    )
-                ],
-            )
+        WatsonxMetric(
+            name="context_quality",
+            applies_to=["retrieval_augmented_generation", "summarization"],
+            thresholds=[
+                WatsonxMetricThreshold(
+                    threshold_type="lower_limit", default_value=0.75
+                )
+            ],
+        )
+        ```
     """
 
     name: str
@@ -1355,33 +1355,33 @@ class WatsonxCustomMetric:
     """
     Provides functionality to set up a custom metric to measure your model's performance with IBM watsonx.governance.
 
-    Args:
+    Attributes:
         api_key (str): The API key for IBM watsonx.governance.
         region (str, optional): The region where IBM watsonx.governance is hosted when using IBM Cloud.
             Defaults to `us-south`.
         cpd_creds (CloudPakforDataCredentials, optional): IBM Cloud Pak for Data environment credentials.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.observers.watsonx import (
+            WatsonxCustomMetric,
+            CloudPakforDataCredentials,
+        )
 
-            from beekeeper.observers.watsonx import (
-                WatsonxCustomMetric,
-                CloudPakforDataCredentials,
-            )
+        # watsonx.governance (IBM Cloud)
+        wxgov_client = WatsonxCustomMetric(api_key="API_KEY")
 
-            # watsonx.governance (IBM Cloud)
-            wxgov_client = WatsonxCustomMetric(api_key="API_KEY")
+        # watsonx.governance (CP4D)
+        cpd_creds = CloudPakforDataCredentials(
+            url="CPD_URL",
+            username="USERNAME",
+            password="PASSWORD",
+            version="5.0",
+            instance_id="openshift",
+        )
 
-            # watsonx.governance (CP4D)
-            cpd_creds = CloudPakforDataCredentials(
-                url="CPD_URL",
-                username="USERNAME",
-                password="PASSWORD",
-                version="5.0",
-                instance_id="openshift",
-            )
-
-            wxgov_client = WatsonxCustomMetric(cpd_creds=cpd_creds)
+        wxgov_client = WatsonxCustomMetric(cpd_creds=cpd_creds)
+        ```
     """
 
     def __init__(
@@ -1591,35 +1591,35 @@ class WatsonxCustomMetric:
             integrated_system_credentials (IntegratedSystemCredentials): The credentials for the integrated system.
 
         Example:
-            .. code-block:: python
+            ```python
+            from beekeeper.observers.watsonx import (
+                WatsonxMetric,
+                IntegratedSystemCredentials,
+                WatsonxMetricThreshold,
+            )
 
-                from beekeeper.observers.watsonx import (
-                    WatsonxMetric,
-                    IntegratedSystemCredentials,
-                    WatsonxMetricThreshold,
-                )
-
-                wxgov_client.add_metric_definition(
-                    name="Custom Metric - Custom LLM Quality",
-                    metrics=[
-                        WatsonxMetric(
-                            name="context_quality",
-                            applies_to=[
-                                "retrieval_augmented_generation",
-                                "summarization",
-                            ],
-                            thresholds=[
-                                WatsonxMetricThreshold(
-                                    threshold_type="lower_limit", default_value=0.75
-                                )
-                            ],
-                        )
-                    ],
-                    integrated_system_url="IS_URL",  # URL to the endpoint computing the metric
-                    integrated_system_credentials=IntegratedSystemCredentials(
-                        auth_type="basic", username="USERNAME", password="PASSWORD"
-                    ),
-                )
+            wxgov_client.add_metric_definition(
+                name="Custom Metric - Custom LLM Quality",
+                metrics=[
+                    WatsonxMetric(
+                        name="context_quality",
+                        applies_to=[
+                            "retrieval_augmented_generation",
+                            "summarization",
+                        ],
+                        thresholds=[
+                            WatsonxMetricThreshold(
+                                threshold_type="lower_limit", default_value=0.75
+                            )
+                        ],
+                    )
+                ],
+                integrated_system_url="IS_URL",  # URL to the endpoint computing the metric
+                integrated_system_credentials=IntegratedSystemCredentials(
+                    auth_type="basic", username="USERNAME", password="PASSWORD"
+                ),
+            )
+            ```
         """
         integrated_system_id = self._add_integrated_system(
             integrated_system_credentials,
@@ -1664,13 +1664,13 @@ class WatsonxCustomMetric:
             subscription_id (str): The ID of the subscription to associate the observer with.
 
         Example:
-            .. code-block:: python
-
-                wxgov_client.add_observer_instance(
-                    integrated_system_id="019667ca-5687-7838-8d29-4ff70c2b36b0",
-                    monitor_definition_id="custom_llm_quality",
-                    subscription_id="0195e95d-03a4-7000-b954-b607db10fe9e",
-                )
+            ```python
+            wxgov_client.add_observer_instance(
+                integrated_system_id="019667ca-5687-7838-8d29-4ff70c2b36b0",
+                monitor_definition_id="custom_llm_quality",
+                subscription_id="0195e95d-03a4-7000-b954-b607db10fe9e",
+            )
+            ```
         """
         from ibm_watson_openscale.base_classes.watson_open_scale_v2 import Target
 
@@ -1726,13 +1726,13 @@ class WatsonxCustomMetric:
             request_records (Dict[str | float | int]): Dict containing the metrics to be published.
 
         Example:
-            .. code-block:: python
-
-                wxgov_client.publish_metrics(
-                    monitor_instance_id="01966801-f9ee-7248-a706-41de00a8a998",
-                    run_id="RUN_ID",
-                    request_records={"context_quality": 0.914, "sensitivity": 0.85},
-                )
+            ```python
+            wxgov_client.publish_metrics(
+                monitor_instance_id="01966801-f9ee-7248-a706-41de00a8a998",
+                run_id="RUN_ID",
+                request_records={"context_quality": 0.914, "sensitivity": 0.85},
+            )
+            ```
         """
         from ibm_watson_openscale.base_classes.watson_open_scale_v2 import (
             MonitorMeasurementRequest,
@@ -1786,17 +1786,17 @@ class WatsonxCustomMetric:
             subscription_id (str): The IBM watsonx.governance subscription ID associated with the metric definition.
 
         Example:
-            .. code-block:: python
+            ```python
+            from beekeeper.observers.watsonx import WatsonxLocalMetric
 
-                from beekeeper.observers.watsonx import WatsonxLocalMetric
-
-                wxgov_client.add_local_metric_definition(
-                    name="Custom LLM Local Metric",
-                    subscription_id="019674ca-0c38-745f-8e9b-58546e95174e",
-                    metrics=[
-                        WatsonxLocalMetric(name="context_quality", data_type="double")
-                    ],
-                )
+            wxgov_client.add_local_metric_definition(
+                name="Custom LLM Local Metric",
+                subscription_id="019674ca-0c38-745f-8e9b-58546e95174e",
+                metrics=[
+                    WatsonxLocalMetric(name="context_quality", data_type="double")
+                ],
+            )
+            ```
         """
         from ibm_watson_openscale.base_classes.watson_open_scale_v2 import (
             LocationTableName,
@@ -1856,19 +1856,19 @@ class WatsonxCustomMetric:
             request_records (List[Dict]): A list of dictionaries containing the records to be stored.
 
         Example:
-            .. code-block:: python
-
-                wxgov_client.publish_local_metrics(
-                    metric_instance_id="0196ad39-1b75-7e77-bddb-cc5393d575c2",
-                    request_records=[
-                        {
-                            "scoring_id": "304a9270-44a1-4c4d-bfd4-f756541011f8",
-                            "run_id": "RUN_ID",
-                            "computed_on": "payload",
-                            "context_quality": 0.786,
-                        }
-                    ],
-                )
+            ```python
+            wxgov_client.publish_local_metrics(
+                metric_instance_id="0196ad39-1b75-7e77-bddb-cc5393d575c2",
+                request_records=[
+                    {
+                        "scoring_id": "304a9270-44a1-4c4d-bfd4-f756541011f8",
+                        "run_id": "RUN_ID",
+                        "computed_on": "payload",
+                        "context_quality": 0.786,
+                    }
+                ],
+            )
+            ```
         """
         return self._wos_client.data_sets.store_records(
             data_set_id=metric_instance_id,
@@ -1886,10 +1886,10 @@ class WatsonxCustomMetric:
             metric_instance_id (str): The unique ID of the custom transaction metric.
 
         Example:
-            .. code-block:: python
-
-                wxgov_client.list_local_metrics(
-                    metric_instance_id="0196ad47-c505-73c0-9d7b-91c082b697e3"
-                )
+            ```python
+            wxgov_client.list_local_metrics(
+                metric_instance_id="0196ad47-c505-73c0-9d7b-91c082b697e3"
+            )
+            ```
         """
         return self._get_dataset_data(metric_instance_id)

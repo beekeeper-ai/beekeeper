@@ -6,15 +6,15 @@ class PromptTemplate(BaseModel):
     """
     Prompt Template.
 
-    Args:
+    Attributes:
         template (str): Prompt template string.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.core.prompts import PromptTemplate
 
-            from beekeeper.core.prompts import PromptTemplate
-
-            PromptTemplate("Summarize the following text: {input_text}")
+        PromptTemplate("Summarize the following text: {input_text}")
+        ```
     """
 
     template: str

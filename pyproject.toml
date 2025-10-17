@@ -27,12 +27,6 @@ dependencies = [
 dev = [
     "ruff>=0.11.13",
 ]
-docs = [
-    "furo>=2024.8.6",
-    "sphinx>=8.1.3",
-    "sphinx-copybutton>=0.5.2",
-    "sphinx-favicon>=1.0.1",
-]
 
 [project.urls]
 Documentation = "https://beekeeper-ai.github.io/beekeeper"

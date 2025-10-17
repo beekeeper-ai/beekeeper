@@ -56,10 +56,9 @@ coverage.xml
 .pytest_cache/
 cover/
 
-# Sphinx documentation
+# Mkdocs documentation
 docs/_build/
-docs/sphinx-pages/
-sphinx-pages/
+docs/api_reference/site/
 
 # Ruff
 .ruff_cache/

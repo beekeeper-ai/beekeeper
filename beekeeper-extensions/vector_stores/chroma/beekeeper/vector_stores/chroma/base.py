@@ -14,20 +14,20 @@ class ChromaVectorStore(BaseVectorStore):
     Chroma is the AI-native open-source vector database.
     Embeddings are stored within a ChromaDB collection.
 
-    Args:
+    Attributes:
         embed_model (BaseEmbedding): Embedding model used to compute vectors.
         collection_name (str, optional): Name of the ChromaDB collection.
         distance_strategy (str, optional): Distance strategy for similarity search.
             Currently supports `"cosine"`, `"ip"`, and `"l2"`. Defaults to `cosine`.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
+        from beekeeper.vector_stores.chroma import ChromaVectorStore
 
-            from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
-            from beekeeper.vector_stores.chroma import ChromaVectorStore
-
-            embedding = HuggingFaceEmbedding()
-            vector_db = ChromaVectorStore(embed_model=embedding)
+        embedding = HuggingFaceEmbedding()
+        vector_db = ChromaVectorStore(embed_model=embedding)
+        ```
     """
 
     def __init__(

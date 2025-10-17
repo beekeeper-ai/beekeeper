@@ -14,9 +14,9 @@ class DoclingReader(BaseReader):
     A document reader that uses the `docling` library to extract and structure content from various file types
     including PDF, DOCX, and HTML.
 
-    For more information, see `Docling <https://docling-project.github.io/docling/>`_.
+    For more information, see [Docling](https://docling-project.github.io/docling/)
 
-    Args:
+    Attributes:
         detached_tables (bool): If True, separates extracted tables from the main document text and
             treats them as individual documents. Default is False.
         export_table_format (str): Format used when exporting tables. Applicable only if `detached_tables` is True.

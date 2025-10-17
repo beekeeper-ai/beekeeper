@@ -11,9 +11,9 @@ class WatsonDiscoveryRetriever:
     Provides functionality to interact with IBM Watson Discovery for querying documents.
 
     For more information, see
-    `IBM Watson Discovery Getting Started <https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-getting-started>`_.
+    [IBM Watson Discovery Getting Started](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-getting-started)
 
-    Args:
+    Attributes:
         url (str): Watson Discovery instance URL.
         api_key (str): Watson Discovery API key.
         project_id (str): Watson Discovery project ID.
@@ -22,13 +22,13 @@ class WatsonDiscoveryRetriever:
             Only enable this if all documents are short. Defaults to `False`.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.retrievers.watson_discovery import WatsonDiscoveryRetriever
 
-            from beekeeper.retrievers.watson_discovery import WatsonDiscoveryRetriever
-
-            doc_retriever = WatsonDiscoveryRetriever(
-                url="your_url", api_key="your_api_key", project_id="your_project_id"
-            )
+        doc_retriever = WatsonDiscoveryRetriever(
+            url="your_url", api_key="your_api_key", project_id="your_project_id"
+        )
+        ```
     """
 
     def __init__(
@@ -70,9 +70,9 @@ class WatsonDiscoveryRetriever:
             top_k (int, optional): Number of top results to return. Defaults to `4`.
 
         Example:
-            .. code-block:: python
-
-                docs = doc_retriever.search_documents("What's Beekeeper Framework?")
+            ```python
+            docs = doc_retriever.search_documents("What's Beekeeper Framework?")
+            ```
         """
         from ibm_watson.discovery_v2 import QueryLargePassages
 

@@ -14,9 +14,9 @@ class SemanticChunker(BaseTextChunker, BaseModel):
     Python class designed to split text into chunks using semantic understanding.
 
     Credit to Greg Kamradt's notebook:
-    `5 Levels Of Text Splitting <https://github.com/FullStackRetrieval-com/RetrievalTutorials/blob/main/tutorials/LevelsOfTextSplitting/5_Levels_Of_Text_Splitting.ipynb>`_.
+    [5 Levels Of Text Splitting](https://github.com/FullStackRetrieval-com/RetrievalTutorials/blob/main/tutorials/LevelsOfTextSplitting/5_Levels_Of_Text_Splitting.ipynb)
 
-    Args:
+    Attributes:
         embed_model (BaseEmbedding): Embedding model used for semantic chunking.
         buffer_size (int, optional): Number of sentences to group together. Default is `1`.
         breakpoint_threshold_amount (int, optional): Threshold percentage for detecting breakpoints between group of sentences.
@@ -24,13 +24,13 @@ class SemanticChunker(BaseTextChunker, BaseModel):
         device (str, optional): Device to use for processing. Currently supports "cpu" and "cuda". Default is `cpu`.
 
     Example:
-        .. code-block:: python
+        ```python
+        from beekeeper.core.text_chunkers import SemanticChunker
+        from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
 
-            from beekeeper.core.text_chunkers import SemanticChunker
-            from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
-
-            embedding = HuggingFaceEmbedding()
-            text_chunker = SemanticChunker(embed_model=embedding)
+        embedding = HuggingFaceEmbedding()
+        text_chunker = SemanticChunker(embed_model=embedding)
+        ```
     """
 
     embed_model: BaseEmbedding
