@@ -78,8 +78,8 @@ dev = [
 requires-dist = [
     { name = "beekeeper-core", specifier = ">=1.0.0,<2.0.0" },
     { name = "certifi", specifier = ">=2025.4.26,<2026.0.0" },
-    { name = "ibm-aigov-facts-client", specifier = ">=1.0.99,<1.1.0" },
-    { name = "ibm-watson-openscale", specifier = ">=3.1.1,<3.2.0" },
+    { name = "ibm-aigov-facts-client", specifier = ">=1.0.95,<1.0.97" },
+    { name = "ibm-watson-openscale", specifier = ">=3.0.49,<3.1.0" },
     { name = "ibm-watsonx-ai", specifier = ">=1.3.26,<2.0.0" },
     { name = "ipython", specifier = "==8.37.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.11.13" },
@@ -125,11 +125,11 @@ wheels = [
 
 [[package]]
 name = "certifi"
-version = "2025.8.3"
+version = "2025.6.15"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/dc/67/960ebe6bf230a96cda2e0abcf73af550ec4f090005363542f0765df162e0/certifi-2025.8.3.tar.gz", hash = "sha256:e564105f78ded564e3ae7c923924435e1daa7463faeab5bb932bc53ffae63407", size = 162386, upload-time = "2025-08-03T03:07:47.08Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/73/f7/f14b46d4bcd21092d7d3ccef689615220d8a08fb25e564b65d20738e672e/certifi-2025.6.15.tar.gz", hash = "sha256:d747aa5a8b9bbbb1bb8c22bb13e22bd1f18e9796defa16bab421f7f7a317323b", size = 158753, upload-time = "2025-06-15T02:45:51.329Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e5/48/1549795ba7742c948d2ad169c1c8cdbae65bc450d6cd753d124b17c8cd32/certifi-2025.8.3-py3-none-any.whl", hash = "sha256:f6c12493cfb1b06ba2ff328595af9350c65d6644968e5d3a2ffd78699af217a5", size = 161216, upload-time = "2025-08-03T03:07:45.777Z" },
+    { url = "https://files.pythonhosted.org/packages/84/ae/320161bd181fc06471eed047ecce67b693fd7515b16d495d8932db763426/certifi-2025.6.15-py3-none-any.whl", hash = "sha256:2e0c7ce7cb5d8f8634ca55d2ba7e6ec2689a2fd6537d8dec1296a477a4910057", size = 157650, upload-time = "2025-06-15T02:45:49.977Z" },
 ]
 
 [[package]]
@@ -367,7 +367,7 @@ wheels = [
 
 [[package]]
 name = "ibm-aigov-facts-client"
-version = "1.0.99"
+version = "1.0.96"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "boto3" },
@@ -383,7 +383,7 @@ dependencies = [
     { name = "timeout-decorator" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3e/20/02672e1111fe9df7eede45bc6a0561af949bfce11d7979c827e13abaa114/ibm_aigov_facts_client-1.0.99-py3-none-any.whl", hash = "sha256:6039fc70de73d04f04e67dafebdbef0dca42740f078e112a699d656a5f33cc5f", size = 257637, upload-time = "2025-09-11T07:07:16.871Z" },
+    { url = "https://files.pythonhosted.org/packages/4f/7d/c21fe77fd439d58aad71eb3a3281e21e1dbb5b719790593f1478ede7f109/ibm_aigov_facts_client-1.0.96-py3-none-any.whl", hash = "sha256:70aacb9b2ef24efd1c38a6df58456be6dd85455d7da82e2b4b6f0fee034680bd", size = 244886, upload-time = "2025-06-30T17:55:24.685Z" },
 ]
 
 [[package]]
@@ -435,7 +435,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/8e/ca/3c4c48c2a180e3410
 
 [[package]]
 name = "ibm-watson-openscale"
-version = "3.1.2"
+version = "3.0.49"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "certifi" },
@@ -444,24 +444,24 @@ dependencies = [
     { name = "requests" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/db/ad/18c1fc2992eddf461287d9c516a923700fa693e7bd937bb3d5da888efa7c/ibm_watson_openscale-3.1.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:276c780ded32c146faecbf64610efe8abbf518d0406f4c3c607fe5945bbfecb8", size = 1621614, upload-time = "2025-10-10T14:22:11.065Z" },
-    { url = "https://files.pythonhosted.org/packages/f1/f1/9846157942501cd6661603f7f580a858e49eb7f694fdc0b1116eaca7ec27/ibm_watson_openscale-3.1.2-cp310-cp310-macosx_11_0_x86_64.whl", hash = "sha256:601e03cf23206e0ff53e362dbba67dfa52848b9e891573f9cba3a2f3ef08442b", size = 1652423, upload-time = "2025-10-10T14:22:12.594Z" },
-    { url = "https://files.pythonhosted.org/packages/10/3d/0d597c809e03cee6bd8e9987ed8058860cd88af4dadc82c497006b1f818c/ibm_watson_openscale-3.1.2-cp310-cp310-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:7a72e64876a6ae72dc274bd5e36fb3ef0ac68a80c237af07fd2043834e0a4486", size = 4567668, upload-time = "2025-10-10T14:22:13.678Z" },
-    { url = "https://files.pythonhosted.org/packages/af/07/89fb11eb0659b68002dbf74bb9fc480051b543e5f463dc61ac2f580d9441/ibm_watson_openscale-3.1.2-cp310-cp310-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:8dada310a30b06f516a268c9101cd6c485101d99adf4c22dd94104e01739dd57", size = 4591152, upload-time = "2025-10-10T14:22:14.775Z" },
-    { url = "https://files.pythonhosted.org/packages/b4/3f/807614b7fd52c71e9a33966e7345f9464b85d095b07921d4fd1aebb81168/ibm_watson_openscale-3.1.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bc4841ad7fb8a6a1f74bdeeb563473268f613fbb069fd8b40e2ec9f944e7168d", size = 4511209, upload-time = "2025-10-10T14:22:16.546Z" },
-    { url = "https://files.pythonhosted.org/packages/a4/0e/deb2088afa13e8f79683ec01c4b83b56705e7ec579b61ad6dc2393bddd36/ibm_watson_openscale-3.1.2-cp310-cp310-win_amd64.whl", hash = "sha256:b3078f067e64b6f05a2949ff22ff3d380e730f56fc03a226279062332cac21cc", size = 1624594, upload-time = "2025-10-10T14:22:18.092Z" },
-    { url = "https://files.pythonhosted.org/packages/fc/90/f023824a3a6f7a13cad12446a3afa10e076ac3aa2d61985f374ef5d3ca01/ibm_watson_openscale-3.1.2-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:b2c88466833a6c2fbba3953facf74ea276a22a2aaad82bc9319f1d9bca8c1b92", size = 1631837, upload-time = "2025-10-10T14:22:19.653Z" },
-    { url = "https://files.pythonhosted.org/packages/75/f1/efa2f3364d43b459990bc58f01210167a77537f43e42e51f5367677afb5c/ibm_watson_openscale-3.1.2-cp311-cp311-macosx_11_0_x86_64.whl", hash = "sha256:044d9556c4d7d9516e557fd818e34af7a3193d49fb8493f9a144d3c542f7c56c", size = 1663064, upload-time = "2025-10-10T14:22:20.916Z" },
-    { url = "https://files.pythonhosted.org/packages/b3/8e/e784def2069e3e9adba167d1f2eaa694676aea2b17ab7bb5f48e41b4ecb5/ibm_watson_openscale-3.1.2-cp311-cp311-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:c6de10ef3b9d658f00d176ebc4b1bbeac00b3fbce5209ea049cc43e35f398def", size = 4895433, upload-time = "2025-10-10T14:22:22.317Z" },
-    { url = "https://files.pythonhosted.org/packages/ab/5d/19e994f23dac589e6bb02d77a347a346aaf5be007b3520052f4b8d315623/ibm_watson_openscale-3.1.2-cp311-cp311-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:de33dab502e3df7d820ea8c9d12cf1fe0f9357681ed67088e3a44dcb02bc98cb", size = 4917625, upload-time = "2025-10-10T14:22:23.506Z" },
-    { url = "https://files.pythonhosted.org/packages/39/7b/620f20cc0611136e8a4ce86fed2dd0ef23c520a1c93194ab4a34d1279373/ibm_watson_openscale-3.1.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ef81280bd913d306b9eb65f78eda3475ed2ae4b701b1f24ba16cbf9040d08c9a", size = 4820343, upload-time = "2025-10-10T14:22:24.842Z" },
-    { url = "https://files.pythonhosted.org/packages/e0/a0/64076224ad2922cae7db04b8da3aea6c19d1d0158fd36e2ca78b86d45401/ibm_watson_openscale-3.1.2-cp311-cp311-win_amd64.whl", hash = "sha256:9ff69d07edbff75209b2124266df28fc06b62b6bdc64f0d354fbebf1c70ad585", size = 1625007, upload-time = "2025-10-10T14:22:26.046Z" },
-    { url = "https://files.pythonhosted.org/packages/1a/c2/ca051b1c5feaf1ee69bbbf37e7f80c29b1820a5dde0718ad1a9f41176c81/ibm_watson_openscale-3.1.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:a5aefca1c39d46519598a2b68bb62916cd7ffb2d2ba41ab5ceefc7991dcb6855", size = 1627442, upload-time = "2025-10-10T14:22:27.248Z" },
-    { url = "https://files.pythonhosted.org/packages/10/7e/3dac10194caa9838182f045ed9587d288d68a8a3ad464fd753ab22d6e5d4/ibm_watson_openscale-3.1.2-cp312-cp312-macosx_11_0_x86_64.whl", hash = "sha256:62f32e97ee5f1cc4782179414f340de0ded26191c36f62f02b4021d991d95ba6", size = 1661580, upload-time = "2025-10-10T14:22:28.26Z" },
-    { url = "https://files.pythonhosted.org/packages/6f/0c/fbbc53ef9a3fcc2fe0718fecfea7a1593da34682793add64bf58f6348804/ibm_watson_openscale-3.1.2-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:257883f35fe90f8bd8420b18bf44e0a410746cbbb877665b4ca26b58c60f65a7", size = 4598515, upload-time = "2025-10-10T14:22:29.32Z" },
-    { url = "https://files.pythonhosted.org/packages/2a/08/f21223e9e902cbccce925b17cec3f3cf4174af1a9c32c3340410fd3d16aa/ibm_watson_openscale-3.1.2-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:6662d82f553b90a447634dddc4a303976a58366849203e09c40d8bc207242d06", size = 4995727, upload-time = "2025-10-10T14:22:30.976Z" },
-    { url = "https://files.pythonhosted.org/packages/a7/12/7a4b35c1e2b362a6b4912ff13b484d9ca0cc9b65a121265075ef29dfbd65/ibm_watson_openscale-3.1.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b6de102cef953fef6dc9572fccf97caa7a1423f650a04948b68ffcbb655af205", size = 4929334, upload-time = "2025-10-10T14:22:32.2Z" },
-    { url = "https://files.pythonhosted.org/packages/5c/e5/1caea06e3209df546a774039b92d9c2b07db12fcf80c4492bcf9cce329f7/ibm_watson_openscale-3.1.2-cp312-cp312-win_amd64.whl", hash = "sha256:597580658de76218eb34845f5f1c9167a34647c331032a6ae5fb51f30d584383", size = 1618701, upload-time = "2025-10-10T14:22:33.363Z" },
+    { url = "https://files.pythonhosted.org/packages/fe/34/206341928b34bc1f8646fa7cfc3220028a8da07c14c63a09aa47efb1d580/ibm_watson_openscale-3.0.49-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:9d2214c5c4ad68af1fcb32023fd90753f9dad91923d7c3d0841078dd0e9028a8", size = 1621331, upload-time = "2025-07-30T20:45:22.088Z" },
+    { url = "https://files.pythonhosted.org/packages/18/02/8d062f670c085680d598c4066df09b9fe856614c4e4e9f020d083a5c5331/ibm_watson_openscale-3.0.49-cp310-cp310-macosx_11_0_x86_64.whl", hash = "sha256:49c1b27a5d02eef8fb67fe74505a2dfb3bdd67bdf56c403602ab680b2340f742", size = 1652214, upload-time = "2025-07-30T20:45:23.834Z" },
+    { url = "https://files.pythonhosted.org/packages/3e/1f/19f8ffa746c27f26540fbe114c42aa5568c2add357eb238a71607430f2fa/ibm_watson_openscale-3.0.49-cp310-cp310-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:01fde2cbc13ae1db675c5cb0f881abfc58a49299e71120446a90743c1a7b144f", size = 4565259, upload-time = "2025-07-30T20:45:25.267Z" },
+    { url = "https://files.pythonhosted.org/packages/d5/63/ff8e5b514994eb78799f0c90859243f2e0445037a473f0f5c4d36b84efa8/ibm_watson_openscale-3.0.49-cp310-cp310-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:a3f503922a7baa2db5f73b910dc92d9934527bfd6326f6558bcc188296df1162", size = 4589005, upload-time = "2025-07-30T20:45:26.713Z" },
+    { url = "https://files.pythonhosted.org/packages/e5/29/60d12e37f1c888e4c4ec0082b9ab36b7e27761b7e2e056904944e478dfc2/ibm_watson_openscale-3.0.49-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b90ac9ac809c33e8093db8fd2b45d9b8161a50e1b7133838da41f648740d096e", size = 4508800, upload-time = "2025-07-30T20:45:28.5Z" },
+    { url = "https://files.pythonhosted.org/packages/c2/e1/9afe1be3dc1237908b15267a703ff21ef6ae83ee70347887e03c7e32dd7b/ibm_watson_openscale-3.0.49-cp310-cp310-win_amd64.whl", hash = "sha256:3b3443de2efdc2fd51825a285aaf381276f8b4612b3fe127782b19c2218f4f57", size = 1622548, upload-time = "2025-07-30T20:45:30.014Z" },
+    { url = "https://files.pythonhosted.org/packages/7f/26/a1fd9ff1815d0abcb53afa51e177e6c70b11bf2a0abc2b436c13165bd4d5/ibm_watson_openscale-3.0.49-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:5d86853e3de5620249115f8ecfa99cc2582859edf5905e1d20b054f13dfcfee9", size = 1631658, upload-time = "2025-07-30T20:45:31.12Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/a3/98cf105169f36e771b03242ae74091ae80b317833b85bc6942553f33c5f1/ibm_watson_openscale-3.0.49-cp311-cp311-macosx_11_0_x86_64.whl", hash = "sha256:8f577c3a5bb981bf86347070df4fada17d12315f0b81f1fad5f55f4673876800", size = 1663155, upload-time = "2025-07-30T20:45:32.207Z" },
+    { url = "https://files.pythonhosted.org/packages/ca/1e/b7678a08b87b888d8e0d2db54b80db83ad68188a1c6411d102db8182fe41/ibm_watson_openscale-3.0.49-cp311-cp311-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:3cccf3e7dc5505b60a13c46b251e6f198513e8993ba0ed5c9770497196ed145f", size = 4893017, upload-time = "2025-07-30T20:45:33.253Z" },
+    { url = "https://files.pythonhosted.org/packages/04/56/d6fce6a3c6fc318e7006ee1fea02032c37a705e528c29a0c7f64e66ff689/ibm_watson_openscale-3.0.49-cp311-cp311-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:d4a47a89bfa53417f42037d6a6c628dad73054e823ab93ebfa678b8975d08eff", size = 4915477, upload-time = "2025-07-30T20:45:34.733Z" },
+    { url = "https://files.pythonhosted.org/packages/82/9c/eb7371ced2409c4477f150ed9e13811ee46f0b6ce2fbe94f10f70e2f65ca/ibm_watson_openscale-3.0.49-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4435f3479178f31b06b766286998f899e908338e9a6da1edd004998a387855be", size = 4817933, upload-time = "2025-07-30T20:45:36.258Z" },
+    { url = "https://files.pythonhosted.org/packages/a3/dd/c05adf284dabb7f1ae94663406d5e3c9024e13ac0bf1778c9354f48b24a7/ibm_watson_openscale-3.0.49-cp311-cp311-win_amd64.whl", hash = "sha256:9acee10eb7bad1ee3ad434b6a94770575acaa42f1d37995cf184cad124cb9dd3", size = 1623333, upload-time = "2025-07-30T20:45:37.352Z" },
+    { url = "https://files.pythonhosted.org/packages/c5/97/f7e755b619f43f5b126e7b5fce80bbb4ad3937661e7888f2b10443fc01bc/ibm_watson_openscale-3.0.49-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:02dbbbbf094ecb81c87cb520b35e099b35bf4b6d84b9714548a20ac4e6617db4", size = 1625721, upload-time = "2025-07-30T20:45:38.659Z" },
+    { url = "https://files.pythonhosted.org/packages/8d/a9/9bb00da93593b2a7ebe080af2480608e4e7f9c16689a1f38ec59074cad51/ibm_watson_openscale-3.0.49-cp312-cp312-macosx_11_0_x86_64.whl", hash = "sha256:e9bf0e045d37e9587309fa60d0e2d1076aac35b440990a4ca3c9952287a880fa", size = 1659975, upload-time = "2025-07-30T20:45:40.09Z" },
+    { url = "https://files.pythonhosted.org/packages/bc/e4/6dafa443bcd9175ee66930d2e24acc6029b0f80d51ae8c7499663a5190d5/ibm_watson_openscale-3.0.49-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:8fbab6e3c3de89b7216d6cdd0973e4c783348832e8594b7f2f9ec2faab552c46", size = 4589939, upload-time = "2025-07-30T20:45:41.37Z" },
+    { url = "https://files.pythonhosted.org/packages/7c/26/47f47034f0f14421733c67e1cab736d9f68d4ef5fa8655cadcc826f2a4d4/ibm_watson_openscale-3.0.49-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:2d6cac5dede26059b9b0ebc5c3d55fd2764e6f1e444f3edba9c3717d70eef6dd", size = 4626712, upload-time = "2025-07-30T20:45:42.498Z" },
+    { url = "https://files.pythonhosted.org/packages/20/ab/76bc78b8610556d803873a1923d1c1b537e75348d93de1ec3231f6edd304/ibm_watson_openscale-3.0.49-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5c413460e0d44b628e5d13f35b3bc0c10d05f651846ca5987f822b79f089c26d", size = 4927191, upload-time = "2025-07-30T20:45:43.623Z" },
+    { url = "https://files.pythonhosted.org/packages/29/6d/e9062ace726c077cded45428ff5d1865dc076f42c6492badedf6c68638b3/ibm_watson_openscale-3.0.49-cp312-cp312-win_amd64.whl", hash = "sha256:ad1da93d3fc2972c6821bb23829d462cefcf419b29fe6193b104e33ae5a1d9c9", size = 1616721, upload-time = "2025-07-30T20:45:44.977Z" },
 ]
 
 [[package]]
