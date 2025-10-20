@@ -1,6 +1,7 @@
 import contextlib
 import io
-from typing import Callable, Any
+from typing import Any, Callable
+
 
 def suppress_output(fn: Callable, *args: Any, **kwargs: Any) -> Any:
     """
