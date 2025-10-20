@@ -10,6 +10,8 @@ import certifi
 from beekeeper.core.observers import ModelObserver
 from beekeeper.core.observers.types import PayloadRecord
 from beekeeper.core.prompts.utils import extract_template_vars
+from instrumentation import suppress_output
+
 from pydantic.v1 import BaseModel
 
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
@@ -561,14 +563,14 @@ class WatsonxExternalPromptObserver(ModelObserver):
             ["name", "model_id", "task_id"],
         )
 
-        detached_pta_id = self._create_detached_prompt(
+        detached_pta_id = suppress_output(self._create_detached_prompt,
             detached_details,
             prompt_details,
             detached_asset_details,
         )
         deployment_id = None
         if self._container_type == "space":
-            deployment_id = self._create_deployment_pta(detached_pta_id, name, model_id)
+            deployment_id = suppress_output(self._create_deployment_pta, detached_pta_id, name, model_id)
 
         observers = {
             "generative_ai_quality": {
@@ -579,8 +581,8 @@ class WatsonxExternalPromptObserver(ModelObserver):
         max_attempt_execute_prompt_setup = 0
         while max_attempt_execute_prompt_setup < 2:
             try:
-                generative_ai_observer_details = (
-                    self._wos_client.wos.execute_prompt_setup(
+                generative_ai_observer_details = suppress_output(
+                    self._wos_client.wos.execute_prompt_setup,
                         prompt_template_asset_id=detached_pta_id,
                         space_id=self.space_id,
                         project_id=self.project_id,
@@ -595,7 +597,6 @@ class WatsonxExternalPromptObserver(ModelObserver):
                         input_data_type="unstructured_text",
                         supporting_monitors=observers,
                         background_mode=False,
-                    ).result
                 )
 
                 break
@@ -628,7 +629,7 @@ class WatsonxExternalPromptObserver(ModelObserver):
                     max_attempt_execute_prompt_setup = 2
                     raise
 
-        generative_ai_observer_details = generative_ai_observer_details._to_dict()
+        generative_ai_observer_details = generative_ai_observer_details.result._to_dict()
 
         return {
             "detached_prompt_template_asset_id": detached_pta_id,
@@ -732,7 +733,7 @@ class WatsonxExternalPromptObserver(ModelObserver):
 
         payload_data = _convert_payload_format(request_records, feature_fields)
 
-        self._wos_client.data_sets.store_records(
+        suppress_output(self._wos_client.data_sets.store_records,
             data_set_id=payload_data_set_id,
             request_body=payload_data,
             background_mode=False,
@@ -1053,10 +1054,10 @@ class WatsonxPromptObserver(ModelObserver):
             ["name", "model_id", "task_id"],
         )
 
-        pta_id = self._create_prompt_template(prompt_details, asset_details)
+        pta_id = suppress_output(self._create_prompt_template, prompt_details, asset_details)
         deployment_id = None
         if self._container_type == "space":
-            deployment_id = self._create_deployment_pta(pta_id, name, model_id)
+            deployment_id = suppress_output(self._create_deployment_pta, pta_id, name, model_id)
 
         observers = {
             "generative_ai_quality": {
@@ -1067,8 +1068,8 @@ class WatsonxPromptObserver(ModelObserver):
         max_attempt_execute_prompt_setup = 0
         while max_attempt_execute_prompt_setup < 2:
             try:
-                generative_ai_observer_details = (
-                    self._wos_client.wos.execute_prompt_setup(
+                generative_ai_observer_details = suppress_output(
+                    self._wos_client.wos.execute_prompt_setup,
                         prompt_template_asset_id=pta_id,
                         space_id=self.space_id,
                         project_id=self.project_id,
@@ -1083,7 +1084,6 @@ class WatsonxPromptObserver(ModelObserver):
                         input_data_type="unstructured_text",
                         supporting_monitors=observers,
                         background_mode=False,
-                    ).result
                 )
 
                 break
@@ -1116,7 +1116,7 @@ class WatsonxPromptObserver(ModelObserver):
                     max_attempt_execute_prompt_setup = 2
                     raise
 
-        generative_ai_observer_details = generative_ai_observer_details._to_dict()
+        generative_ai_observer_details = generative_ai_observer_details.result._to_dict()
 
         return {
             "prompt_template_asset_id": pta_id,
@@ -1221,7 +1221,7 @@ class WatsonxPromptObserver(ModelObserver):
 
         payload_data = _convert_payload_format(request_records, feature_fields)
 
-        self._wos_client.data_sets.store_records(
+        suppress_output(self._wos_client.data_sets.store_records,
             data_set_id=payload_data_set_id,
             request_body=payload_data,
             background_mode=False,
@@ -1627,7 +1627,7 @@ class WatsonxCustomMetric:
             integrated_system_url,
         )
 
-        external_monitor_id = self._add_monitor_definitions(
+        external_monitor_id = suppress_output(self._add_monitor_definitions,
             name,
             metrics,
             schedule,
