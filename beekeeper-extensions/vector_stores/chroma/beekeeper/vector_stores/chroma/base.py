@@ -85,7 +85,7 @@ class ChromaVectorStore(BaseVectorStore):
 
         return ids
 
-    def search_documents(self, query: str, top_k: int = 4) -> List[DocumentWithScore]:
+    def query_documents(self, query: str, top_k: int = 4) -> List[DocumentWithScore]:
         """
         Performs a similarity search for the top-k most similar documents.
 
