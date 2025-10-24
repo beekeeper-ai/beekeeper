@@ -18,7 +18,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-core"
-version = "1.0.1"
+version = "1.0.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "deprecated" },
@@ -27,14 +27,14 @@ dependencies = [
     { name = "pydantic" },
     { name = "tiktoken" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cb/ae/e819dfb05ab677daaf2d1102c6646ef570f857c9f6ae75de1c6e233035ae/beekeeper_core-1.0.1.tar.gz", hash = "sha256:0052fa43f177f39501228163e6bc7661bcbf9e69ca2c16e95579cb1c368b2afa", size = 13694, upload-time = "2025-09-23T21:31:46.233Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5e/d9/87875ce811fe0017fbcd67d4e44ba4d278049fe220ab99a035d122eb078c/beekeeper_core-1.0.2.tar.gz", hash = "sha256:7c344cd76bc6585f8e0ae0139ad3e6c3b604ee32bc1c890eded080a511153b84", size = 14081, upload-time = "2025-10-24T20:37:29.438Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fe/4b/343e8e2be097f3c3c2be32e4da11373d52a8df84b465a38004f776f80aaa/beekeeper_core-1.0.1-py3-none-any.whl", hash = "sha256:b081cf1acb5f556d26de8ae636ff8b0c309df12a45d57d75e1d159f021dd553e", size = 24486, upload-time = "2025-09-23T21:31:45.209Z" },
+    { url = "https://files.pythonhosted.org/packages/e4/b5/f279ab4cc91c08bab17442f988d8286fd8920d8a109541e72cc14126f66e/beekeeper_core-1.0.2-py3-none-any.whl", hash = "sha256:0fb421c5916b6a9554b1f5d148bb486b1186f88ba32d7140652a973509c11fc6", size = 25164, upload-time = "2025-10-24T20:37:30.523Z" },
 ]
 
 [[package]]
 name = "beekeeper-embeddings-huggingface"
-version = "1.0.1"
+version = "1.0.2"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
@@ -48,7 +48,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beekeeper-core", specifier = ">=1.0.0,<2.0.0" },
+    { name = "beekeeper-core", specifier = ">=1.0.2,<2.0.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.11.13" },
     { name = "sentence-transformers", specifier = ">=4.1.0,<5.0.0" },
 ]

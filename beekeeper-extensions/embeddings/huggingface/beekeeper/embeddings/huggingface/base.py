@@ -1,6 +1,5 @@
 from typing import Any, List, Literal
 
-from beekeeper.core.document import Document
 from beekeeper.core.embeddings import BaseEmbedding, Embedding
 from pydantic.v1 import BaseModel, PrivateAttr
 
@@ -32,23 +31,7 @@ class HuggingFaceEmbedding(BaseModel, BaseEmbedding):
 
         self._client = SentenceTransformer(self.model_name, device=self.device)
 
-    def get_text_embedding(self, query: str) -> Embedding:
-        """
-        Compute embedding for a text.
-
-        Args:
-            query (str): Input query to compute the embedding.
-
-        Example:
-            ```python
-            embedded_query = embedding.get_text_embedding(
-                "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
-            )
-            ```
-        """
-        return self.get_texts_embedding([query])[0]
-
-    def get_texts_embedding(self, texts: List[str]) -> List[Embedding]:
+    def embed_texts(self, texts: List[str]) -> List[Embedding]:
         """
         Compute embeddings for a list of texts.
 
@@ -56,18 +39,3 @@ class HuggingFaceEmbedding(BaseModel, BaseEmbedding):
             texts (List[str]): A list of input strings for which to compute embeddings.
         """
         return self._client.encode(texts).tolist()
-
-    def get_documents_embedding(self, documents: List[Document]) -> List[Document]:
-        """
-        Compute embeddings for a list of documents.
-
-        Args:
-            documents (List[Document]): List of documents to compute embeddings.
-        """
-        texts = [document.get_content() for document in documents]
-        embeddings = self.get_texts_embedding(texts)
-
-        for document, embedding in zip(documents, embeddings):
-            document.embedding = embedding
-
-        return documents
