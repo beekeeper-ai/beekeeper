@@ -7,7 +7,7 @@ from deprecated import deprecated
 
 
 class BaseTextChunker(TransformerComponent, ABC):
-    """An interface for text chunker."""
+    """Abstract base class defining the interface for text chunker."""
 
     @classmethod
     def class_name(cls) -> str:
@@ -22,15 +22,17 @@ class BaseTextChunker(TransformerComponent, ABC):
         """Split a list of documents into smaller document chunks."""
 
     @deprecated(
-        reason="`from_text()` is deprecated and will be removed in a future version. "
-        "Use `chunk_text()` instead."
+        reason="'from_text()' is deprecated and will be removed in a future version. Use 'chunk_text' instead.",
+        version="1.0.2",
+        action="always",
     )
     def from_text(self, text: str) -> List[str]:
         return self.chunk_text(text)
 
     @deprecated(
-        reason="`from_documents()` is deprecated and will be removed in a future version. "
-        "Use `chunk_documents()` instead."
+        reason="'from_documents()' is deprecated and will be removed in a future version. Use 'chunk_documents' instead.",
+        version="1.0.2",
+        action="always",
     )
     def from_documents(self, documents: List[Document]) -> List[Document]:
         return self.chunk_documents(documents)

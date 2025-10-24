@@ -8,7 +8,7 @@ from pydantic.v1 import BaseModel, Field, validator
 
 
 class BaseDocument(ABC, BaseModel):
-    """Generic abstract interface for retrievable documents."""
+    """Abstract base class defining the interface for retrievable documents."""
 
     id_: str = Field(
         default_factory=lambda: str(uuid.uuid4()),

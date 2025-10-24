@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 
 class BaseLLM(ABC, BaseModel):
-    """An interface for LLMs."""
+    """Abstract base class defining the interface for LLMs."""
 
     model_config = {"arbitrary_types_allowed": True}
     callback_manager: Optional[BaseObserver] = None
