@@ -48,9 +48,9 @@ class TokenTextChunker(BaseTextChunker):
 
         self._sub_split_fns = [split_by_char()]
 
-    def from_text(self, text: str) -> List[str]:
+    def chunk_text(self, text: str) -> List[str]:
         """
-        Split text into chunks.
+        Split a single string of text into smaller chunks.
 
         Args:
             text (str): Input text to split.
@@ -60,7 +60,7 @@ class TokenTextChunker(BaseTextChunker):
 
         Example:
             ```python
-            chunks = text_chunker.from_text(
+            chunks = text_chunker.chunk_text(
                 "Beekeeper is a data framework to load any data in one line of code and connect with AI applications."
             )
             ```
@@ -69,9 +69,9 @@ class TokenTextChunker(BaseTextChunker):
 
         return merge_splits(splits, self.chunk_size, self.chunk_overlap)
 
-    def from_documents(self, documents: List[Document]) -> List[Document]:
+    def chunk_documents(self, documents: List[Document]) -> List[Document]:
         """
-        Split documents into chunks.
+        Split a list of documents into smaller document chunks.
 
         Args:
             documents (List[Document]): List of `Document` objects to split.
@@ -82,7 +82,7 @@ class TokenTextChunker(BaseTextChunker):
         chunks = []
 
         for document in documents:
-            texts = self.from_text(document.get_content())
+            texts = self.chunk_text(document.get_content())
             metadata = {**document.get_metadata()}
 
             for text in texts:

@@ -99,9 +99,9 @@ class SemanticChunker(BaseTextChunker, BaseModel):
 
         return [i for i, x in enumerate(distances) if x > distance_threshold]
 
-    def from_text(self, text: str) -> List[str]:
+    def chunk_text(self, text: str) -> List[str]:
         """
-        Split text into chunks.
+        Split a single string of text into smaller chunks.
 
         Args:
             text (str): Input text to split.
@@ -133,9 +133,9 @@ class SemanticChunker(BaseTextChunker, BaseModel):
 
         return chunks
 
-    def from_documents(self, documents: List[Document]) -> List[Document]:
+    def chunk_documents(self, documents: List[Document]) -> List[Document]:
         """
-        Split documents into chunks.
+        Split a list of documents into smaller document chunks.
 
         Args:
             documents (List[Document]): List of `Document` objects to split.
@@ -146,7 +146,7 @@ class SemanticChunker(BaseTextChunker, BaseModel):
         chunks = []
 
         for document in documents:
-            texts = self.from_text(document.get_content())
+            texts = self.chunk_text(document.get_content())
             metadata = {**document.get_metadata()}
 
             for text in texts:
