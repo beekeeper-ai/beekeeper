@@ -14,7 +14,7 @@ class BaseObserver(ABC):
 
 
 class ModelObserver(BaseObserver):
-    """An interface for model observability."""
+    """Abstract base class defining the interface for prompt observability."""
 
     def __init__(self, prompt_template: Optional[PromptTemplate] = None) -> None:
         self.prompt_template = prompt_template
@@ -29,7 +29,7 @@ class ModelObserver(BaseObserver):
 
 
 class TelemetryObserver(BaseObserver):
-    """An interface for telemetry observability."""
+    """Abstract base class defining the interface for telemetry observability."""
 
     @classmethod
     def class_name(cls) -> str:

@@ -16,7 +16,7 @@ class ToolInputSchema(BaseModel):
 
 
 class BaseTool(ABC, BaseModel):
-    """Interface that Beekeeper tools must implement."""
+    """Abstract base class defining the interface for tools."""
 
     name: str
     description: str

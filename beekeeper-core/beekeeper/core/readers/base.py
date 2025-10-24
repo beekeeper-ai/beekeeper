@@ -6,7 +6,7 @@ from pydantic.v1 import BaseModel
 
 
 class BaseReader(ABC, BaseModel):
-    """An interface for document reader."""
+    """Abstract base class defining the interface for document reader."""
 
     @classmethod
     def class_name(cls) -> str:
@@ -15,9 +15,3 @@ class BaseReader(ABC, BaseModel):
     @abstractmethod
     def load_data(self) -> List[Document]:
         """Loads data."""
-
-    def load(self) -> List[Document]:
-        return self.load_data()
-
-    def lazy_load(self) -> List[Document]:
-        return self.load_data()
