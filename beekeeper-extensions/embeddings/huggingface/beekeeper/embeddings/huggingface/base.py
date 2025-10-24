@@ -33,7 +33,7 @@ class HuggingFaceEmbedding(BaseModel, BaseEmbedding):
 
     def embed_texts(self, texts: List[str]) -> List[Embedding]:
         """
-        Compute embeddings for a list of texts.
+        Embed a list of text strings.
 
         Args:
             texts (List[str]): A list of input strings for which to compute embeddings.
