@@ -163,7 +163,7 @@ class ElasticsearchVectorStore(BaseVectorStore):
 
         return [doc.id_ for doc in documents]
 
-    def search_documents(self, query: str, top_k: int = 4) -> List[DocumentWithScore]:
+    def query_documents(self, query: str, top_k: int = 4) -> List[DocumentWithScore]:
         """
         Performs a similarity search for the top-k most similar documents.
 
