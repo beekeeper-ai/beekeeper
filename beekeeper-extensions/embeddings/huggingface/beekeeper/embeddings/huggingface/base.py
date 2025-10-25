@@ -1,4 +1,4 @@
-from typing import Any, List, Literal
+from typing import Any, List, Literal, Union
 
 from beekeeper.core.embeddings import BaseEmbedding, Embedding
 from pydantic.v1 import BaseModel, PrivateAttr
@@ -31,11 +31,13 @@ class HuggingFaceEmbedding(BaseModel, BaseEmbedding):
 
         self._client = SentenceTransformer(self.model_name, device=self.device)
 
-    def embed_texts(self, texts: List[str]) -> List[Embedding]:
+    def embed_text(
+        self, input: Union[str, List[str]]
+    ) -> Union[Embedding, List[Embedding]]:
         """
-        Embed a list of text strings.
+        Embed one or more text strings.
 
         Args:
-            texts (List[str]): A list of input strings for which to compute embeddings.
+            input (List[str]): Input for which to compute embeddings.
         """
-        return self._client.encode(texts).tolist()
+        return self._client.encode(input).tolist()
