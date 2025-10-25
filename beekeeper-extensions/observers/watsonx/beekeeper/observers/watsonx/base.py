@@ -3,14 +3,13 @@ import json
 import logging
 import os
 import uuid
-import warnings
 from typing import Any, Dict, List, Literal, Optional, Union
 
 import certifi
-from beekeeper.core.observers import ModelObserver
+from beekeeper.core.observers import PromptObserver
 from beekeeper.core.observers.types import PayloadRecord
 from beekeeper.core.prompts.utils import extract_template_vars
-from instrumentation import suppress_output
+from beekeeper.observers.watsonx.instrumentation import suppress_output
 from pydantic.v1 import BaseModel
 
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
@@ -229,7 +228,7 @@ class IntegratedSystemCredentials(BaseModel):
 
 
 # ===== Observer Classes =====
-class WatsonxExternalPromptObserver(ModelObserver):
+class WatsonxExternalPromptObserver(PromptObserver):
     """
     Provides functionality to interact with IBM watsonx.governance for monitoring external LLMs.
 
@@ -758,7 +757,7 @@ class WatsonxExternalPromptObserver(ModelObserver):
             self.store_payload_records([{**payload.model_dump(), **template_vars}])
 
 
-class WatsonxPromptObserver(ModelObserver):
+class WatsonxPromptObserver(PromptObserver):
     """
     Provides functionality to interact with IBM watsonx.governance for monitoring IBM watsonx.ai LLMs.
 
