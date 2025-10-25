@@ -86,7 +86,7 @@ class ElasticsearchVectorStore(BaseVectorStore):
 
         else:
             # Get embedding dims dynamically
-            dims_length = len(self._embed_model.get_text_embedding("Elasticsearch"))
+            dims_length = len(self._embed_model.embed_text("beekeeper-embeddings"))
 
             index_mappings = {
                 "dynamic_templates": [
@@ -147,7 +147,7 @@ class ElasticsearchVectorStore(BaseVectorStore):
                     self.text_field: doc.get_content(),
                     self.vector_field: doc.embedding
                     if doc.embedding
-                    else self._embed_model.get_text_embedding(doc.get_content()),
+                    else self._embed_model.embed_text(doc.get_content()),
                     "metadata": _metadata,
                     **_metadata_mapping,
                 },
@@ -174,7 +174,7 @@ class ElasticsearchVectorStore(BaseVectorStore):
         Returns:
             List[DocumentWithScore]: List of the most similar documents.
         """
-        query_embedding = self._embed_model.get_text_embedding(query)
+        query_embedding = self._embed_model.embed_text(query)
         #  TO-DO: Add elasticsearch `filter` option
         es_query = {
             "knn": {
