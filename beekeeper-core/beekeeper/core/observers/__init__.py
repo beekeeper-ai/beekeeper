@@ -1,3 +1,3 @@
-from beekeeper.core.observers.base import BaseObserver, PromptObserver
+from beekeeper.core.observers.base import BaseObserver, ModelObserver, PromptObserver
 
-__all__ = (["BaseObserver", "PromptObserver"],)
+__all__ = (["BaseObserver", "ModelObserver", "PromptObserver"],)
