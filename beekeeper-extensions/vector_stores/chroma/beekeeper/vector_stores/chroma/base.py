@@ -71,7 +71,7 @@ class ChromaVectorStore(BaseVectorStore):
             embeddings.append(
                 doc.embedding
                 if doc.embedding
-                else self._embed_model.get_text_embedding(doc.get_content()),
+                else self._embed_model.embed_text(doc.get_content()),
             )
             ids.append(doc.id_ if doc.id_ else str(uuid.uuid4()))
             chroma_documents.append(doc.get_content())
@@ -96,7 +96,7 @@ class ChromaVectorStore(BaseVectorStore):
         Returns:
             List[DocumentWithScore]: List of the most similar documents.
         """
-        query_embedding = self._embed_model.get_text_embedding(query)
+        query_embedding = self._embed_model.embed_text(query)
 
         results = self._collection.query(
             query_embeddings=query_embedding,
