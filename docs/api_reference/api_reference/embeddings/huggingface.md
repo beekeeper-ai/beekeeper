@@ -4,4 +4,6 @@ title: Hugging Face
 
 ::: beekeeper.embeddings.huggingface
     options:
-        show_inherited_members: true
+        inherited_members: true
+        filters:
+        - "!similarity"

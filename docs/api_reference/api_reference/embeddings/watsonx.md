@@ -4,4 +4,6 @@ title: watsonx.ai
 
 ::: beekeeper.embeddings.watsonx
     options:
-        show_inherited_members: true
+        inherited_members: true
+        filters:
+        - "!similarity"
