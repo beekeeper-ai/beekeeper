@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import List
+from typing import List, Union
 
 import numpy as np
 from beekeeper.core.document import Document
@@ -43,17 +43,15 @@ class BaseEmbedding(TransformerComponent, ABC):
         return "BaseEmbedding"
 
     @abstractmethod
-    def embed_texts(self, texts: List[str]) -> List[Embedding]:
-        """Embed a list of text strings."""
-
-    def embed_text(self, query: str) -> Embedding:
-        """Embed a single text string."""
-        return self.embed_texts([query])[0]
+    def embed_text(
+        self, input: Union[str, List[str]]
+    ) -> Union[Embedding, List[Embedding]]:
+        """Embed one or more text strings."""
 
     def embed_documents(self, documents: List[Document]) -> List[Document]:
         """Embed a list of documents and set them in the 'embedding' attribute."""
         texts = [document.get_content() for document in documents]
-        embeddings = self.embed_texts(texts)
+        embeddings = self.embed_text(texts)
 
         for document, embedding in zip(documents, embeddings):
             document.embedding = embedding
@@ -61,7 +59,15 @@ class BaseEmbedding(TransformerComponent, ABC):
         return documents
 
     @deprecated(
-        reason="'get_text_embedding()' is deprecated and will be removed in a future version. Use 'embed_text' instead.",
+        reason="'embed_texts()' is deprecated and will be removed in a future version. Use 'embed_text()' instead.",
+        version="1.0.3",
+        action="always",
+    )
+    def embed_texts(self, texts: List[str]) -> List[Embedding]:
+        return self.embed_text(texts)
+
+    @deprecated(
+        reason="'get_text_embedding()' is deprecated and will be removed in a future version. Use 'embed_text()' instead.",
         version="1.0.2",
         action="always",
     )
@@ -69,7 +75,7 @@ class BaseEmbedding(TransformerComponent, ABC):
         return self.embed_text(query)
 
     @deprecated(
-        reason="'get_texts_embedding()' is deprecated and will be removed in a future version. Use 'embed_texts' instead.",
+        reason="'get_texts_embedding()' is deprecated and will be removed in a future version. Use 'embed_texts()' instead.",
         version="1.0.2",
         action="always",
     )
@@ -77,7 +83,7 @@ class BaseEmbedding(TransformerComponent, ABC):
         return self.embed_texts(texts)
 
     @deprecated(
-        reason="'get_documents_embedding()' is deprecated and will be removed in a future version. Use 'embed_documents' instead.",
+        reason="'get_documents_embedding()' is deprecated and will be removed in a future version. Use 'embed_documents()' instead.",
         version="1.0.2",
         action="always",
     )
