@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from beekeeper.core.embeddings import BaseEmbedding, Embedding
 from pydantic.v1 import BaseModel, PrivateAttr
@@ -70,11 +70,18 @@ class WatsonxEmbedding(BaseModel, BaseEmbedding):
 
         self._client = WatsonxEmbeddings(**kwargs_params)
 
-    def embed_texts(self, texts: List[str]) -> List[Embedding]:
+    def embed_text(
+        self, input: Union[str, List[str]]
+    ) -> Union[Embedding, List[Embedding]]:
         """
-        Embed a list of text strings.
+        Embed one or more text strings.
 
         Args:
-            texts (List[str]): A list of input strings for which to compute embeddings.
+            input (str | List[str]): Input for which to compute embeddings.
         """
-        return self._client.embed_documents(texts)
+        if isinstance(input, str):
+            return self._client.embed_query(input)
+        elif isinstance(input, list) and all(isinstance(i, str) for i in input):
+            return self._client.embed_documents(input)
+        else:
+            raise TypeError(f"Expected str or List[str], got {type(input).__name__}")
