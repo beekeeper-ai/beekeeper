@@ -49,7 +49,12 @@ class BaseEmbedding(TransformerComponent, ABC):
         """Embed one or more text strings."""
 
     def embed_documents(self, documents: List[Document]) -> List[Document]:
-        """Embed a list of documents and set them in the 'embedding' attribute."""
+        """
+        Embed a list of documents and set them in the 'embedding' attribute.
+
+        Args:
+            documents (List[Document]): List of documents to compute embeddings.
+        """
         texts = [document.get_content() for document in documents]
         embeddings = self.embed_text(texts)
 
