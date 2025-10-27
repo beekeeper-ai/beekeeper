@@ -1090,7 +1090,7 @@ class WatsonxPromptObserver(PromptObserver):
                     input_data_type="unstructured_text",
                     supporting_monitors=observers,
                     background_mode=False,
-                )
+                ).result
 
                 break
 
@@ -1122,9 +1122,7 @@ class WatsonxPromptObserver(PromptObserver):
                     max_attempt_execute_prompt_setup = 2
                     raise
 
-        generative_ai_observer_details = (
-            generative_ai_observer_details.result._to_dict()
-        )
+        generative_ai_observer_details = generative_ai_observer_details._to_dict()
 
         return {
             "prompt_template_asset_id": pta_id,
@@ -1703,7 +1701,8 @@ class WatsonxCustomMetric:
                 "enable_custom_metric_runs": True,
             }
 
-            monitor_instance_details = suppress_output(self._wos_client.monitor_instances.create,
+            monitor_instance_details = suppress_output(
+                self._wos_client.monitor_instances.create,
                 data_mart_id=data_mart_id,
                 background_mode=False,
                 monitor_definition_id=monitor_definition_id,
