@@ -1703,7 +1703,7 @@ class WatsonxCustomMetric:
                 "enable_custom_metric_runs": True,
             }
 
-            monitor_instance_details = self._wos_client.monitor_instances.create(
+            monitor_instance_details = suppress_output(self._wos_client.monitor_instances.create,
                 data_mart_id=data_mart_id,
                 background_mode=False,
                 monitor_definition_id=monitor_definition_id,
