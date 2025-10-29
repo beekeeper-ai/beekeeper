@@ -1,9 +1,4 @@
-from abc import ABC, abstractmethod
-from typing import Optional
-
-from beekeeper.core.monitors import BaseMonitor, PromptMonitor, TelemetryMonitor
-from beekeeper.core.monitors.types import PayloadRecord
-from beekeeper.core.prompts import PromptTemplate
+from beekeeper.core.monitors import BaseMonitor, PromptMonitor
 from deprecated import deprecated
 
 
