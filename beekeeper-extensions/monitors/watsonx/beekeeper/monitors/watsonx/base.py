@@ -227,13 +227,13 @@ class IntegratedSystemCredentials(BaseModel):
         return integrated_system_creds
 
 
-# ===== Observer Classes =====
-class WatsonxExternalPromptObserver(PromptMonitor):
+# ===== Monitor Classes =====
+class WatsonxExternalPromptMonitor(PromptMonitor):
     """
     Provides functionality to interact with IBM watsonx.governance for monitoring external LLMs.
 
     Note:
-        One of the following parameters is required to create a prompt observer:
+        One of the following parameters is required to create a prompt monitor:
         `project_id` or `space_id`, but not both.
 
     Attributes:
@@ -247,13 +247,13 @@ class WatsonxExternalPromptObserver(PromptMonitor):
 
     Example:
         ```python
-        from beekeeper.observers.watsonx import (
-            WatsonxExternalPromptObserver,
+        from beekeeper.monitors.watsonx import (
+            WatsonxExternalPromptMonitor,
             CloudPakforDataCredentials,
         )
 
         # watsonx.governance (IBM Cloud)
-        wxgov_client = WatsonxExternalPromptObserver(
+        wxgov_client = WatsonxExternalPromptMonitor(
             api_key="API_KEY", space_id="SPACE_ID"
         )
 
@@ -266,7 +266,7 @@ class WatsonxExternalPromptObserver(PromptMonitor):
             instance_id="openshift",
         )
 
-        wxgov_client = WatsonxExternalPromptObserver(
+        wxgov_client = WatsonxExternalPromptMonitor(
             space_id="SPACE_ID", cpd_creds=cpd_creds
         )
         ```
@@ -434,7 +434,7 @@ class WatsonxExternalPromptObserver(PromptMonitor):
         question_field: str = None,
     ) -> Dict:
         """
-        Creates a Detached/External Prompt Template Asset and sets up observer for a given prompt template asset.
+        Creates a Detached/External Prompt Template Asset and setup monitor for a given prompt template asset.
 
         Args:
             name (str): The name of the External Prompt Template Asset.
@@ -757,12 +757,12 @@ class WatsonxExternalPromptObserver(PromptMonitor):
             self.store_payload_records([{**payload.model_dump(), **template_vars}])
 
 
-class WatsonxPromptObserver(PromptMonitor):
+class WatsonxPromptMonitor(PromptMonitor):
     """
     Provides functionality to interact with IBM watsonx.governance for monitoring IBM watsonx.ai LLMs.
 
     Note:
-        One of the following parameters is required to create a prompt observer:
+        One of the following parameters is required to create a prompt monitor:
         `project_id` or `space_id`, but not both.
 
     Attributes:
@@ -776,13 +776,13 @@ class WatsonxPromptObserver(PromptMonitor):
 
     Example:
         ```python
-        from beekeeper.observers.watsonx import (
-            WatsonxPromptObserver,
+        from beekeeper.monitors.watsonx import (
+            WatsonxPromptMonitor,
             CloudPakforDataCredentials,
         )
 
         # watsonx.governance (IBM Cloud)
-        wxgov_client = WatsonxPromptObserver(api_key="API_KEY", space_id="SPACE_ID")
+        wxgov_client = WatsonxPromptMonitor(api_key="API_KEY", space_id="SPACE_ID")
 
         # watsonx.governance (CP4D)
         cpd_creds = CloudPakforDataCredentials(
@@ -793,7 +793,7 @@ class WatsonxPromptObserver(PromptMonitor):
             instance_id="openshift",
         )
 
-        wxgov_client = WatsonxPromptObserver(space_id="SPACE_ID", cpd_creds=cpd_creds)
+        wxgov_client = WatsonxPromptMonitor(space_id="SPACE_ID", cpd_creds=cpd_creds)
         ```
     """
 
@@ -953,7 +953,7 @@ class WatsonxPromptObserver(PromptMonitor):
         question_field: str = None,
     ) -> Dict:
         """
-        Creates an IBM Prompt Template Asset and sets up observer for the given prompt template asset.
+        Creates an IBM Prompt Template Asset and ssetup monitor for the given prompt template asset.
 
         Args:
             name (str): The name of the Prompt Template Asset.
@@ -1251,7 +1251,7 @@ class WatsonxPromptObserver(PromptMonitor):
 # ===== Supporting Classes =====
 class WatsonxLocalMetric(BaseModel):
     """
-    Provides the IBM watsonx.governance local observer metric definition.
+    Provides the IBM watsonx.governance local monitor metric definition.
 
     Attributes:
         name (str): The name of the metric.
@@ -1260,7 +1260,7 @@ class WatsonxLocalMetric(BaseModel):
 
     Example:
         ```python
-        from beekeeper.observers.watsonx import WatsonxLocalMetric
+        from beekeeper.monitors.watsonx import WatsonxLocalMetric
 
         WatsonxLocalMetric(name="context_quality", data_type="double")
         ```
@@ -1284,7 +1284,7 @@ class WatsonxMetricThreshold(BaseModel):
 
     Example:
         ```python
-        from beekeeper.observers.watsonx import WatsonxMetricThreshold
+        from beekeeper.monitors.watsonx import WatsonxMetricThreshold
 
         WatsonxMetricThreshold(threshold_type="lower_limit", default_value=0.8)
         ```
@@ -1299,7 +1299,7 @@ class WatsonxMetricThreshold(BaseModel):
 
 class WatsonxMetric(BaseModel):
     """
-    Defines the IBM watsonx.governance global observer metric.
+    Defines the IBM watsonx.governance global monitor metric.
 
     Attributes:
         name (str): The name of the metric.
@@ -1309,7 +1309,7 @@ class WatsonxMetric(BaseModel):
 
     Example:
         ```python
-        from beekeeper.observers.watsonx import (
+        from beekeeper.monitors.watsonx import (
             WatsonxMetric,
             WatsonxMetricThreshold,
         )
@@ -1368,7 +1368,7 @@ class WatsonxCustomMetric:
 
     Example:
         ```python
-        from beekeeper.observers.watsonx import (
+        from beekeeper.monitors.watsonx import (
             WatsonxCustomMetric,
             CloudPakforDataCredentials,
         )
@@ -1584,7 +1584,7 @@ class WatsonxCustomMetric:
         schedule: bool = False,
     ):
         """
-        Creates a custom observer definition for IBM watsonx.governance.
+        Creates a custom monitor definition for IBM watsonx.governance.
 
         This must be done before using custom metrics.
 
@@ -1597,7 +1597,7 @@ class WatsonxCustomMetric:
 
         Example:
             ```python
-            from beekeeper.observers.watsonx import (
+            from beekeeper.monitors.watsonx import (
                 WatsonxMetric,
                 IntegratedSystemCredentials,
                 WatsonxMetricThreshold,
@@ -1639,7 +1639,7 @@ class WatsonxCustomMetric:
             schedule,
         )
 
-        # Associate the external observer with the integrated system
+        # Associate the external monitor with the integrated system
         payload = [
             {
                 "op": "add",
@@ -1662,12 +1662,12 @@ class WatsonxCustomMetric:
         subscription_id: str,
     ):
         """
-        Enables a custom observer for the specified subscription and monitor definition.
+        Enables a custom monitor for the specified subscription and monitor definition.
 
         Args:
             integrated_system_id (str): The ID of the integrated system.
             monitor_definition_id (str): The ID of the custom metric monitor instance.
-            subscription_id (str): The ID of the subscription to associate the observer with.
+            subscription_id (str): The ID of the subscription to associate the monitor with.
 
         Example:
             ```python
@@ -1725,11 +1725,11 @@ class WatsonxCustomMetric:
         request_records: Dict[str, Union[float, int]],
     ):
         """
-        Publishes computed custom metrics for a specific global observer instance.
+        Publishes computed custom metrics for a specific global monitor instance.
 
         Args:
             monitor_instance_id (str): The unique ID of the monitor instance.
-            run_id (str): The ID of the observer run that generated the metrics.
+            run_id (str): The ID of the monitor run that generated the metrics.
             request_records (Dict[str | float | int]): Dict containing the metrics to be published.
 
         Example:
@@ -1794,7 +1794,7 @@ class WatsonxCustomMetric:
 
         Example:
             ```python
-            from beekeeper.observers.watsonx import WatsonxLocalMetric
+            from beekeeper.monitors.watsonx import WatsonxLocalMetric
 
             wxgov_client.add_local_metric_definition(
                 name="Custom LLM Local Metric",
