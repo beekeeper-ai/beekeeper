@@ -50,7 +50,7 @@ class BaseEmbedding(TransformerComponent, ABC):
 
     def embed_documents(self, documents: List[Document]) -> List[Document]:
         """
-        Embed a list of documents and set them in the 'embedding' attribute.
+        Embed a list of documents and assign the computed embeddings to the 'embedding' attribute.
 
         Args:
             documents (List[Document]): List of documents to compute embeddings.
