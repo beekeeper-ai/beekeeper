@@ -7,7 +7,7 @@ class BaseObserver(BaseMonitor):
 
 
 @deprecated(
-    reason="'PromptObserver()' is deprecated and will be removed in a future version. Use 'PromptMonitor()' instead.",
+    reason="'PromptObserver()' is deprecated and will be removed in a future version. Use 'PromptMonitor()' from 'beekeeper.core.monitors' instead.",
     version="1.0.4",
     action="always",
 )
@@ -16,7 +16,7 @@ class PromptObserver(PromptMonitor):
 
 
 @deprecated(
-    reason="'ModelObserver()' is deprecated and will be removed in a future version. Use 'PromptMonitor()' instead.",
+    reason="'ModelObserver()' is deprecated and will be removed in a future version. Use 'PromptMonitor()' from 'beekeeper.core.monitors' instead.",
     version="1.0.3",
     action="always",
 )
@@ -25,7 +25,7 @@ class ModelObserver(PromptMonitor):
 
 
 @deprecated(
-    reason="'TelemetryObserver()' is deprecated and will be removed in a future version. Use 'TelemetryMonitor()' instead.",
+    reason="'TelemetryObserver()' is deprecated and will be removed in a future version. Use 'TelemetryMonitor()' from 'beekeeper.core.monitors' instead.",
     version="1.0.4",
     action="always",
 )
