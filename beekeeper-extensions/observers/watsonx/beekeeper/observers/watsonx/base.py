@@ -9,16 +9,14 @@ import certifi
 from beekeeper.core.observers import PromptObserver
 from beekeeper.core.observers.types import PayloadRecord
 from beekeeper.core.prompts.utils import extract_template_vars
+from beekeeper.monitors.watsonx import (
+    WatsonxExternalPromptMonitor,
+    WatsonxLocalMetric,
+    WatsonxPromptMonitor,
+)
 from beekeeper.observers.watsonx.instrumentation import suppress_output
 from deprecated import deprecated
 from pydantic.v1 import BaseModel
-
-from beekeeper.monitors.watsonx import (
-    WatsonxPromptMonitor,
-    WatsonxExternalPromptMonitor,
-    WatsonxLocalMetric
-
-)
 
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
 logging.getLogger("ibm_watsonx_ai.client").setLevel(logging.ERROR)
@@ -243,11 +241,10 @@ class IntegratedSystemCredentials(BaseModel):
     action="always",
 )
 class WatsonxExternalPromptObserver(WatsonxExternalPromptMonitor):
-
     @deprecated(
-    reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'add_prompt_monitor()' instead.",
-    version="1.0.5",
-    action="always",
+        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'add_prompt_monitor()' instead.",
+        version="1.0.5",
+        action="always",
     )
     def add_prompt_observer(
         self,
@@ -291,6 +288,7 @@ class WatsonxExternalPromptObserver(WatsonxExternalPromptMonitor):
             question_field=question_field,
         )
 
+
 @deprecated(
     reason="'WatsonxPromptObserver()' is deprecated and will be removed in a future version. "
     "Use 'WatsonxPromptMonitor' from 'beekeeper-monitors-watsonx' instead.",
@@ -298,11 +296,10 @@ class WatsonxExternalPromptObserver(WatsonxExternalPromptMonitor):
     action="always",
 )
 class WatsonxPromptObserver(WatsonxPromptMonitor):
-
     @deprecated(
-    reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'add_prompt_monitor()' instead.",
-    version="1.0.5",
-    action="always",
+        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'add_prompt_monitor()' instead.",
+        version="1.0.5",
+        action="always",
     )
     def add_prompt_observer(
         self,
@@ -769,9 +766,9 @@ class WatsonxCustomMetric:
         }
 
     @deprecated(
-    reason="'add_observer_instance()' is deprecated and will be removed in a future version. Use 'add_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
-    version="1.0.5",
-    action="always",
+        reason="'add_observer_instance()' is deprecated and will be removed in a future version. Use 'add_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
+        version="1.0.5",
+        action="always",
     )
     def add_observer_instance(
         self,
