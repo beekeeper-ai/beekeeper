@@ -2,51 +2,51 @@
 title: watsonx.governance
 ---
 
-## Observers
+## Monitor
 
-::: beekeeper.observers.watsonx.WatsonxPromptObserver
+::: beekeeper.monitors.watsonx.WatsonxPromptMonitor
     options:
       members_order: source
       show_root_heading: true
       show_root_full_path: false
 
-::: beekeeper.observers.watsonx.WatsonxExternalPromptObserver
+::: beekeeper.monitors.watsonx.WatsonxExternalPromptMonitor
     options:
       members_order: source
       show_root_heading: true
       show_root_full_path: false
 
 ## Custom Metrics
-::: beekeeper.observers.watsonx.WatsonxCustomMetric
+::: beekeeper.monitors.watsonx.WatsonxCustomMetric
     options:
       members_order: source
       show_root_heading: true
       show_root_full_path: false
 
 ## Credentials
-::: beekeeper.observers.watsonx.CloudPakforDataCredentials
+::: beekeeper.monitors.watsonx.CloudPakforDataCredentials
     options:
       members_order: source
       show_root_heading: true
       show_root_full_path: false
-::: beekeeper.observers.watsonx.IntegratedSystemCredentials
+::: beekeeper.monitors.watsonx.IntegratedSystemCredentials
     options:
       members_order: source
       show_root_heading: true
       show_root_full_path: false
 
 ## Supporting Classes
-::: beekeeper.observers.watsonx.WatsonxMetric
+::: beekeeper.monitors.watsonx.WatsonxMetric
     options:
       members_order: source
       show_root_heading: true
       show_root_full_path: false
-::: beekeeper.observers.watsonx.WatsonxLocalMetric
+::: beekeeper.monitors.watsonx.WatsonxLocalMetric
     options:
       members_order: source
       show_root_heading: true
       show_root_full_path: false
-::: beekeeper.observers.watsonx.WatsonxMetricThreshold
+::: beekeeper.monitors.watsonx.WatsonxMetricThreshold
     options:
       members_order: source
       show_root_heading: true
