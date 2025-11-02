@@ -42,7 +42,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-core"
-version = "1.0.3"
+version = "1.0.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "deprecated" },
@@ -51,17 +51,35 @@ dependencies = [
     { name = "pydantic" },
     { name = "tiktoken" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ae/46/6ac1c2eb3b3477455e300659aca5fc4d5d880da0bad795b5d2a33d111a06/beekeeper_core-1.0.3.tar.gz", hash = "sha256:14d520ad3a3d9751d9555b94677dd7bbca203cf8b134f71c75d27e7beabd0c37", size = 14143, upload-time = "2025-10-25T03:55:59.399Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/73/71/b924b1eb1842fc3cb81063c9435cad51c4c5b314ebc16b46b6ff745bc353/beekeeper_core-1.0.4.tar.gz", hash = "sha256:646ad4304c1547a7aff89e4f2ca9ae9496969054628fd5c91e6ccc79778a8a1d", size = 14319, upload-time = "2025-11-02T02:54:15.291Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fc/d2/06a7852c45656fd10480b3fbff8c365d910d38c184f9f04fde5b184dc557/beekeeper_core-1.0.3-py3-none-any.whl", hash = "sha256:4b48e1171df0fab5db218e9f76262edd6caac0e90c90d700f57dca3313f30545", size = 25346, upload-time = "2025-10-25T03:55:58.18Z" },
+    { url = "https://files.pythonhosted.org/packages/78/e0/68d050c31d6eb659bcaa583fb191476363a5f8001f18da0e0f8f4d272f2f/beekeeper_core-1.0.4-py3-none-any.whl", hash = "sha256:bc01fa13c83d3efd38b7ff0262d01f42145472afb66b11420977ec94be5fed1b", size = 26016, upload-time = "2025-11-02T02:54:16.539Z" },
+]
+
+[[package]]
+name = "beekeeper-monitors-watsonx"
+version = "1.0.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "beekeeper-core" },
+    { name = "certifi" },
+    { name = "ibm-aigov-facts-client" },
+    { name = "ibm-watson-openscale" },
+    { name = "ibm-watsonx-ai" },
+    { name = "ipython" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/44/0e/9e13d16ab018d35c4c3b9696fcd3233dc376168b7db97448f915469204cc/beekeeper_monitors_watsonx-1.0.5.tar.gz", hash = "sha256:9ad8bc9aeabaf7fc301d9ef41698c8d8da69cf49a1e6dfbc4b906e6c0af8c740", size = 12521, upload-time = "2025-11-02T03:02:38.013Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e9/00/a28aeaffc3e9932b52a1da6056ebcefb802e208a39c8edf51e3f0c6027f2/beekeeper_monitors_watsonx-1.0.5-py3-none-any.whl", hash = "sha256:bc8e4427a93fdae95a2338becb8a7491ac4ecdbe17d4f974e852981c9fe6b038", size = 13015, upload-time = "2025-11-02T03:02:36.517Z" },
 ]
 
 [[package]]
 name = "beekeeper-observers-watsonx"
-version = "1.0.4"
+version = "1.0.5"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
+    { name = "beekeeper-monitors-watsonx" },
     { name = "certifi" },
     { name = "ibm-aigov-facts-client" },
     { name = "ibm-watson-openscale" },
@@ -76,7 +94,8 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beekeeper-core", specifier = ">=1.0.3,<2.0.0" },
+    { name = "beekeeper-core", specifier = ">=1.0.4,<2.0.0" },
+    { name = "beekeeper-monitors-watsonx", specifier = ">=1.0.5,<2.0.0" },
     { name = "certifi", specifier = ">=2025.4.26,<2026.0.0" },
     { name = "ibm-aigov-facts-client", specifier = ">=1.0.96,<1.0.97" },
     { name = "ibm-watson-openscale", specifier = ">=3.0.49,<3.1.0" },
