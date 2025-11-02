@@ -409,7 +409,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
         return wml_client.deployments.get_uid(created_deployment)
 
-    def add_prompt_observer(
+    def add_prompt_monitor(
         self,
         name: str,
         model_id: str,
@@ -457,7 +457,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
         Example:
             ```python
-            wxgov_client.add_prompt_observer(
+            wxgov_client.add_prompt_monitor(
                 name="Detached prompt (model AWS Anthropic)",
                 model_id="anthropic.claude-v2",
                 task_id="retrieval_augmented_generation",
@@ -573,7 +573,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                 self._create_deployment_pta, detached_pta_id, name, model_id
             )
 
-        observers = {
+        monitors = {
             "generative_ai_quality": {
                 "parameters": {"min_sample_size": 10, "metrics_configuration": {}},
             },
@@ -582,7 +582,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         max_attempt_execute_prompt_setup = 0
         while max_attempt_execute_prompt_setup < 2:
             try:
-                generative_ai_observer_details = suppress_output(
+                generative_ai_monitor_details = suppress_output(
                     self._wos_client.wos.execute_prompt_setup,
                     prompt_template_asset_id=detached_pta_id,
                     space_id=self.space_id,
@@ -596,7 +596,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                     data_input_locale=[locale],
                     generated_output_locale=[locale],
                     input_data_type="unstructured_text",
-                    supporting_monitors=observers,
+                    supporting_monitors=monitors,
                     background_mode=False,
                 )
 
@@ -630,14 +630,12 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                     max_attempt_execute_prompt_setup = 2
                     raise
 
-        generative_ai_observer_details = (
-            generative_ai_observer_details.result._to_dict()
-        )
+        generative_ai_monitor_details = generative_ai_monitor_details.result._to_dict()
 
         return {
             "detached_prompt_template_asset_id": detached_pta_id,
             "deployment_id": deployment_id,
-            "subscription_id": generative_ai_observer_details["subscription_id"],
+            "subscription_id": generative_ai_monitor_details["subscription_id"],
         }
 
     def store_payload_records(
@@ -933,7 +931,7 @@ class WatsonxPromptMonitor(PromptMonitor):
 
         return wml_client.deployments.get_uid(created_deployment)
 
-    def add_prompt_observer(
+    def add_prompt_monitor(
         self,
         name: str,
         model_id: str,
@@ -971,7 +969,7 @@ class WatsonxPromptMonitor(PromptMonitor):
 
         Example:
             ```python
-            wxgov_client.add_prompt_observer(
+            wxgov_client.add_prompt_monitor(
                 name="IBM prompt template",
                 model_id="ibm/granite-3-2b-instruct",
                 task_id="retrieval_augmented_generation",
@@ -1065,7 +1063,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                 self._create_deployment_pta, pta_id, name, model_id
             )
 
-        observers = {
+        monitors = {
             "generative_ai_quality": {
                 "parameters": {"min_sample_size": 10, "metrics_configuration": {}},
             },
@@ -1074,7 +1072,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         max_attempt_execute_prompt_setup = 0
         while max_attempt_execute_prompt_setup < 2:
             try:
-                generative_ai_observer_details = suppress_output(
+                generative_ai_monitor_details = suppress_output(
                     self._wos_client.wos.execute_prompt_setup,
                     prompt_template_asset_id=pta_id,
                     space_id=self.space_id,
@@ -1088,7 +1086,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                     data_input_locale=[locale],
                     generated_output_locale=[locale],
                     input_data_type="unstructured_text",
-                    supporting_monitors=observers,
+                    supporting_monitors=monitors,
                     background_mode=False,
                 ).result
 
@@ -1122,12 +1120,12 @@ class WatsonxPromptMonitor(PromptMonitor):
                     max_attempt_execute_prompt_setup = 2
                     raise
 
-        generative_ai_observer_details = generative_ai_observer_details._to_dict()
+        generative_ai_monitor_details = generative_ai_monitor_details._to_dict()
 
         return {
             "prompt_template_asset_id": pta_id,
             "deployment_id": deployment_id,
-            "subscription_id": generative_ai_observer_details["subscription_id"],
+            "subscription_id": generative_ai_monitor_details["subscription_id"],
         }
 
     def store_payload_records(
@@ -1342,17 +1340,17 @@ class WatsonxMetric(BaseModel):
             MetricThreshold,
         )
 
-        observer_metric = {
+        monitor_metric = {
             "name": self.name,
             "applies_to": ApplicabilitySelection(problem_type=self.applies_to),
         }
 
         if self.thresholds is not None:
-            observer_metric["thresholds"] = [
+            monitor_metric["thresholds"] = [
                 MetricThreshold(**threshold.to_dict()) for threshold in self.thresholds
             ]
 
-        return observer_metric
+        return monitor_metric
 
 
 # ===== Metric Classes =====
@@ -1655,7 +1653,7 @@ class WatsonxCustomMetric:
             "monitor_definition_id": external_monitor_id,
         }
 
-    def add_observer_instance(
+    def add_monitor_instance(
         self,
         integrated_system_id: str,
         monitor_definition_id: str,
@@ -1671,7 +1669,7 @@ class WatsonxCustomMetric:
 
         Example:
             ```python
-            wxgov_client.add_observer_instance(
+            wxgov_client.add_monitor_instance(
                 integrated_system_id="019667ca-5687-7838-8d29-4ff70c2b36b0",
                 monitor_definition_id="custom_llm_quality",
                 subscription_id="0195e95d-03a4-7000-b954-b607db10fe9e",

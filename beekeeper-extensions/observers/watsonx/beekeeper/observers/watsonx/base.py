@@ -10,7 +10,13 @@ from beekeeper.core.observers import PromptObserver
 from beekeeper.core.observers.types import PayloadRecord
 from beekeeper.core.prompts.utils import extract_template_vars
 from beekeeper.observers.watsonx.instrumentation import suppress_output
+from deprecated import deprecated
 from pydantic.v1 import BaseModel
+
+from beekeeper.monitors.watsonx import (
+    WatsonxPromptMonitor,
+    WatsonxExternalPromptMonitor,
+)
 
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
 logging.getLogger("ibm_watsonx_ai.client").setLevel(logging.ERROR)
@@ -228,6 +234,12 @@ class IntegratedSystemCredentials(BaseModel):
 
 
 # ===== Observer Classes =====
+@deprecated(
+    reason="'WatsonxExternalPromptObserver()' is deprecated and will be removed in a future version. "
+    "Use 'WatsonxExternalPromptMonitor' from 'beekeeper-monitors-watsonx' instead.",
+    version="1.0.5",
+    action="always",
+)
 class WatsonxExternalPromptObserver(PromptObserver):
     """
     Provides functionality to interact with IBM watsonx.governance for monitoring external LLMs.
@@ -757,6 +769,12 @@ class WatsonxExternalPromptObserver(PromptObserver):
             self.store_payload_records([{**payload.model_dump(), **template_vars}])
 
 
+@deprecated(
+    reason="'WatsonxPromptObserver()' is deprecated and will be removed in a future version. "
+    "Use 'WatsonxPromptMonitor' from 'beekeeper-monitors-watsonx' instead.",
+    version="1.0.5",
+    action="always",
+)
 class WatsonxPromptObserver(PromptObserver):
     """
     Provides functionality to interact with IBM watsonx.governance for monitoring IBM watsonx.ai LLMs.
@@ -1249,6 +1267,12 @@ class WatsonxPromptObserver(PromptObserver):
 
 
 # ===== Supporting Classes =====
+@deprecated(
+    reason="'WatsonxLocalMetric()' has been moved to the 'beekeeper-monitors-watsonx' "
+    "and will be removed from this package in a future version. Use 'beekeeper-monitors-watsonx' instead.",
+    version="1.0.5",
+    action="always",
+)
 class WatsonxLocalMetric(BaseModel):
     """
     Provides the IBM watsonx.governance local observer metric definition.
@@ -1274,6 +1298,12 @@ class WatsonxLocalMetric(BaseModel):
         return {"name": self.name, "type": self.data_type, "nullable": self.nullable}
 
 
+@deprecated(
+    reason="'WatsonxMetricThreshold()' has been moved to the 'beekeeper-monitors-watsonx' "
+    "and will be removed from this package in a future version. Use 'beekeeper-monitors-watsonx' instead.",
+    version="1.0.5",
+    action="always",
+)
 class WatsonxMetricThreshold(BaseModel):
     """
     Defines the metric threshold for IBM watsonx.governance.
@@ -1297,6 +1327,12 @@ class WatsonxMetricThreshold(BaseModel):
         return {"type": self.threshold_type, "default": self.default_value}
 
 
+@deprecated(
+    reason="'WatsonxMetric()' has been moved to the 'beekeeper-monitors-watsonx' "
+    "and will be removed from this package in a future version. Use 'beekeeper-monitors-watsonx' instead.",
+    version="1.0.5",
+    action="always",
+)
 class WatsonxMetric(BaseModel):
     """
     Defines the IBM watsonx.governance global observer metric.
@@ -1356,6 +1392,12 @@ class WatsonxMetric(BaseModel):
 
 
 # ===== Metric Classes =====
+@deprecated(
+    reason="'WatsonxCustomMetric()' has been moved to the 'beekeeper-monitors-watsonx' "
+    "and will be removed from this package in a future version. Use 'beekeeper-monitors-watsonx' instead.",
+    version="1.0.5",
+    action="always",
+)
 class WatsonxCustomMetric:
     """
     Provides functionality to set up a custom metric to measure your model's performance with IBM watsonx.governance.
