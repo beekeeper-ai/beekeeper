@@ -2,7 +2,7 @@
 title: watsonx.governance
 ---
 
-## Monitor
+## Monitors
 
 ::: beekeeper.monitors.watsonx.WatsonxPromptMonitor
     options:
