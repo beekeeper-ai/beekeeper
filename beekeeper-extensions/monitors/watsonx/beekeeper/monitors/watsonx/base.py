@@ -10,6 +10,7 @@ from beekeeper.core.monitors import PromptMonitor
 from beekeeper.core.monitors.types import PayloadRecord
 from beekeeper.core.prompts.utils import extract_template_vars
 from beekeeper.monitors.watsonx.instrumentation import suppress_output
+from deprecated import deprecated
 from pydantic.v1 import BaseModel
 
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
@@ -408,6 +409,53 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         created_deployment = wml_client.deployments.create(asset_id, meta_props)
 
         return wml_client.deployments.get_uid(created_deployment)
+
+    @deprecated(
+        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'add_prompt_monitor()' instead.",
+        version="1.0.5",
+        action="always",
+    )
+    def add_prompt_observer(
+        self,
+        name: str,
+        model_id: str,
+        task_id: Literal[
+            "extraction",
+            "generation",
+            "question_answering",
+            "retrieval_augmented_generation",
+            "summarization",
+        ],
+        detached_model_provider: str,
+        description: str = "",
+        model_parameters: Dict = None,
+        detached_model_name: str = None,
+        detached_model_url: str = None,
+        detached_prompt_url: str = None,
+        detached_prompt_additional_info: Dict = None,
+        prompt_variables: List[str] = None,
+        locale: str = "en",
+        input_text: str = None,
+        context_fields: List[str] = None,
+        question_field: str = None,
+    ) -> Dict:
+        return self.add_prompt_monitor(
+            name=name,
+            model_id=model_id,
+            task_id=task_id,
+            detached_model_provider=detached_model_provider,
+            description=description,
+            model_parameters=model_parameters,
+            detached_model_name=detached_model_name,
+            detached_model_url=detached_model_url,
+            detached_prompt_url=detached_prompt_url,
+            detached_prompt_additional_info=detached_prompt_additional_info,
+            prompt_variables=prompt_variables,
+            locale=locale,
+            input_text=input_text,
+            context_fields=context_fields,
+            question_field=question_field,
+        )
 
     def add_prompt_monitor(
         self,
@@ -930,6 +978,43 @@ class WatsonxPromptMonitor(PromptMonitor):
         created_deployment = wml_client.deployments.create(asset_id, meta_props)
 
         return wml_client.deployments.get_uid(created_deployment)
+
+    @deprecated(
+        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'add_prompt_monitor()' instead.",
+        version="1.0.5",
+        action="always",
+    )
+    def add_prompt_observer(
+        self,
+        name: str,
+        model_id: str,
+        task_id: Literal[
+            "extraction",
+            "generation",
+            "question_answering",
+            "retrieval_augmented_generation",
+            "summarization",
+        ],
+        description: str = "",
+        model_parameters: Dict = None,
+        prompt_variables: List[str] = None,
+        locale: str = "en",
+        input_text: str = None,
+        context_fields: List[str] = None,
+        question_field: str = None,
+    ) -> Dict:
+        return self.add_prompt_monitor(
+            name=name,
+            model_id=model_id,
+            task_id=task_id,
+            description=description,
+            model_parameters=model_parameters,
+            prompt_variables=prompt_variables,
+            locale=locale,
+            input_text=input_text,
+            context_fields=context_fields,
+            question_field=question_field,
+        )
 
     def add_prompt_monitor(
         self,
@@ -1652,6 +1737,23 @@ class WatsonxCustomMetric:
             "integrated_system_id": integrated_system_id,
             "monitor_definition_id": external_monitor_id,
         }
+
+    @deprecated(
+        reason="'add_observer_instance()' is deprecated and will be removed in a future version. Use 'add_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
+        version="1.0.5",
+        action="always",
+    )
+    def add_observer_instance(
+        self,
+        integrated_system_id: str,
+        monitor_definition_id: str,
+        subscription_id: str,
+    ):
+        return self.add_monitor_instance(
+            integrated_system_id=integrated_system_id,
+            monitor_definition_id=monitor_definition_id,
+            subscription_id=subscription_id,
+        )
 
     def add_monitor_instance(
         self,
