@@ -57,7 +57,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-monitors-watsonx"
-version = "1.0.5.post1"
+version = "1.0.6"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
