@@ -7,10 +7,13 @@ from beekeeper.monitors.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
     IntegratedSystemCredentials,
 )
+from beekeeper.monitors.watsonx.supporting_classes.enums import Region
 from beekeeper.monitors.watsonx.supporting_classes.metric import (
     WatsonxLocalMetric,
     WatsonxMetric,
 )
+from beekeeper.monitors.watsonx.utils.data_utils import validate_and_filter_dict
+from beekeeper.monitors.watsonx.utils.instrumentation import suppress_output
 from deprecated import deprecated
 
 
@@ -20,7 +23,7 @@ class WatsonxCustomMetricsManager:
 
     Attributes:
         api_key (str): The API key for IBM watsonx.governance.
-        region (str, optional): The region where IBM watsonx.governance is hosted when using IBM Cloud.
+        region (Region, optional): The region where watsonx.governance is hosted when using IBM Cloud.
             Defaults to `us-south`.
         cpd_creds (CloudPakforDataCredentials, optional): IBM Cloud Pak for Data environment credentials.
 
@@ -50,18 +53,18 @@ class WatsonxCustomMetricsManager:
     def __init__(
         self,
         api_key: str = None,
-        region: Literal["us-south", "eu-de", "au-syd"] = "us-south",
-        cpd_creds: CloudPakforDataCredentials | Dict = None,
+        region: Union[Region, str] = Region.US_SOUTH,
+        cpd_creds: Union[CloudPakforDataCredentials, Dict] = None,
     ) -> None:
         from ibm_cloud_sdk_core.authenticators import IAMAuthenticator  # type: ignore
         from ibm_watson_openscale import APIClient as WosAPIClient  # type: ignore
 
-        self.region = region
+        self.region = Region.from_value(region)
         self._api_key = api_key
         self._wos_client = None
 
         if cpd_creds:
-            self._wos_cpd_creds = _filter_dict(
+            self._wos_cpd_creds = validate_and_filter_dict(
                 cpd_creds.to_dict(),
                 ["username", "password", "api_key", "disable_ssl_verification"],
                 ["url"],
@@ -89,7 +92,7 @@ class WatsonxCustomMetricsManager:
                     authenticator = IAMAuthenticator(apikey=self._api_key)
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
-                        service_url=REGIONS_URL[self.region]["wos"],
+                        service_url=self.region.openscale,
                     )
 
             except Exception as e:

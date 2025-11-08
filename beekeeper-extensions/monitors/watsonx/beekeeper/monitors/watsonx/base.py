@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import uuid
-from typing import Dict, List, Literal
+from typing import Dict, List, Literal, Union
 
 import certifi
 from beekeeper.core.monitors import PromptMonitor
@@ -11,54 +11,14 @@ from beekeeper.core.prompts.utils import extract_template_vars
 from beekeeper.monitors.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
 )
+from beekeeper.monitors.watsonx.supporting_classes.enums import Region
+from beekeeper.monitors.watsonx.utils.data_utils import validate_and_filter_dict
 from beekeeper.monitors.watsonx.utils.instrumentation import suppress_output
 from deprecated import deprecated
 
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
 logging.getLogger("ibm_watsonx_ai.client").setLevel(logging.ERROR)
 logging.getLogger("ibm_watsonx_ai.wml_resource").setLevel(logging.ERROR)
-
-REGIONS_URL = {
-    "us-south": {
-        "wml": "https://us-south.ml.cloud.ibm.com",
-        "wos": "https://api.aiopenscale.cloud.ibm.com",
-        "factsheet": None,
-    },
-    "eu-de": {
-        "wml": "https://eu-de.ml.cloud.ibm.com",
-        "wos": "https://eu-de.api.aiopenscale.cloud.ibm.com",
-        "factsheet": "frankfurt",
-    },
-    "au-syd": {
-        "wml": "https://au-syd.ml.cloud.ibm.com",
-        "wos": "https://au-syd.api.aiopenscale.cloud.ibm.com",
-        "factsheet": "sydney",
-    },
-}
-
-
-def _filter_dict(original_dict: Dict, optional_keys: List, required_keys: List = []):
-    """
-    Filters a dictionary to keep only the specified keys and checks for required keys.
-
-    Args:
-        original_dict (Dict): The original dictionary.
-        optional_keys (list): A list of keys to retain.
-        required_keys (list, optional): A list of keys that must be present in the dictionary. Defaults to None.
-    """
-    # Ensure all required keys are in the source dict
-    missing_keys = [key for key in required_keys if key not in original_dict]
-    if missing_keys:
-        raise KeyError(f"Missing required parameter: {missing_keys}")
-
-    all_keys_to_keep = set(required_keys + optional_keys)
-
-    # Create a new dictionary with only the key-value pairs where the key is in 'keys' and value is not None
-    return {
-        key: original_dict[key]
-        for key in all_keys_to_keep
-        if key in original_dict and original_dict[key] is not None
-    }
 
 
 def _convert_payload_format(
@@ -94,7 +54,6 @@ def _convert_payload_format(
     return payload_data
 
 
-# ===== Monitor Classes =====
 class WatsonxExternalPromptMonitor(PromptMonitor):
     """
     Provides functionality to interact with IBM watsonx.governance for monitoring prompts executed on external LLMs.
@@ -107,7 +66,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         api_key (str): The API key for IBM watsonx.governance.
         space_id (str, optional): The space ID in watsonx.governance.
         project_id (str, optional): The project ID in watsonx.governance.
-        region (str, optional): The region where watsonx.governance is hosted when using IBM Cloud.
+        region (Region, optional): The region where watsonx.governance is hosted when using IBM Cloud.
             Defaults to `us-south`.
         cpd_creds (CloudPakforDataCredentials, optional): The Cloud Pak for Data environment credentials.
         subscription_id (str, optional): The subscription ID associated with the records being logged.
@@ -144,8 +103,8 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         api_key: str = None,
         space_id: str = None,
         project_id: str = None,
-        region: Literal["us-south", "eu-de", "au-syd"] = "us-south",
-        cpd_creds: CloudPakforDataCredentials | Dict = None,
+        region: Union[Region, str] = Region.US_SOUTH,
+        cpd_creds: Union[CloudPakforDataCredentials, Dict] = None,
         subscription_id: str = None,
         **kwargs,
     ) -> None:
@@ -158,7 +117,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
         self.space_id = space_id
         self.project_id = project_id
-        self.region = region
+        self.region = Region.from_value(region)
         self.subscription_id = subscription_id
         self._api_key = api_key
         self._wos_client = None
@@ -168,18 +127,18 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         self._deployment_stage = "production" if space_id else "development"
 
         if cpd_creds:
-            self._wos_cpd_creds = _filter_dict(
+            self._wos_cpd_creds = validate_and_filter_dict(
                 cpd_creds.to_dict(),
                 ["username", "password", "api_key", "disable_ssl_verification"],
                 ["url"],
             )
-            self._fact_cpd_creds = _filter_dict(
+            self._fact_cpd_creds = validate_and_filter_dict(
                 cpd_creds.to_dict(),
                 ["username", "password", "api_key", "bedrock_url"],
                 ["url"],
             )
             self._fact_cpd_creds["service_url"] = self._fact_cpd_creds.pop("url")
-            self._wml_cpd_creds = _filter_dict(
+            self._wml_cpd_creds = validate_and_filter_dict(
                 cpd_creds.to_dict(),
                 [
                     "username",
@@ -222,7 +181,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                     container_id=self._container_id,
                     container_type=self._container_type,
                     disable_tracing=True,
-                    region=REGIONS_URL[self.region]["factsheet"],
+                    region=self.region.factsheet,
                 )
 
         except Exception as e:
@@ -251,7 +210,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
             else:
                 creds = Credentials(
-                    url=REGIONS_URL[self.region]["wml"],
+                    url=self.region.watsonxai,
                     api_key=self._api_key,
                 )
                 wml_client = APIClient(creds)
@@ -495,7 +454,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                     authenticator = IAMAuthenticator(apikey=self._api_key)
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
-                        service_url=REGIONS_URL[self.region]["wos"],
+                        service_url=self.region.openscale,
                     )
 
             except Exception as e:
@@ -504,19 +463,19 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                 )
                 raise
 
-        detached_details = _filter_dict(
+        detached_details = validate_and_filter_dict(
             prompt_metadata,
             ["model_name", "model_url", "prompt_url", "prompt_additional_info"],
             ["model_id", "model_provider"],
         )
         detached_details["prompt_id"] = "detached_prompt_" + str(uuid.uuid4())
 
-        prompt_details = _filter_dict(
+        prompt_details = validate_and_filter_dict(
             prompt_metadata,
             ["prompt_variables", "input", "model_parameters"],
         )
 
-        detached_asset_details = _filter_dict(
+        detached_asset_details = validate_and_filter_dict(
             prompt_metadata,
             ["description"],
             ["name", "model_id", "task_id"],
@@ -665,7 +624,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                     authenticator = IAMAuthenticator(apikey=self._api_key)
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
-                        service_url=REGIONS_URL[self.region]["wos"],
+                        service_url=self.region.openscale,
                     )
 
             except Exception as e:
@@ -729,7 +688,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         api_key (str): The API key for IBM watsonx.governance.
         space_id (str, optional): The space ID in watsonx.governance.
         project_id (str, optional): The project ID in watsonx.governance.
-        region (str, optional): The region where watsonx.governance is hosted when using IBM Cloud.
+        region (Region, optional): The region where watsonx.governance is hosted when using IBM Cloud.
             Defaults to `us-south`.
         cpd_creds (CloudPakforDataCredentials, optional): The Cloud Pak for Data environment credentials.
         subscription_id (str, optional): The subscription ID associated with the records being logged.
@@ -762,8 +721,8 @@ class WatsonxPromptMonitor(PromptMonitor):
         api_key: str = None,
         space_id: str = None,
         project_id: str = None,
-        region: Literal["us-south", "eu-de", "au-syd"] = "us-south",
-        cpd_creds: CloudPakforDataCredentials | Dict = None,
+        region: Union[Region, str] = Region.US_SOUTH,
+        cpd_creds: Union[CloudPakforDataCredentials, Dict] = None,
         subscription_id: str = None,
         **kwargs,
     ) -> None:
@@ -776,7 +735,7 @@ class WatsonxPromptMonitor(PromptMonitor):
 
         self.space_id = space_id
         self.project_id = project_id
-        self.region = region
+        self.region = Region.from_value(region)
         self.subscription_id = subscription_id
         self._api_key = api_key
         self._wos_client = None
@@ -786,18 +745,18 @@ class WatsonxPromptMonitor(PromptMonitor):
         self._deployment_stage = "production" if space_id else "development"
 
         if cpd_creds:
-            self._wos_cpd_creds = _filter_dict(
+            self._wos_cpd_creds = validate_and_filter_dict(
                 cpd_creds.to_dict(),
                 ["username", "password", "api_key", "disable_ssl_verification"],
                 ["url"],
             )
-            self._fact_cpd_creds = _filter_dict(
+            self._fact_cpd_creds = validate_and_filter_dict(
                 cpd_creds.to_dict(),
                 ["username", "password", "api_key", "bedrock_url"],
                 ["url"],
             )
             self._fact_cpd_creds["service_url"] = self._fact_cpd_creds.pop("url")
-            self._wml_cpd_creds = _filter_dict(
+            self._wml_cpd_creds = validate_and_filter_dict(
                 cpd_creds.to_dict(),
                 [
                     "username",
@@ -838,7 +797,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                     container_id=self._container_id,
                     container_type=self._container_type,
                     disable_tracing=True,
-                    region=REGIONS_URL[self.region]["factsheet"],
+                    region=self.region.factsheet,
                 )
 
         except Exception as e:
@@ -867,7 +826,7 @@ class WatsonxPromptMonitor(PromptMonitor):
 
             else:
                 creds = Credentials(
-                    url=REGIONS_URL[self.region]["wml"],
+                    url=self.region.watsonxai,
                     api_key=self._api_key,
                 )
 
@@ -1070,7 +1029,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                     authenticator = IAMAuthenticator(apikey=self._api_key)
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
-                        service_url=REGIONS_URL[self.region]["wos"],
+                        service_url=self.region.openscale,
                     )
 
             except Exception as e:
@@ -1079,12 +1038,12 @@ class WatsonxPromptMonitor(PromptMonitor):
                 )
                 raise
 
-        prompt_details = _filter_dict(
+        prompt_details = validate_and_filter_dict(
             prompt_metadata,
             ["prompt_variables", "input", "model_parameters"],
         )
 
-        asset_details = _filter_dict(
+        asset_details = validate_and_filter_dict(
             prompt_metadata,
             ["description"],
             ["name", "model_id", "task_id"],
@@ -1231,7 +1190,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                     authenticator = IAMAuthenticator(apikey=self._api_key)
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
-                        service_url=REGIONS_URL[self.region]["wos"],
+                        service_url=self.region.openscale,
                     )
 
             except Exception as e:
