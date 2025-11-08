@@ -1525,6 +1525,7 @@ class WatsonxMetric(BaseModel):
 
 # ===== Metric Classes =====
 
+
 class WatsonxCustomMetricsManager:
     """
     Provides functionality to set up a custom metric to measure your model's performance with IBM watsonx.governance.
@@ -2141,6 +2142,7 @@ class WatsonxCustomMetricsManager:
             ```
         """
         return self._get_dataset_data(metric_instance_id)
+
 
 @deprecated(
     reason="'WatsonxCustomMetric()' is deprecated and will be removed in a future version. "
