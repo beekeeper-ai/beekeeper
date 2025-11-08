@@ -2,7 +2,7 @@
 title: watsonx.governance
 ---
 
-## Monitor
+## Monitors
 
 ::: beekeeper.monitors.watsonx.WatsonxPromptMonitor
     options:
@@ -51,3 +51,6 @@ title: watsonx.governance
       members_order: source
       show_root_heading: true
       show_root_full_path: false
+
+## Enums
+::: beekeeper.monitors.watsonx.supporting_classes.enums.Region
