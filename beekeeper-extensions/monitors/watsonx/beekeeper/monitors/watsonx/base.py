@@ -231,7 +231,7 @@ class IntegratedSystemCredentials(BaseModel):
 # ===== Monitor Classes =====
 class WatsonxExternalPromptMonitor(PromptMonitor):
     """
-    Provides functionality to interact with IBM watsonx.governance for monitoring external LLMs.
+    Provides functionality to interact with IBM watsonx.governance for monitoring prompts executed on external LLMs.
 
     Note:
         One of the following parameters is required to create a prompt monitor:
@@ -411,7 +411,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         return wml_client.deployments.get_uid(created_deployment)
 
     @deprecated(
-        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'add_prompt_monitor()' instead.",
+        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'create_prompt_monitor()' instead.",
         version="1.0.5",
         action="always",
     )
@@ -439,7 +439,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         context_fields: List[str] = None,
         question_field: str = None,
     ) -> Dict:
-        return self.add_prompt_monitor(
+        return self.create_prompt_monitor(
             name=name,
             model_id=model_id,
             task_id=task_id,
@@ -457,6 +457,11 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             question_field=question_field,
         )
 
+    @deprecated(
+        reason="'add_prompt_monitor()' is deprecated and will be removed in a future version. Use 'create_prompt_monitor()' instead.",
+        version="1.0.6",
+        action="always",
+    )
     def add_prompt_monitor(
         self,
         name: str,
@@ -481,8 +486,50 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         context_fields: List[str] = None,
         question_field: str = None,
     ) -> Dict:
+        return self.create_prompt_monitor(
+            name=name,
+            model_id=model_id,
+            task_id=task_id,
+            detached_model_provider=detached_model_provider,
+            description=description,
+            model_parameters=model_parameters,
+            detached_model_name=detached_model_name,
+            detached_model_url=detached_model_url,
+            detached_prompt_url=detached_prompt_url,
+            detached_prompt_additional_info=detached_prompt_additional_info,
+            prompt_variables=prompt_variables,
+            locale=locale,
+            input_text=input_text,
+            context_fields=context_fields,
+            question_field=question_field,
+        )
+
+    def create_prompt_monitor(
+        self,
+        name: str,
+        model_id: str,
+        task_id: Literal[
+            "extraction",
+            "generation",
+            "question_answering",
+            "retrieval_augmented_generation",
+            "summarization",
+        ],
+        detached_model_provider: str,
+        description: str = "",
+        model_parameters: Dict = None,
+        detached_model_name: str = None,
+        detached_model_url: str = None,
+        detached_prompt_url: str = None,
+        detached_prompt_additional_info: Dict = None,
+        prompt_variables: List[str] = None,
+        locale: str = "en",
+        input_text: str = None,
+        context_fields: List[str] = None,
+        question_field: str = None,
+    ) -> Dict:
         """
-        Creates a Detached/External Prompt Template Asset and setup monitor for a given prompt template asset.
+        Creates a detached (external) prompt template asset and attaches a monitor to the specified prompt template asset.
 
         Args:
             name (str): The name of the External Prompt Template Asset.
@@ -505,7 +552,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
         Example:
             ```python
-            wxgov_client.add_prompt_monitor(
+            wxgov_client.create_prompt_monitor(
                 name="Detached prompt (model AWS Anthropic)",
                 model_id="anthropic.claude-v2",
                 task_id="retrieval_augmented_generation",
@@ -805,7 +852,8 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
 class WatsonxPromptMonitor(PromptMonitor):
     """
-    Provides functionality to interact with IBM watsonx.governance for monitoring IBM watsonx.ai LLMs.
+    Provides functionality to interact with IBM watsonx.governance for monitoring prompts executed within
+    IBM watsonx.ai LLMs.
 
     Note:
         One of the following parameters is required to create a prompt monitor:
@@ -980,7 +1028,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         return wml_client.deployments.get_uid(created_deployment)
 
     @deprecated(
-        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'add_prompt_monitor()' instead.",
+        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'create_prompt_monitor()' instead.",
         version="1.0.5",
         action="always",
     )
@@ -1003,7 +1051,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         context_fields: List[str] = None,
         question_field: str = None,
     ) -> Dict:
-        return self.add_prompt_monitor(
+        return self.create_prompt_monitor(
             name=name,
             model_id=model_id,
             task_id=task_id,
@@ -1016,7 +1064,44 @@ class WatsonxPromptMonitor(PromptMonitor):
             question_field=question_field,
         )
 
+    @deprecated(
+        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'create_prompt_monitor()' instead.",
+        version="1.0.6",
+        action="always",
+    )
     def add_prompt_monitor(
+        self,
+        name: str,
+        model_id: str,
+        task_id: Literal[
+            "extraction",
+            "generation",
+            "question_answering",
+            "retrieval_augmented_generation",
+            "summarization",
+        ],
+        description: str = "",
+        model_parameters: Dict = None,
+        prompt_variables: List[str] = None,
+        locale: str = "en",
+        input_text: str = None,
+        context_fields: List[str] = None,
+        question_field: str = None,
+    ) -> Dict:
+        return self.create_prompt_monitor(
+            name=name,
+            model_id=model_id,
+            task_id=task_id,
+            description=description,
+            model_parameters=model_parameters,
+            prompt_variables=prompt_variables,
+            locale=locale,
+            input_text=input_text,
+            context_fields=context_fields,
+            question_field=question_field,
+        )
+
+    def create_prompt_monitor(
         self,
         name: str,
         model_id: str,
@@ -1054,7 +1139,7 @@ class WatsonxPromptMonitor(PromptMonitor):
 
         Example:
             ```python
-            wxgov_client.add_prompt_monitor(
+            wxgov_client.create_prompt_monitor(
                 name="IBM prompt template",
                 model_id="ibm/granite-3-2b-instruct",
                 task_id="retrieval_augmented_generation",
@@ -1439,7 +1524,8 @@ class WatsonxMetric(BaseModel):
 
 
 # ===== Metric Classes =====
-class WatsonxCustomMetric:
+
+class WatsonxCustomMetricsManager:
     """
     Provides functionality to set up a custom metric to measure your model's performance with IBM watsonx.governance.
 
@@ -1452,12 +1538,12 @@ class WatsonxCustomMetric:
     Example:
         ```python
         from beekeeper.monitors.watsonx import (
-            WatsonxCustomMetric,
+            WatsonxCustomMetricsManager,
             CloudPakforDataCredentials,
         )
 
         # watsonx.governance (IBM Cloud)
-        wxgov_client = WatsonxCustomMetric(api_key="API_KEY")
+        wxgov_client = WatsonxCustomMetricsManager(api_key="API_KEY")
 
         # watsonx.governance (CP4D)
         cpd_creds = CloudPakforDataCredentials(
@@ -1468,7 +1554,7 @@ class WatsonxCustomMetric:
             instance_id="openshift",
         )
 
-        wxgov_client = WatsonxCustomMetric(cpd_creds=cpd_creds)
+        wxgov_client = WatsonxCustomMetricsManager(cpd_creds=cpd_creds)
         ```
     """
 
@@ -1658,6 +1744,11 @@ class WatsonxCustomMetric:
         return data_marts[0].metadata.id
 
     # ===== Global Custom Metrics =====
+    @deprecated(
+        reason="'add_metric_definition()' is deprecated and will be removed in a future version. Use 'create_metric_definition()' instead.",
+        version="1.0.6",
+        action="always",
+    )
     def add_metric_definition(
         self,
         name: str,
@@ -1666,8 +1757,24 @@ class WatsonxCustomMetric:
         integrated_system_credentials: IntegratedSystemCredentials,
         schedule: bool = False,
     ):
+        return self.create_metric_definition(
+            name=name,
+            metrics=metrics,
+            integrated_system_url=integrated_system_url,
+            integrated_system_credentials=integrated_system_credentials,
+            schedule=schedule,
+        )
+
+    def create_metric_definition(
+        self,
+        name: str,
+        metrics: List[WatsonxMetric],
+        integrated_system_url: str,
+        integrated_system_credentials: IntegratedSystemCredentials,
+        schedule: bool = False,
+    ):
         """
-        Creates a custom monitor definition for IBM watsonx.governance.
+        Creates a custom metric definition for IBM watsonx.governance.
 
         This must be done before using custom metrics.
 
@@ -1686,7 +1793,7 @@ class WatsonxCustomMetric:
                 WatsonxMetricThreshold,
             )
 
-            wxgov_client.add_metric_definition(
+            wxgov_client.create_metric_definition(
                 name="Custom Metric - Custom LLM Quality",
                 metrics=[
                     WatsonxMetric(
@@ -1739,7 +1846,7 @@ class WatsonxCustomMetric:
         }
 
     @deprecated(
-        reason="'add_observer_instance()' is deprecated and will be removed in a future version. Use 'add_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
+        reason="'add_observer_instance()' is deprecated and will be removed in a future version. Use 'attach_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
         version="1.0.5",
         action="always",
     )
@@ -1749,20 +1856,37 @@ class WatsonxCustomMetric:
         monitor_definition_id: str,
         subscription_id: str,
     ):
-        return self.add_monitor_instance(
+        return self.attach_monitor_instance(
             integrated_system_id=integrated_system_id,
             monitor_definition_id=monitor_definition_id,
             subscription_id=subscription_id,
         )
 
+    @deprecated(
+        reason="'add_monitor_instance()' is deprecated and will be removed in a future version. Use 'attach_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
+        version="1.0.6",
+        action="always",
+    )
     def add_monitor_instance(
         self,
         integrated_system_id: str,
         monitor_definition_id: str,
         subscription_id: str,
     ):
+        return self.attach_monitor_instance(
+            integrated_system_id=integrated_system_id,
+            monitor_definition_id=monitor_definition_id,
+            subscription_id=subscription_id,
+        )
+
+    def attach_monitor_instance(
+        self,
+        integrated_system_id: str,
+        monitor_definition_id: str,
+        subscription_id: str,
+    ):
         """
-        Enables a custom monitor for the specified subscription and monitor definition.
+        Attaches the specified monitor definition to the specified subscription.
 
         Args:
             integrated_system_id (str): The ID of the integrated system.
@@ -1771,7 +1895,7 @@ class WatsonxCustomMetric:
 
         Example:
             ```python
-            wxgov_client.add_monitor_instance(
+            wxgov_client.attach_monitor_instance(
                 integrated_system_id="019667ca-5687-7838-8d29-4ff70c2b36b0",
                 monitor_definition_id="custom_llm_quality",
                 subscription_id="0195e95d-03a4-7000-b954-b607db10fe9e",
@@ -1825,7 +1949,7 @@ class WatsonxCustomMetric:
         request_records: Dict[str, Union[float, int]],
     ):
         """
-        Publishes computed custom metrics for a specific global monitor instance.
+        Publishes computed metrics to the specified global monitor instance.
 
         Args:
             monitor_instance_id (str): The unique ID of the monitor instance.
@@ -1878,7 +2002,24 @@ class WatsonxCustomMetric:
         ).result
 
     # ===== Local Custom Metrics =====
+    @deprecated(
+        reason="'add_local_metric_definition()' is deprecated and will be removed in a future version. Use 'create_local_metric_definition()' from 'beekeeper-monitors-watsonx' instead.",
+        version="1.0.6",
+        action="always",
+    )
     def add_local_metric_definition(
+        self,
+        name: str,
+        metrics: List[WatsonxMetric],
+        subscription_id: str,
+    ):
+        return self.create_local_metric_definition(
+            name=name,
+            metrics=metrics,
+            subscription_id=subscription_id,
+        )
+
+    def create_local_metric_definition(
         self,
         name: str,
         metrics: List[WatsonxLocalMetric],
@@ -1896,7 +2037,7 @@ class WatsonxCustomMetric:
             ```python
             from beekeeper.monitors.watsonx import WatsonxLocalMetric
 
-            wxgov_client.add_local_metric_definition(
+            wxgov_client.create_local_metric_definition(
                 name="Custom LLM Local Metric",
                 subscription_id="019674ca-0c38-745f-8e9b-58546e95174e",
                 metrics=[
@@ -1956,7 +2097,7 @@ class WatsonxCustomMetric:
         request_records: List[Dict],
     ):
         """
-        Publishes computed custom metrics for a specific transaction record.
+        Publishes computed metrics to the specified transaction record.
 
         Args:
             metric_instance_id (str): The unique ID of the custom transaction metric.
@@ -2000,3 +2141,12 @@ class WatsonxCustomMetric:
             ```
         """
         return self._get_dataset_data(metric_instance_id)
+
+@deprecated(
+    reason="'WatsonxCustomMetric()' is deprecated and will be removed in a future version. "
+    "Use 'WatsonxCustomMetricsManager' instead.",
+    version="1.0.6",
+    action="always",
+)
+class WatsonxCustomMetric(WatsonxCustomMetricsManager):
+    pass
