@@ -20,6 +20,18 @@ _REGION_DATA = {
 
 
 class Region(str, Enum):
+    """
+    Supported IBM watsonx.governance regions.
+
+    Defines the available regions where watsonx.governance SaaS
+    services are deployed.
+
+    Attributes:
+        US_SOUTH (str): "us-south".
+        EU_DE (str): "eu-de".
+        AU_SYD (str): "au-syd".
+    """
+
     US_SOUTH = "us-south"
     EU_DE = "eu-de"
     AU_SYD = "au-syd"
