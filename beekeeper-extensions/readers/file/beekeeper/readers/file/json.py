@@ -35,7 +35,16 @@ class JSONReader(BaseReader):
             )
 
         if not os.path.isfile(input_file):
-            raise ValueError(f"File `{input_file}` does not exist")
+            raise ValueError(
+                f"File not found: the specified file '{input_file}' does not exist."
+            )
+
+        _, ext = os.path.splitext(input_file)
+        if ext.lower() not in [".json"]:
+            raise TypeError(
+                f"Invalid file type: expected '.json' but received '{ext}'. "
+                "Ensure the input file is a valid JSON document."
+            )
 
         documents = []
         jq_compiler = jq.compile(self.jq_schema)

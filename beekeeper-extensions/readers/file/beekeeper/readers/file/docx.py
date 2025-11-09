@@ -27,7 +27,16 @@ class DocxReader(BaseReader):
             )
 
         if not os.path.isfile(input_file):
-            raise ValueError(f"File `{input_file}` does not exist")
+            raise ValueError(
+                f"File not found: the specified file '{input_file}' does not exist."
+            )
+
+        _, ext = os.path.splitext(input_file)
+        if ext.lower() != ".docx":
+            raise TypeError(
+                f"Invalid file type: expected '.docx' but received '{ext}'. "
+                "Ensure the input file is a valid Microsoft Word (Docx) document."
+            )
 
         input_file = str(Path(input_file).resolve())
 
