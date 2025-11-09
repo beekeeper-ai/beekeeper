@@ -4,6 +4,7 @@ from beekeeper.monitors.watsonx.base import (
 )
 from beekeeper.monitors.watsonx.custom_metric import (
     WatsonxCustomMetric,
+    WatsonxCustomMetricsManager,
 )
 from beekeeper.monitors.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
@@ -21,6 +22,7 @@ __all__ = [
     "WatsonxCustomMetric",
     "WatsonxExternalPromptMonitor",
     "WatsonxLocalMetric",
+    "WatsonxCustomMetricsManager",
     "WatsonxMetric",
     "WatsonxMetricThreshold",
     "WatsonxPromptMonitor",
