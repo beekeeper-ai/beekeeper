@@ -576,7 +576,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                 request_records=[
                     {
                         "context1": "value_context1",
-                        "context2": "value_context1",
+                        "context2": "value_context2",
                         "input_query": "What's Beekeeper Framework?",
                         "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
                         "input_token_count": 25,
@@ -1252,7 +1252,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                 request_records=[
                     {
                         "context1": "value_context1",
-                        "context2": "value_context1",
+                        "context2": "value_context2",
                         "input_query": "What's Beekeeper Framework?",
                         "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
                         "input_token_count": 25,
