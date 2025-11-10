@@ -672,7 +672,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         Stores records to the feedback logging system.
 
         Note:
-        Feedback data for external prompt must include the model output named `_generated_text`.
+            Feedback data for external prompt must include the model output named `generated_text`.
 
         Args:
             request_records (List[Dict]): A list of records to be logged, where each record is represented as a dictionary.
@@ -687,7 +687,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                         "context2": "value_context2",
                         "input_query": "What's Beekeeper Framework?",
                         "reference_output": "Beekeeper is a data framework to make AI easier to work with."
-                        "_generated_text": "Beekeeper is a data framework to make AI easier to work with.",
+                        "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
                     }
                 ],
                 subscription_id="5d62977c-a53d-4b6d-bda1-7b79b3b9d1a0",
@@ -749,10 +749,10 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             "feature_fields"
         ]
 
-        # Rename _generated_text to _original_prediction (expected by WOS feedback dataset)
+        # Rename generated_text to _original_prediction (expected by WOS feedback dataset)
         # Validate required fields for detached/external monitor
         for i, d in enumerate(request_records):
-            d["_original_prediction"] = d.pop("_generated_text", None)
+            d["_original_prediction"] = d.pop("generated_text", None)
             request_records[i] = validate_and_filter_dict(
                 d, feature_fields, ["_original_prediction"]
             )
@@ -1363,7 +1363,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                         "context2": "value_context2",
                         "input_query": "What's Beekeeper Framework?",
                         "reference_output": "Beekeeper is a data framework to make AI easier to work with."
-                        "_generated_text": "Beekeeper is a data framework to make AI easier to work with.",
+                        "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
                     }
                 ],
                 subscription_id="5d62977c-a53d-4b6d-bda1-7b79b3b9d1a0",
@@ -1425,10 +1425,10 @@ class WatsonxPromptMonitor(PromptMonitor):
             "feature_fields"
         ]
 
-        # Rename _generated_text to _original_prediction (expected by WOS feedback dataset)
+        # Rename generated_text to _original_prediction (expected by WOS feedback dataset)
         # Validate required fields for detached/external monitor
         for i, d in enumerate(request_records):
-            d["_original_prediction"] = d.pop("_generated_text", None)
+            d["_original_prediction"] = d.pop("generated_text", None)
             request_records[i] = validate_and_filter_dict(
                 d, [*feature_fields, "_original_prediction"]
             )
