@@ -672,7 +672,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         Stores records to the feedback logging system.
 
         Note:
-            Feedback data for external prompt must include the model output named `generated_text`.
+            Feedback data for external prompt **must include** the model output named `generated_text`.
 
         Args:
             request_records (List[Dict]): A list of records to be logged, where each record is represented as a dictionary.
