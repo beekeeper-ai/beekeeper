@@ -171,7 +171,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-ai"
-version = "1.0.4"
+version = "1.0.5"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
@@ -190,7 +190,7 @@ requires-dist = [
     { name = "beekeeper-core", specifier = ">=1.0.5,<2.0.0" },
     { name = "beekeeper-embeddings-huggingface", specifier = ">=1.0.3,<2.0.0" },
     { name = "beekeeper-llms-litellm", specifier = ">=1.0.0,<2.0.0" },
-    { name = "beekeeper-readers-file", specifier = ">=1.0.0,<2.0.0" },
+    { name = "beekeeper-readers-file", specifier = ">=1.0.1,<2.0.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.11.13" },
 ]
 provides-extras = ["dev"]
@@ -238,7 +238,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-readers-file"
-version = "1.0.0"
+version = "1.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -247,9 +247,9 @@ dependencies = [
     { name = "jq" },
     { name = "pypdf" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c9/33/f82f20dfb1f0a188001877daa7a42f67b05aed05648ec5b0d731eb14b6af/beekeeper_readers_file-1.0.0.tar.gz", hash = "sha256:0076fbdb2b7c3f4c55d5c4d30e33601a3b8be588fb7f49f24c99907cf8808c08", size = 3050, upload-time = "2025-09-06T17:12:30.842Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ff/ac/be6e604d81553d3141c7d170fcd504ac5ea9d8ca01d72fa4c7d030ed5e40/beekeeper_readers_file-1.0.1.tar.gz", hash = "sha256:aeac948d2f1d8cfa6836df124043e22ec131bfa58b80022dc9e9f619dee6b68a", size = 3249, upload-time = "2025-11-10T03:19:12.951Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8f/ef/cecce03d18598a4ed36497548a5fe6678e1c8893c58123898f9126226e96/beekeeper_readers_file-1.0.0-py2.py3-none-any.whl", hash = "sha256:5d933c13ff491cd06bb38d5e0edd0bb1a856defd67aba1cabf239c6bed47aad9", size = 4772, upload-time = "2025-09-06T17:12:29.421Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/b5/112a6f0536c2a8056f4c483e43888570790f463e4ca482804d64b6a0371e/beekeeper_readers_file-1.0.1-py3-none-any.whl", hash = "sha256:8ef222e12ba486eecaeeb3877ccf8c80891c3646e2a503c01aa55ad960063bf0", size = 5236, upload-time = "2025-11-10T03:19:11.521Z" },
 ]
 
 [[package]]
