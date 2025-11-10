@@ -576,7 +576,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                 request_records=[
                     {
                         "context1": "value_context1",
-                        "context2": "value_context1",
+                        "context2": "value_context2",
                         "input_query": "What's Beekeeper Framework?",
                         "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
                         "input_token_count": 25,
@@ -662,6 +662,119 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         )
 
         return [data["scoring_id"] + "-1" for data in payload_data]
+
+    def store_feedback_records(
+        self,
+        request_records: List[Dict],
+        subscription_id: str = None,
+    ) -> Dict:
+        """
+        Stores records to the feedback logging system.
+
+        Note:
+        Feedback data for external prompt must include the model output named `_generated_text`.
+
+        Args:
+            request_records (List[Dict]): A list of records to be logged, where each record is represented as a dictionary.
+            subscription_id (str, optional): The subscription ID associated with the records being logged.
+
+        Example:
+            ```python
+            wxgov_client.store_feedback_records(
+                request_records=[
+                    {
+                        "context1": "value_context1",
+                        "context2": "value_context2",
+                        "input_query": "What's Beekeeper Framework?",
+                        "reference_output": "Beekeeper is a data framework to make AI easier to work with."
+                        "_generated_text": "Beekeeper is a data framework to make AI easier to work with.",
+                    }
+                ],
+                subscription_id="5d62977c-a53d-4b6d-bda1-7b79b3b9d1a0",
+            )
+            ```
+        """
+        from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+        from ibm_watson_openscale import APIClient as WosAPIClient
+        from ibm_watson_openscale.supporting_classes.enums import (
+            DataSetTypes,
+            TargetTypes,
+        )
+
+        # Expected behavior: Prefer using fn `subscription_id`.
+        # Fallback to `self.subscription_id` if `subscription_id` None or empty.
+        _subscription_id = subscription_id or self.subscription_id
+
+        if _subscription_id is None or _subscription_id == "":
+            raise ValueError(
+                "Unexpected value for 'subscription_id': Cannot be None or empty string."
+            )
+
+        if not self._wos_client:
+            try:
+                if hasattr(self, "_wos_cpd_creds") and self._wos_cpd_creds:
+                    from ibm_cloud_sdk_core.authenticators import (
+                        CloudPakForDataAuthenticator,  # type: ignore
+                    )
+
+                    authenticator = CloudPakForDataAuthenticator(**self._wos_cpd_creds)
+                    self._wos_client = WosAPIClient(
+                        authenticator=authenticator,
+                        service_url=self._wos_cpd_creds["url"],
+                    )
+
+                else:
+                    from ibm_cloud_sdk_core.authenticators import (
+                        IAMAuthenticator,  # type: ignore
+                    )
+
+                    authenticator = IAMAuthenticator(apikey=self._api_key)
+                    self._wos_client = WosAPIClient(
+                        authenticator=authenticator,
+                        service_url=self.region.openscale,
+                    )
+
+            except Exception as e:
+                logging.error(
+                    f"Error connecting to IBM watsonx.governance (openscale): {e}",
+                )
+                raise
+
+        subscription_details = self._wos_client.subscriptions.get(
+            _subscription_id,
+        ).result
+        subscription_details = json.loads(str(subscription_details))
+
+        feature_fields = subscription_details["entity"]["asset_properties"][
+            "feature_fields"
+        ]
+
+        # Rename _generated_text to _original_prediction (expected by WOS feedback dataset)
+        # Validate required fields for detached/external monitor
+        for i, d in enumerate(request_records):
+            d["_original_prediction"] = d.pop("_generated_text", None)
+            request_records[i] = validate_and_filter_dict(
+                d, feature_fields, ["_original_prediction"]
+            )
+
+        feedback_data_set_id = (
+            self._wos_client.data_sets.list(
+                type=DataSetTypes.FEEDBACK,
+                target_target_id=_subscription_id,
+                target_target_type=TargetTypes.SUBSCRIPTION,
+            )
+            .result.data_sets[0]
+            .metadata.id
+        )
+
+        suppress_output(
+            self._wos_client.data_sets.store_records,
+            data_set_id=feedback_data_set_id,
+            request_body=request_records,
+            background_mode=False,
+        )
+
+        return {"status": "success"}
 
     def __call__(self, payload: PayloadRecord) -> None:
         if self.prompt_template:
@@ -1141,7 +1254,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                 request_records=[
                     {
                         "context1": "value_context1",
-                        "context2": "value_context1",
+                        "context2": "value_context2",
                         "input_query": "What's Beekeeper Framework?",
                         "generated_text": "Beekeeper is a data framework to make AI easier to work with.",
                         "input_token_count": 25,
@@ -1228,6 +1341,116 @@ class WatsonxPromptMonitor(PromptMonitor):
         )
 
         return [data["scoring_id"] + "-1" for data in payload_data]
+
+    def store_feedback_records(
+        self,
+        request_records: List[Dict],
+        subscription_id: str = None,
+    ) -> Dict:
+        """
+        Stores records to the feedback logging system.
+
+        Args:
+            request_records (List[Dict]): A list of records to be logged, where each record is represented as a dictionary.
+            subscription_id (str, optional): The subscription ID associated with the records being logged.
+
+        Example:
+            ```python
+            wxgov_client.store_feedback_records(
+                request_records=[
+                    {
+                        "context1": "value_context1",
+                        "context2": "value_context2",
+                        "input_query": "What's Beekeeper Framework?",
+                        "reference_output": "Beekeeper is a data framework to make AI easier to work with."
+                        "_generated_text": "Beekeeper is a data framework to make AI easier to work with.",
+                    }
+                ],
+                subscription_id="5d62977c-a53d-4b6d-bda1-7b79b3b9d1a0",
+            )
+            ```
+        """
+        from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+        from ibm_watson_openscale import APIClient as WosAPIClient
+        from ibm_watson_openscale.supporting_classes.enums import (
+            DataSetTypes,
+            TargetTypes,
+        )
+
+        # Expected behavior: Prefer using fn `subscription_id`.
+        # Fallback to `self.subscription_id` if `subscription_id` None or empty.
+        _subscription_id = subscription_id or self.subscription_id
+
+        if _subscription_id is None or _subscription_id == "":
+            raise ValueError(
+                "Unexpected value for 'subscription_id': Cannot be None or empty string."
+            )
+
+        if not self._wos_client:
+            try:
+                if hasattr(self, "_wos_cpd_creds") and self._wos_cpd_creds:
+                    from ibm_cloud_sdk_core.authenticators import (
+                        CloudPakForDataAuthenticator,  # type: ignore
+                    )
+
+                    authenticator = CloudPakForDataAuthenticator(**self._wos_cpd_creds)
+                    self._wos_client = WosAPIClient(
+                        authenticator=authenticator,
+                        service_url=self._wos_cpd_creds["url"],
+                    )
+
+                else:
+                    from ibm_cloud_sdk_core.authenticators import (
+                        IAMAuthenticator,  # type: ignore
+                    )
+
+                    authenticator = IAMAuthenticator(apikey=self._api_key)
+                    self._wos_client = WosAPIClient(
+                        authenticator=authenticator,
+                        service_url=self.region.openscale,
+                    )
+
+            except Exception as e:
+                logging.error(
+                    f"Error connecting to IBM watsonx.governance (openscale): {e}",
+                )
+                raise
+
+        subscription_details = self._wos_client.subscriptions.get(
+            _subscription_id,
+        ).result
+        subscription_details = json.loads(str(subscription_details))
+
+        feature_fields = subscription_details["entity"]["asset_properties"][
+            "feature_fields"
+        ]
+
+        # Rename _generated_text to _original_prediction (expected by WOS feedback dataset)
+        # Validate required fields for detached/external monitor
+        for i, d in enumerate(request_records):
+            d["_original_prediction"] = d.pop("_generated_text", None)
+            request_records[i] = validate_and_filter_dict(
+                d, [*feature_fields, "_original_prediction"]
+            )
+
+        feedback_data_set_id = (
+            self._wos_client.data_sets.list(
+                type=DataSetTypes.FEEDBACK,
+                target_target_id=_subscription_id,
+                target_target_type=TargetTypes.SUBSCRIPTION,
+            )
+            .result.data_sets[0]
+            .metadata.id
+        )
+
+        suppress_output(
+            self._wos_client.data_sets.store_records,
+            data_set_id=feedback_data_set_id,
+            request_body=request_records,
+            background_mode=False,
+        )
+
+        return {"status": "success"}
 
     def __call__(self, payload: PayloadRecord) -> None:
         if self.prompt_template:

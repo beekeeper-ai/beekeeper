@@ -338,7 +338,7 @@ class WatsonxCustomMetricsManager:
         }
 
     @deprecated(
-        reason="'add_observer_instance()' is deprecated and will be removed in a future version. Use 'attach_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
+        reason="'add_observer_instance()' is deprecated and will be removed in a future version. Use 'associate_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
         version="1.0.5",
         action="always",
     )
@@ -348,14 +348,14 @@ class WatsonxCustomMetricsManager:
         monitor_definition_id: str,
         subscription_id: str,
     ):
-        return self.attach_monitor_instance(
+        return self.associate_monitor_instance(
             integrated_system_id=integrated_system_id,
             monitor_definition_id=monitor_definition_id,
             subscription_id=subscription_id,
         )
 
     @deprecated(
-        reason="'add_monitor_instance()' is deprecated and will be removed in a future version. Use 'attach_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
+        reason="'add_monitor_instance()' is deprecated and will be removed in a future version. Use 'associate_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
         version="1.0.6",
         action="always",
     )
@@ -365,20 +365,37 @@ class WatsonxCustomMetricsManager:
         monitor_definition_id: str,
         subscription_id: str,
     ):
-        return self.attach_monitor_instance(
+        return self.associate_monitor_instance(
             integrated_system_id=integrated_system_id,
             monitor_definition_id=monitor_definition_id,
             subscription_id=subscription_id,
         )
 
+    @deprecated(
+        reason="'attach_monitor_instance()' is deprecated and will be removed in a future version. Use 'associate_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
+        version="1.1.0",
+        action="always",
+    )
     def attach_monitor_instance(
         self,
         integrated_system_id: str,
         monitor_definition_id: str,
         subscription_id: str,
     ):
+        return self.associate_monitor_instance(
+            integrated_system_id=integrated_system_id,
+            monitor_definition_id=monitor_definition_id,
+            subscription_id=subscription_id,
+        )
+
+    def associate_monitor_instance(
+        self,
+        integrated_system_id: str,
+        monitor_definition_id: str,
+        subscription_id: str,
+    ):
         """
-        Attaches the specified monitor definition to the specified subscription.
+        Associate the specified monitor definition to the specified subscription.
 
         Args:
             integrated_system_id (str): The ID of the integrated system.
@@ -387,7 +404,7 @@ class WatsonxCustomMetricsManager:
 
         Example:
             ```python
-            wxgov_client.attach_monitor_instance(
+            wxgov_client.associate_monitor_instance(
                 integrated_system_id="019667ca-5687-7838-8d29-4ff70c2b36b0",
                 monitor_definition_id="custom_llm_quality",
                 subscription_id="0195e95d-03a4-7000-b954-b607db10fe9e",
@@ -434,14 +451,31 @@ class WatsonxCustomMetricsManager:
 
         return monitor_instance_details
 
+    @deprecated(
+        reason="'publish_metrics()' is deprecated and will be removed in a future version. Use 'put_metric_data()'",
+        version="1.1.0",
+        action="always",
+    )
     def publish_metrics(
         self,
         monitor_instance_id: str,
         run_id: str,
         request_records: Dict[str, Union[float, int]],
     ):
+        return self.put_metric_data(
+            monitor_instance_id=monitor_instance_id,
+            run_id=run_id,
+            request_records=request_records,
+        )
+
+    def put_metric_data(
+        self,
+        monitor_instance_id: str,
+        run_id: str,
+        request_records: Dict[str, Union[float, int]],
+    ):
         """
-        Publishes computed metrics to the specified global monitor instance.
+        Publishes computed metrics data to the specified global monitor instance.
 
         Args:
             monitor_instance_id (str): The unique ID of the monitor instance.
@@ -450,7 +484,7 @@ class WatsonxCustomMetricsManager:
 
         Example:
             ```python
-            wxgov_client.publish_metrics(
+            wxgov_client.put_metrics(
                 monitor_instance_id="01966801-f9ee-7248-a706-41de00a8a998",
                 run_id="RUN_ID",
                 request_records={"context_quality": 0.914, "sensitivity": 0.85},
@@ -583,13 +617,28 @@ class WatsonxCustomMetricsManager:
             background_mode=False,
         ).result.metadata.id
 
+    @deprecated(
+        reason="'publish_local_metrics()' is deprecated and will be removed in a future version. Use 'put_local_metric_data()'",
+        version="1.1.0",
+        action="always",
+    )
     def publish_local_metrics(
         self,
         metric_instance_id: str,
         request_records: List[Dict],
     ):
+        return self.put_local_metric_data(
+            metric_instance_id=metric_instance_id,
+            request_records=request_records,
+        )
+
+    def put_local_metric_data(
+        self,
+        metric_instance_id: str,
+        request_records: List[Dict],
+    ):
         """
-        Publishes computed metrics to the specified transaction record.
+        Publishes computed metrics data to the specified transaction record.
 
         Args:
             metric_instance_id (str): The unique ID of the custom transaction metric.
@@ -597,7 +646,7 @@ class WatsonxCustomMetricsManager:
 
         Example:
             ```python
-            wxgov_client.publish_local_metrics(
+            wxgov_client.put_local_metric_data(
                 metric_instance_id="0196ad39-1b75-7e77-bddb-cc5393d575c2",
                 request_records=[
                     {
