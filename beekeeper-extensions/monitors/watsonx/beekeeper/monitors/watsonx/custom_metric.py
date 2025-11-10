@@ -338,7 +338,7 @@ class WatsonxCustomMetricsManager:
         }
 
     @deprecated(
-        reason="'add_observer_instance()' is deprecated and will be removed in a future version. Use 'attach_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
+        reason="'add_observer_instance()' is deprecated and will be removed in a future version. Use 'associate_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
         version="1.0.5",
         action="always",
     )
@@ -348,14 +348,14 @@ class WatsonxCustomMetricsManager:
         monitor_definition_id: str,
         subscription_id: str,
     ):
-        return self.attach_monitor_instance(
+        return self.associate_monitor_instance(
             integrated_system_id=integrated_system_id,
             monitor_definition_id=monitor_definition_id,
             subscription_id=subscription_id,
         )
 
     @deprecated(
-        reason="'add_monitor_instance()' is deprecated and will be removed in a future version. Use 'attach_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
+        reason="'add_monitor_instance()' is deprecated and will be removed in a future version. Use 'associate_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
         version="1.0.6",
         action="always",
     )
@@ -365,20 +365,37 @@ class WatsonxCustomMetricsManager:
         monitor_definition_id: str,
         subscription_id: str,
     ):
-        return self.attach_monitor_instance(
+        return self.associate_monitor_instance(
             integrated_system_id=integrated_system_id,
             monitor_definition_id=monitor_definition_id,
             subscription_id=subscription_id,
         )
 
+    @deprecated(
+        reason="'attach_monitor_instance()' is deprecated and will be removed in a future version. Use 'associate_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
+        version="1.1.0",
+        action="always",
+    )
     def attach_monitor_instance(
         self,
         integrated_system_id: str,
         monitor_definition_id: str,
         subscription_id: str,
     ):
+        return self.associate_monitor_instance(
+            integrated_system_id=integrated_system_id,
+            monitor_definition_id=monitor_definition_id,
+            subscription_id=subscription_id,
+        )
+
+    def associate_monitor_instance(
+        self,
+        integrated_system_id: str,
+        monitor_definition_id: str,
+        subscription_id: str,
+    ):
         """
-        Attaches the specified monitor definition to the specified subscription.
+        Associate the specified monitor definition to the specified subscription.
 
         Args:
             integrated_system_id (str): The ID of the integrated system.
@@ -387,7 +404,7 @@ class WatsonxCustomMetricsManager:
 
         Example:
             ```python
-            wxgov_client.attach_monitor_instance(
+            wxgov_client.associate_monitor_instance(
                 integrated_system_id="019667ca-5687-7838-8d29-4ff70c2b36b0",
                 monitor_definition_id="custom_llm_quality",
                 subscription_id="0195e95d-03a4-7000-b954-b607db10fe9e",
