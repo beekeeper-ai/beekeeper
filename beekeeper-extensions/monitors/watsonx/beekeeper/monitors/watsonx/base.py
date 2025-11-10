@@ -753,7 +753,9 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         # Validate required fields for detached/external monitor
         for i, d in enumerate(request_records):
             d["_original_prediction"] = d.pop("_generated_text", None)
-            request_records[i] = validate_and_filter_dict(d, feature_fields, ["_original_prediction"])
+            request_records[i] = validate_and_filter_dict(
+                d, feature_fields, ["_original_prediction"]
+            )
 
         feedback_data_set_id = (
             self._wos_client.data_sets.list(
@@ -772,7 +774,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             background_mode=False,
         )
 
-        return { "status": "success" }
+        return {"status": "success"}
 
     def __call__(self, payload: PayloadRecord) -> None:
         if self.prompt_template:
@@ -1427,7 +1429,9 @@ class WatsonxPromptMonitor(PromptMonitor):
         # Validate required fields for detached/external monitor
         for i, d in enumerate(request_records):
             d["_original_prediction"] = d.pop("_generated_text", None)
-            request_records[i] = validate_and_filter_dict(d, [*feature_fields, "_original_prediction"])
+            request_records[i] = validate_and_filter_dict(
+                d, [*feature_fields, "_original_prediction"]
+            )
 
         feedback_data_set_id = (
             self._wos_client.data_sets.list(
@@ -1446,7 +1450,7 @@ class WatsonxPromptMonitor(PromptMonitor):
             background_mode=False,
         )
 
-        return { "status": "success" }
+        return {"status": "success"}
 
     def __call__(self, payload: PayloadRecord) -> None:
         if self.prompt_template:
