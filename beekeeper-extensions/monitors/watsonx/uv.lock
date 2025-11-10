@@ -57,7 +57,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-monitors-watsonx"
-version = "1.0.7"
+version = "1.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
@@ -76,7 +76,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beekeeper-core", specifier = ">=1.0.4,<2.0.0" },
+    { name = "beekeeper-core", specifier = ">=1.0.5,<2.0.0" },
     { name = "certifi", specifier = ">=2025.4.26,<2026.0.0" },
     { name = "ibm-aigov-facts-client", specifier = ">=1.0.96,<1.0.97" },
     { name = "ibm-watson-openscale", specifier = ">=3.0.49,<3.1.0" },
