@@ -463,9 +463,9 @@ class WatsonxCustomMetricsManager:
         request_records: Dict[str, Union[float, int]],
     ):
         return self.put_metric_data(
-        monitor_instance_id=monitor_instance_id,
-        run_id=run_id,
-        request_records=request_records,
+            monitor_instance_id=monitor_instance_id,
+            run_id=run_id,
+            request_records=request_records,
         )
 
     def put_metric_data(
@@ -628,8 +628,8 @@ class WatsonxCustomMetricsManager:
         request_records: List[Dict],
     ):
         return self.put_local_metric_data(
-       metric_instance_id=metric_instance_id,
-        request_records=request_records,
+            metric_instance_id=metric_instance_id,
+            request_records=request_records,
         )
 
     def put_local_metric_data(
