@@ -21,7 +21,7 @@ title: watsonx.governance
 ## Custom Metrics
 ::: beekeeper.monitors.watsonx.WatsonxCustomMetricsManager
     options:
-      members_order: source
+      members_order: alphabetical
       show_root_heading: true
       show_root_full_path: false
       heading_level: 3
