@@ -452,7 +452,7 @@ class WatsonxCustomMetricsManager:
         return monitor_instance_details
 
     @deprecated(
-        reason="'publish_metrics()' is deprecated and will be removed in a future version. Use 'put_metric_data()'",
+        reason="'publish_metrics()' is deprecated and will be removed in a future version. Use 'store_metric_data()'",
         version="1.1.0",
         action="always",
     )
@@ -462,20 +462,20 @@ class WatsonxCustomMetricsManager:
         run_id: str,
         request_records: Dict[str, Union[float, int]],
     ):
-        return self.put_metric_data(
+        return self.store_metric_data(
             monitor_instance_id=monitor_instance_id,
             run_id=run_id,
             request_records=request_records,
         )
 
-    def put_metric_data(
+    def store_metric_data(
         self,
         monitor_instance_id: str,
         run_id: str,
         request_records: Dict[str, Union[float, int]],
     ):
         """
-        Publishes computed metrics data to the specified global monitor instance.
+        Stores computed metrics data to the specified monitor instance.
 
         Args:
             monitor_instance_id (str): The unique ID of the monitor instance.
@@ -618,7 +618,7 @@ class WatsonxCustomMetricsManager:
         ).result.metadata.id
 
     @deprecated(
-        reason="'publish_local_metrics()' is deprecated and will be removed in a future version. Use 'put_local_metric_data()'",
+        reason="'publish_local_metrics()' is deprecated and will be removed in a future version. Use 'store_local_metric_data()'",
         version="1.1.0",
         action="always",
     )
@@ -627,12 +627,12 @@ class WatsonxCustomMetricsManager:
         metric_instance_id: str,
         request_records: List[Dict],
     ):
-        return self.put_local_metric_data(
+        return self.store_local_metric_data(
             metric_instance_id=metric_instance_id,
             request_records=request_records,
         )
 
-    def put_local_metric_data(
+    def store_local_metric_data(
         self,
         metric_instance_id: str,
         request_records: List[Dict],
@@ -646,7 +646,7 @@ class WatsonxCustomMetricsManager:
 
         Example:
             ```python
-            wxgov_client.put_local_metric_data(
+            wxgov_client.store_local_metric_data(
                 metric_instance_id="0196ad39-1b75-7e77-bddb-cc5393d575c2",
                 request_records=[
                     {
