@@ -638,7 +638,7 @@ class WatsonxCustomMetricsManager:
         request_records: List[Dict],
     ):
         """
-        Publishes computed metrics data to the specified transaction record.
+        Stores computed metrics data to the specified transaction record.
 
         Args:
             metric_instance_id (str): The unique ID of the custom transaction metric.
