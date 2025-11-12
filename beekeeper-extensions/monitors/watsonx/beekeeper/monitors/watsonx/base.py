@@ -671,8 +671,9 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         """
         Stores records to the feedback logging system.
 
-        Note:
-            Feedback data for external prompt **must include** the model output named `generated_text`.
+        Info:
+            - Feedback data for external prompt **must include** the model output named `generated_text`.
+            - For prompt monitors created using Beekeeper, the label field is `reference_output`.
 
         Args:
             request_records (List[Dict]): A list of records to be logged, where each record is represented as a dictionary.
@@ -1349,6 +1350,9 @@ class WatsonxPromptMonitor(PromptMonitor):
     ) -> Dict:
         """
         Stores records to the feedback logging system.
+
+        Info:
+            - For prompt monitors created using Beekeeper, the label field is `reference_output`.
 
         Args:
             request_records (List[Dict]): A list of records to be logged, where each record is represented as a dictionary.
