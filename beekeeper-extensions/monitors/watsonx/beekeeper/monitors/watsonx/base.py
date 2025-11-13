@@ -73,6 +73,8 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
     Example:
         ```python
+        from beekeeper.monitors.watsonx.supporting_classes.enums import Region
+
         from beekeeper.monitors.watsonx import (
             WatsonxExternalPromptMonitor,
             CloudPakforDataCredentials,
@@ -80,7 +82,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
         # watsonx.governance (IBM Cloud)
         wxgov_client = WatsonxExternalPromptMonitor(
-            api_key="API_KEY", space_id="SPACE_ID"
+            api_key="API_KEY", space_id="SPACE_ID", region=Region.US_SOUTH
         )
 
         # watsonx.governance (CP4D)
@@ -795,13 +797,17 @@ class WatsonxPromptMonitor(PromptMonitor):
 
     Example:
         ```python
+        from beekeeper.monitors.watsonx.supporting_classes.enums import Region
+
         from beekeeper.monitors.watsonx import (
             WatsonxPromptMonitor,
             CloudPakforDataCredentials,
         )
 
         # watsonx.governance (IBM Cloud)
-        wxgov_client = WatsonxPromptMonitor(api_key="API_KEY", space_id="SPACE_ID")
+        wxgov_client = WatsonxPromptMonitor(
+            api_key="API_KEY", space_id="SPACE_ID", region=Region.US_SOUTH
+        )
 
         # watsonx.governance (CP4D)
         cpd_creds = CloudPakforDataCredentials(
