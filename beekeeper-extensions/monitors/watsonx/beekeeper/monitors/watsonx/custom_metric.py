@@ -486,7 +486,7 @@ class WatsonxCustomMetricsManager:
 
         Example:
             ```python
-            wxgov_client.put_metrics(
+            wxgov_client.store_metric_data(
                 monitor_instance_id="01966801-f9ee-7248-a706-41de00a8a998",
                 run_id="RUN_ID",
                 request_records={"context_quality": 0.914, "sensitivity": 0.85},
