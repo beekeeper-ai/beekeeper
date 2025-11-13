@@ -49,7 +49,7 @@ class Region(str, Enum):
         return _REGION_DATA[self.value]["factsheet"]
 
     @classmethod
-    def from_value(cls, value) -> "Region":
+    def from_value(cls, value: str) -> "Region":
         if value is None:
             return cls.US_SOUTH
 
