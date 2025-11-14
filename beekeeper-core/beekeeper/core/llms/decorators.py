@@ -5,7 +5,7 @@ from logging import getLogger
 from typing import Callable
 
 from beekeeper.core.llms.types import ChatMessage
-from beekeeper.core.observers.types import PayloadRecord
+from beekeeper.core.monitors.types import PayloadRecord
 
 logger = getLogger(__name__)
 
