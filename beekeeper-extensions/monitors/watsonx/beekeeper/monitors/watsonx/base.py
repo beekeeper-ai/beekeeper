@@ -2,7 +2,6 @@ import json
 import logging
 import os
 import uuid
-import warnings
 from typing import Dict, List, Union
 
 import certifi
@@ -332,7 +331,6 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         detached_model_url: str = None,
         detached_prompt_url: str = None,
         detached_prompt_additional_info: Dict = None,
-        prompt_template_text: str = None,
         prompt_variables: List[str] = None,
         locale: str = "en",
         input_text: str = None,  # DEPRECATED
@@ -353,7 +351,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             detached_model_url (str, optional): The URL of the external model.
             detached_prompt_url (str, optional): The URL of the external prompt.
             detached_prompt_additional_info (Dict, optional): Additional information related to the external prompt.
-            prompt_template_text (str, optional): The prompt template text.
+            input_text (str, optional): The prompt template text.
             prompt_variables (List[str], optional): Values for the prompt variables.
             locale (str, optional): Locale code for the input/output language. eg. "en", "pt", "es".
             context_fields (List[str], optional): A list of fields that will provide context to the prompt.
@@ -372,7 +370,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                 detached_model_provider="AWS Bedrock",
                 detached_model_name="Anthropic Claude 2.0",
                 detached_model_url="https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-claude.html",
-                prompt_template_text="You are a helpful AI assistant that provides clear and accurate answers. {context}. Question: {input_query}.",
+                input_text="You are a helpful AI assistant that provides clear and accurate answers. {context}. Question: {input_query}.",
                 prompt_variables=["context", "input_query"],
                 context_fields=["context"],
                 question_field="input_query",
@@ -380,18 +378,6 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             ```
         """
         task_id = TaskType.from_value(task_id).value
-        # DEPRECATION NOTICE
-        if input_text is not None:
-            warnings.warn(
-                "DEPRECATION NOTICE: `input_text` is deprecated and will be removed in a future release. "
-                "Use `prompt_template_text` instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-
-            if prompt_template_text is None:
-                prompt_template_text = input_text
-        # END DEPRECATION NOTICE
 
         if (not (self.project_id or self.space_id)) or (
             self.project_id and self.space_id
@@ -415,7 +401,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         prompt_metadata.pop("locale", None)
 
         # Update name of keys to aigov_facts api
-        prompt_metadata["input"] = prompt_metadata.pop("prompt_template_text", None)
+        prompt_metadata["input"] = prompt_metadata.pop("input_text", None)
         prompt_metadata["model_provider"] = prompt_metadata.pop(
             "detached_model_provider",
             None,
@@ -1041,7 +1027,6 @@ class WatsonxPromptMonitor(PromptMonitor):
         task_id: Union[TaskType, str],
         description: str = "",
         model_parameters: Dict = None,
-        prompt_template_text: str = None,
         prompt_variables: List[str] = None,
         locale: str = "en",
         input_text: str = None,  # DEPRECATED
@@ -1057,7 +1042,7 @@ class WatsonxPromptMonitor(PromptMonitor):
             task_id (TaskType): The task identifier.
             description (str, optional): A description of the Prompt Template Asset.
             model_parameters (Dict, optional): A dictionary of model parameters and their respective values.
-            prompt_template_text (str, optional): The prompt template text.
+            input_text (str, optional): The prompt template text.
             prompt_variables (List[str], optional): A list of values for prompt input variables.
             locale (str, optional): Locale code for the input/output language. eg. "en", "pt", "es".
             context_fields (List[str], optional): A list of fields that will provide context to the prompt.
@@ -1073,7 +1058,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                 name="IBM prompt template",
                 model_id="ibm/granite-3-2b-instruct",
                 task_id=TaskType.RETRIEVAL_AUGMENTED_GENERATION,
-                prompt_template_text="You are a helpful AI assistant that provides clear and accurate answers. {context}. Question: {input_query}.",
+                input_text="You are a helpful AI assistant that provides clear and accurate answers. {context}. Question: {input_query}.",
                 prompt_variables=["context", "input_query"],
                 context_fields=["context"],
                 question_field="input_query",
@@ -1081,18 +1066,6 @@ class WatsonxPromptMonitor(PromptMonitor):
             ```
         """
         task_id = TaskType.from_value(task_id).value
-        # DEPRECATION NOTICE
-        if input_text is not None:
-            warnings.warn(
-                "DEPRECATION NOTICE: `input_text` is deprecated and will be removed in a future release. "
-                "Use `prompt_template_text` instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-
-            if prompt_template_text is None:
-                prompt_template_text = input_text
-        # END DEPRECATION NOTICE
 
         if (not (self.project_id or self.space_id)) or (
             self.project_id and self.space_id
@@ -1116,7 +1089,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         prompt_metadata.pop("locale", None)
 
         # Update name of keys to aigov_facts api
-        prompt_metadata["input"] = prompt_metadata.pop("prompt_template_text", None)
+        prompt_metadata["input"] = prompt_metadata.pop("input_text", None)
 
         # Update list of vars to dict
         prompt_metadata["prompt_variables"] = Dict.fromkeys(
