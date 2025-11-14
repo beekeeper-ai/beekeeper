@@ -70,3 +70,10 @@ title: watsonx.governance
       show_root_heading: true
       show_root_full_path: false
       heading_level: 3
+
+::: beekeeper.monitors.watsonx.supporting_classes.enums.TaskType
+    options:
+      members_order: source
+      show_root_heading: true
+      show_root_full_path: false
+      heading_level: 3
