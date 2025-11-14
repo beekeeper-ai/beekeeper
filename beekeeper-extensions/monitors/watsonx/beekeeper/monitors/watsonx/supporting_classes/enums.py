@@ -72,6 +72,19 @@ class Region(str, Enum):
 
 
 class TaskType(Enum):
+    """
+    Supported IBM watsonx.governance tasks.
+
+    Attributes:
+        QUESTION_ANSWERING (str): "question_answering"
+        SUMMARIZATION (str): "summarization"
+        RETRIEVAL_AUGMENTED_GENERATION (str): "retrieval_augmented_generation"
+        CLASSIFICATION (str): "classification"
+        GENERATION (str): "generation"
+        CODE (str): "code"
+        EXTRACTION (str): "extraction"
+    """
+
     QUESTION_ANSWERING = "question_answering"
     SUMMARIZATION = "summarization"
     RETRIEVAL_AUGMENTED_GENERATION = "retrieval_augmented_generation"
