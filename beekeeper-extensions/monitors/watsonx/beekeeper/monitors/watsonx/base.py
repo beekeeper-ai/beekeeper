@@ -417,7 +417,9 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         prompt_metadata.pop("locale", None)
 
         # Update name of keys to aigov_facts api
-        prompt_metadata["input"] = getattr(prompt_metadata.pop("prompt_template", None), "template", None)
+        prompt_metadata["input"] = getattr(
+            prompt_metadata.pop("prompt_template", None), "template", None
+        )
         prompt_metadata["model_provider"] = prompt_metadata.pop(
             "detached_model_provider",
             None,
@@ -1119,7 +1121,9 @@ class WatsonxPromptMonitor(PromptMonitor):
         prompt_metadata.pop("locale", None)
 
         # Update name of keys to aigov_facts api
-        prompt_metadata["input"] = getattr(prompt_metadata.pop("prompt_template", None), "template", None)
+        prompt_metadata["input"] = getattr(
+            prompt_metadata.pop("prompt_template", None), "template", None
+        )
 
         # Update list of vars to dict
         prompt_metadata["prompt_variables"] = Dict.fromkeys(
