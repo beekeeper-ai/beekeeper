@@ -394,7 +394,6 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                 prompt_template = input_text
         # END DEPRECATION NOTICE
         prompt_template = PromptTemplate.from_value(prompt_template)
-        super().__init__(prompt_template=prompt_template)
 
         if (not (self.project_id or self.space_id)) or (
             self.project_id and self.space_id
@@ -1097,7 +1096,6 @@ class WatsonxPromptMonitor(PromptMonitor):
                 prompt_template = input_text
         # END DEPRECATION NOTICE
         prompt_template = PromptTemplate.from_value(prompt_template)
-        super().__init__(prompt_template=prompt_template)
 
         if (not (self.project_id or self.space_id)) or (
             self.project_id and self.space_id
