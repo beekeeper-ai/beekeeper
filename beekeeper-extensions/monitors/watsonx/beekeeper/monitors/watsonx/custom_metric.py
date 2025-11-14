@@ -29,13 +29,17 @@ class WatsonxCustomMetricsManager:
 
     Example:
         ```python
+        from beekeeper.monitors.watsonx.supporting_classes.enums import Region
+
         from beekeeper.monitors.watsonx import (
             WatsonxCustomMetricsManager,
             CloudPakforDataCredentials,
         )
 
         # watsonx.governance (IBM Cloud)
-        wxgov_client = WatsonxCustomMetricsManager(api_key="API_KEY")
+        wxgov_client = WatsonxCustomMetricsManager(
+            api_key="API_KEY", region=Region.US_SOUTH
+        )
 
         # watsonx.governance (CP4D)
         cpd_creds = CloudPakforDataCredentials(
@@ -484,7 +488,7 @@ class WatsonxCustomMetricsManager:
 
         Example:
             ```python
-            wxgov_client.put_metrics(
+            wxgov_client.store_metric_data(
                 monitor_instance_id="01966801-f9ee-7248-a706-41de00a8a998",
                 run_id="RUN_ID",
                 request_records={"context_quality": 0.914, "sensitivity": 0.85},

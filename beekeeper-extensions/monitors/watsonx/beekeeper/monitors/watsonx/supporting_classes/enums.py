@@ -49,7 +49,7 @@ class Region(str, Enum):
         return _REGION_DATA[self.value]["factsheet"]
 
     @classmethod
-    def from_value(cls, value):
+    def from_value(cls, value: str) -> "Region":
         if value is None:
             return cls.US_SOUTH
 
@@ -58,7 +58,7 @@ class Region(str, Enum):
 
         if isinstance(value, str):
             try:
-                return cls(value)
+                return cls(value.lower())
             except ValueError:
                 raise ValueError(
                     "Invalid value for parameter 'region'. Received: '{}'. Valid values are: {}.".format(
@@ -68,4 +68,33 @@ class Region(str, Enum):
 
         raise TypeError(
             f"Invalid type for parameter 'region'. Expected str or Region, but received {type(value).__name__}."
+        )
+
+
+class TaskType(Enum):
+    QUESTION_ANSWERING = "question_answering"
+    SUMMARIZATION = "summarization"
+    RETRIEVAL_AUGMENTED_GENERATION = "retrieval_augmented_generation"
+    CLASSIFICATION = "classification"
+    GENERATION = "generation"
+    CODE = "code"
+    EXTRACTION = "extraction"
+
+    @classmethod
+    def from_value(cls, value: str) -> "TaskType":
+        if isinstance(value, cls):
+            return value
+
+        if isinstance(value, str):
+            try:
+                return cls(value.lower())
+            except ValueError:
+                raise ValueError(
+                    "Invalid value for parameter 'task_id'. Received: '{}'. Valid values are: {}.".format(
+                        value, [item.value for item in TaskType]
+                    )
+                )
+
+        raise TypeError(
+            f"Invalid type for parameter 'task_id'. Expected str or TaskType, but received {type(value).__name__}."
         )

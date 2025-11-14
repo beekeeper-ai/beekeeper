@@ -2,16 +2,18 @@ import json
 import logging
 import os
 import uuid
-from typing import Dict, List, Literal, Union
+import warnings
+from typing import Dict, List, Union
 
 import certifi
 from beekeeper.core.monitors import PromptMonitor
 from beekeeper.core.monitors.types import PayloadRecord
+from beekeeper.core.prompts import PromptTemplate
 from beekeeper.core.prompts.utils import extract_template_vars
 from beekeeper.monitors.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
 )
-from beekeeper.monitors.watsonx.supporting_classes.enums import Region
+from beekeeper.monitors.watsonx.supporting_classes.enums import Region, TaskType
 from beekeeper.monitors.watsonx.utils.data_utils import validate_and_filter_dict
 from beekeeper.monitors.watsonx.utils.instrumentation import suppress_output
 from deprecated import deprecated
@@ -73,6 +75,8 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
     Example:
         ```python
+        from beekeeper.monitors.watsonx.supporting_classes.enums import Region
+
         from beekeeper.monitors.watsonx import (
             WatsonxExternalPromptMonitor,
             CloudPakforDataCredentials,
@@ -80,7 +84,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
         # watsonx.governance (IBM Cloud)
         wxgov_client = WatsonxExternalPromptMonitor(
-            api_key="API_KEY", space_id="SPACE_ID"
+            api_key="API_KEY", space_id="SPACE_ID", region=Region.US_SOUTH
         )
 
         # watsonx.governance (CP4D)
@@ -244,13 +248,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         self,
         name: str,
         model_id: str,
-        task_id: Literal[
-            "extraction",
-            "generation",
-            "question_answering",
-            "retrieval_augmented_generation",
-            "summarization",
-        ],
+        task_id: Union[TaskType, str],
         detached_model_provider: str,
         description: str = "",
         model_parameters: Dict = None,
@@ -291,13 +289,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         self,
         name: str,
         model_id: str,
-        task_id: Literal[
-            "extraction",
-            "generation",
-            "question_answering",
-            "retrieval_augmented_generation",
-            "summarization",
-        ],
+        task_id: Union[TaskType, str],
         detached_model_provider: str,
         description: str = "",
         model_parameters: Dict = None,
@@ -333,13 +325,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         self,
         name: str,
         model_id: str,
-        task_id: Literal[
-            "extraction",
-            "generation",
-            "question_answering",
-            "retrieval_augmented_generation",
-            "summarization",
-        ],
+        task_id: Union[TaskType, str],
         detached_model_provider: str,
         description: str = "",
         model_parameters: Dict = None,
@@ -347,9 +333,10 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         detached_model_url: str = None,
         detached_prompt_url: str = None,
         detached_prompt_additional_info: Dict = None,
+        prompt_template: Union[PromptTemplate, str] = None,
         prompt_variables: List[str] = None,
         locale: str = "en",
-        input_text: str = None,
+        input_text: str = None,  # DEPRECATED
         context_fields: List[str] = None,
         question_field: str = None,
     ) -> Dict:
@@ -359,7 +346,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         Args:
             name (str): The name of the External Prompt Template Asset.
             model_id (str): The ID of the model associated with the prompt.
-            task_id (str): The task identifier.
+            task_id (TaskType): The task identifier.
             detached_model_provider (str): The external model provider.
             description (str, optional): A description of the External Prompt Template Asset.
             model_parameters (Dict, optional): Model parameters and their respective values.
@@ -367,9 +354,9 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             detached_model_url (str, optional): The URL of the external model.
             detached_prompt_url (str, optional): The URL of the external prompt.
             detached_prompt_additional_info (Dict, optional): Additional information related to the external prompt.
+            prompt_template (PromptTemplate, optional): The prompt template.
             prompt_variables (List[str], optional): Values for the prompt variables.
             locale (str, optional): Locale code for the input/output language. eg. "en", "pt", "es".
-            input_text (str, optional): The input text for the prompt.
             context_fields (List[str], optional): A list of fields that will provide context to the prompt.
                 Applicable only for "retrieval_augmented_generation" task type.
             question_field (str, optional): The field containing the question to be answered.
@@ -377,20 +364,37 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
         Example:
             ```python
+            from beekeeper.monitors.watsonx.supporting_classes.enums import TaskType
+
             wxgov_client.create_prompt_monitor(
                 name="Detached prompt (model AWS Anthropic)",
                 model_id="anthropic.claude-v2",
-                task_id="retrieval_augmented_generation",
+                task_id=TaskType.RETRIEVAL_AUGMENTED_GENERATION,
                 detached_model_provider="AWS Bedrock",
                 detached_model_name="Anthropic Claude 2.0",
                 detached_model_url="https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-claude.html",
-                prompt_variables=["context1", "context2", "input_query"],
-                input_text="Prompt text to be given",
-                context_fields=["context1", "context2"],
+                prompt_template="You are a helpful AI assistant that provides clear and accurate answers. {context}. Question: {input_query}.",
+                prompt_variables=["context", "input_query"],
+                context_fields=["context"],
                 question_field="input_query",
             )
             ```
         """
+        task_id = TaskType.from_value(task_id).value
+        # DEPRECATION NOTICE
+        if input_text is not None:
+            warnings.warn(
+                "DEPRECATION NOTICE: `input_text` is deprecated and will be removed in a future release. "
+                "Use `prompt_template` instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
+            if prompt_template is None:
+                prompt_template = input_text
+        # END DEPRECATION NOTICE
+        prompt_template = PromptTemplate.from_value(prompt_template)
+
         if (not (self.project_id or self.space_id)) or (
             self.project_id and self.space_id
         ):
@@ -399,7 +403,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                 "Both were provided: 'project_id' and 'space_id' cannot be set at the same time."
             )
 
-        if task_id == "retrieval_augmented_generation":
+        if task_id == TaskType.RETRIEVAL_AUGMENTED_GENERATION.value:
             if not context_fields or not question_field:
                 raise ValueError(
                     "For 'retrieval_augmented_generation' task, requires non-empty 'context_fields' and 'question_field'."
@@ -413,7 +417,9 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         prompt_metadata.pop("locale", None)
 
         # Update name of keys to aigov_facts api
-        prompt_metadata["input"] = prompt_metadata.pop("input_text", None)
+        prompt_metadata["input"] = getattr(
+            prompt_metadata.pop("prompt_template", None), "template", None
+        )
         prompt_metadata["model_provider"] = prompt_metadata.pop(
             "detached_model_provider",
             None,
@@ -809,13 +815,17 @@ class WatsonxPromptMonitor(PromptMonitor):
 
     Example:
         ```python
+        from beekeeper.monitors.watsonx.supporting_classes.enums import Region
+
         from beekeeper.monitors.watsonx import (
             WatsonxPromptMonitor,
             CloudPakforDataCredentials,
         )
 
         # watsonx.governance (IBM Cloud)
-        wxgov_client = WatsonxPromptMonitor(api_key="API_KEY", space_id="SPACE_ID")
+        wxgov_client = WatsonxPromptMonitor(
+            api_key="API_KEY", space_id="SPACE_ID", region=Region.US_SOUTH
+        )
 
         # watsonx.governance (CP4D)
         cpd_creds = CloudPakforDataCredentials(
@@ -975,13 +985,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         self,
         name: str,
         model_id: str,
-        task_id: Literal[
-            "extraction",
-            "generation",
-            "question_answering",
-            "retrieval_augmented_generation",
-            "summarization",
-        ],
+        task_id: Union[TaskType, str],
         description: str = "",
         model_parameters: Dict = None,
         prompt_variables: List[str] = None,
@@ -1012,13 +1016,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         self,
         name: str,
         model_id: str,
-        task_id: Literal[
-            "extraction",
-            "generation",
-            "question_answering",
-            "retrieval_augmented_generation",
-            "summarization",
-        ],
+        task_id: Union[TaskType, str],
         description: str = "",
         model_parameters: Dict = None,
         prompt_variables: List[str] = None,
@@ -1044,18 +1042,13 @@ class WatsonxPromptMonitor(PromptMonitor):
         self,
         name: str,
         model_id: str,
-        task_id: Literal[
-            "extraction",
-            "generation",
-            "question_answering",
-            "retrieval_augmented_generation",
-            "summarization",
-        ],
+        task_id: Union[TaskType, str],
         description: str = "",
         model_parameters: Dict = None,
+        prompt_template: Union[PromptTemplate, str] = None,
         prompt_variables: List[str] = None,
         locale: str = "en",
-        input_text: str = None,
+        input_text: str = None,  # DEPRECATED
         context_fields: List[str] = None,
         question_field: str = None,
     ) -> Dict:
@@ -1065,12 +1058,12 @@ class WatsonxPromptMonitor(PromptMonitor):
         Args:
             name (str): The name of the Prompt Template Asset.
             model_id (str): The ID of the model associated with the prompt.
-            task_id (str): The task identifier.
+            task_id (TaskType): The task identifier.
             description (str, optional): A description of the Prompt Template Asset.
             model_parameters (Dict, optional): A dictionary of model parameters and their respective values.
+            prompt_template (PromptTemplate, optional): The prompt template.
             prompt_variables (List[str], optional): A list of values for prompt input variables.
             locale (str, optional): Locale code for the input/output language. eg. "en", "pt", "es".
-            input_text (str, optional): The input text for the prompt.
             context_fields (List[str], optional): A list of fields that will provide context to the prompt.
                 Applicable only for the `retrieval_augmented_generation` task type.
             question_field (str, optional): The field containing the question to be answered.
@@ -1078,17 +1071,34 @@ class WatsonxPromptMonitor(PromptMonitor):
 
         Example:
             ```python
+            from beekeeper.monitors.watsonx.supporting_classes.enums import TaskType
+
             wxgov_client.create_prompt_monitor(
                 name="IBM prompt template",
                 model_id="ibm/granite-3-2b-instruct",
-                task_id="retrieval_augmented_generation",
-                prompt_variables=["context1", "context2", "input_query"],
-                input_text="Prompt text to be given",
-                context_fields=["context1", "context2"],
+                task_id=TaskType.RETRIEVAL_AUGMENTED_GENERATION,
+                prompt_template="You are a helpful AI assistant that provides clear and accurate answers. {context}. Question: {input_query}.",
+                prompt_variables=["context", "input_query"],
+                context_fields=["context"],
                 question_field="input_query",
             )
             ```
         """
+        task_id = TaskType.from_value(task_id).value
+        # DEPRECATION NOTICE
+        if input_text is not None:
+            warnings.warn(
+                "DEPRECATION NOTICE: `input_text` is deprecated and will be removed in a future release. "
+                "Use `prompt_template` instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
+            if prompt_template is None:
+                prompt_template = input_text
+        # END DEPRECATION NOTICE
+        prompt_template = PromptTemplate.from_value(prompt_template)
+
         if (not (self.project_id or self.space_id)) or (
             self.project_id and self.space_id
         ):
@@ -1097,7 +1107,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                 "Both were provided: 'project_id' and 'space_id' cannot be set at the same time."
             )
 
-        if task_id == "retrieval_augmented_generation":
+        if task_id == TaskType.RETRIEVAL_AUGMENTED_GENERATION.value:
             if not context_fields or not question_field:
                 raise ValueError(
                     "For 'retrieval_augmented_generation' task, requires non-empty 'context_fields' and 'question_field'."
@@ -1111,7 +1121,9 @@ class WatsonxPromptMonitor(PromptMonitor):
         prompt_metadata.pop("locale", None)
 
         # Update name of keys to aigov_facts api
-        prompt_metadata["input"] = prompt_metadata.pop("input_text", None)
+        prompt_metadata["input"] = getattr(
+            prompt_metadata.pop("prompt_template", None), "template", None
+        )
 
         # Update list of vars to dict
         prompt_metadata["prompt_variables"] = Dict.fromkeys(
