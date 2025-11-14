@@ -34,7 +34,6 @@ class PromptTemplate(BaseModel):
             f"Invalid type for parameter 'prompt_template'. Expected str or PromptTemplate, but received {type(value).__name__}."
         )
 
-
     def format(self, **kwargs):
         """
         Formats the template using the provided dynamic variables.
