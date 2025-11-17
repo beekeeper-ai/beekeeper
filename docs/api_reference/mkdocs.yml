@@ -41,6 +41,7 @@ plugins:
             - ../../beekeeper-core/
             - ../../beekeeper-extensions/embeddings/huggingface
             - ../../beekeeper-extensions/embeddings/watsonx
+            - ../../beekeeper-extensions/guardrails/watsonx
             - ../../beekeeper-extensions/llms/litellm
             - ../../beekeeper-extensions/monitors/watsonx
             - ../../beekeeper-extensions/readers/docling
@@ -58,6 +59,7 @@ nav:
   - Embeddings: embeddings/
   - Evaluation: evaluation/
   - Flows: flows/
+  - Guardrails: guardrails/
   - LLMs: llms/
   - Observability: monitors/
   - Prompts: prompts/
