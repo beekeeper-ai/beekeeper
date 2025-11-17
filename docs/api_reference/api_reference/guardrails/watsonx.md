@@ -2,9 +2,7 @@
 title: watsonx.governance
 ---
 
-## Guardrails manager
-
-::: beekeeper.guardrails.watsonx
+::: beekeeper.guardrails.watsonx.WatsonxGuardrail
     options:
       members_order: source
       show_root_heading: true
