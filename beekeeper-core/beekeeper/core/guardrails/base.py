@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+
+from beekeeper.core.guardrails.types import GuardrailResponse
 
 
 class BaseGuardrail(ABC):
@@ -10,5 +11,5 @@ class BaseGuardrail(ABC):
         return "BaseGuardrail"
 
     @abstractmethod
-    def enforce(self, text: str,  direction: str) -> Dict:
+    def enforce(self, text: str, direction: str) -> GuardrailResponse:
         """Runs policies enforcement to specified guardrail."""
