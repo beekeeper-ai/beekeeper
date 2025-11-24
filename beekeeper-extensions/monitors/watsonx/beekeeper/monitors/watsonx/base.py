@@ -1246,7 +1246,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         return {
             "prompt_template_asset_id": pta_id,
             "deployment_id": deployment_id,
-            "subscription_id": generative_ai_monitor_details["subscription_id"],
+            "subscription_id": generative_ai_monitor_details.get("subscription_id", None),
         }
 
     def store_payload_records(
