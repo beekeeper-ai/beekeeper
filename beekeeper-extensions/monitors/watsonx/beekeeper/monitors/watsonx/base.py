@@ -202,6 +202,40 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
         return created_detached_pta.to_dict()["asset_id"]
 
+    def _delete_detached_prompt(self, detached_pta_id: str) -> None:
+        from ibm_aigov_facts_client import (  # type: ignore
+            AIGovFactsClient,
+            CloudPakforDataConfig,
+        )
+
+        try:
+            if hasattr(self, "_fact_cpd_creds") and self._fact_cpd_creds:
+                cpd_creds = CloudPakforDataConfig(**self._fact_cpd_creds)
+
+                aigov_client = AIGovFactsClient(
+                    container_id=self._container_id,
+                    container_type=self._container_type,
+                    cloud_pak_for_data_configs=cpd_creds,
+                    disable_tracing=True,
+                )
+
+            else:
+                aigov_client = AIGovFactsClient(
+                    api_key=self._api_key,
+                    container_id=self._container_id,
+                    container_type=self._container_type,
+                    disable_tracing=True,
+                    region=self.region.factsheet,
+                )
+
+        except Exception as e:
+            logging.error(
+                f"Error connecting to IBM watsonx.governance (factsheets): {e}",
+            )
+            raise
+
+        suppress_output(aigov_client.assets.delete_prompt_asset, detached_pta_id)
+
     def _create_deployment_pta(self, asset_id: str, name: str, model_id: str) -> str:
         from ibm_watsonx_ai import APIClient, Credentials  # type: ignore
 
@@ -238,6 +272,30 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         created_deployment = wml_client.deployments.create(asset_id, meta_props)
 
         return wml_client.deployments.get_uid(created_deployment)
+
+    def _delete_deployment_pta(self, deployment_id: str):
+        from ibm_watsonx_ai import APIClient, Credentials  # type: ignore
+
+        try:
+            if hasattr(self, "_wml_cpd_creds") and self._wml_cpd_creds:
+                creds = Credentials(**self._wml_cpd_creds)
+
+                wml_client = APIClient(creds)
+                wml_client.set.default_space(self.space_id)
+
+            else:
+                creds = Credentials(
+                    url=self.region.watsonxai,
+                    api_key=self._api_key,
+                )
+                wml_client = APIClient(creds)
+                wml_client.set.default_space(self.space_id)
+
+        except Exception as e:
+            logging.error(f"Error connecting to IBM watsonx.ai Runtime: {e}")
+            raise
+
+        suppress_output(wml_client.deployments.delete, deployment_id)
 
     @deprecated(
         reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'create_prompt_monitor()' instead.",
@@ -381,6 +439,8 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             ```
         """
         task_id = TaskType.from_value(task_id).value
+        rollback_stack = []
+
         # DEPRECATION NOTICE
         if input_text is not None:
             warnings.warn(
@@ -493,11 +553,14 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             prompt_details,
             detached_asset_details,
         )
+        rollback_stack.append(lambda: self._delete_detached_prompt(detached_pta_id))
+
         deployment_id = None
         if self._container_type == "space":
             deployment_id = suppress_output(
                 self._create_deployment_pta, detached_pta_id, name, model_id
             )
+            rollback_stack.append(lambda: self._delete_deployment_pta(deployment_id))
 
         monitors = {
             "generative_ai_quality": {
@@ -558,10 +621,17 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
         generative_ai_monitor_details = generative_ai_monitor_details.result._to_dict()
 
+        wos_status = generative_ai_monitor_details.get("status", {})
+        if wos_status.get("state") == "ERROR":
+            for rollback_step in reversed(rollback_stack):
+                rollback_step()
+            raise Exception(wos_status.get("failure"))
+
+
         return {
             "detached_prompt_template_asset_id": detached_pta_id,
             "deployment_id": deployment_id,
-            "subscription_id": generative_ai_monitor_details["subscription_id"],
+            "subscription_id": generative_ai_monitor_details.get("subscription_id", None),
         }
 
     def store_payload_records(
@@ -938,6 +1008,40 @@ class WatsonxPromptMonitor(PromptMonitor):
 
         return created_pta.to_dict()["asset_id"]
 
+    def _delete_prompt(self, pta_id: str) -> None:
+        from ibm_aigov_facts_client import (  # type: ignore
+            AIGovFactsClient,
+            CloudPakforDataConfig,
+        )
+
+        try:
+            if hasattr(self, "_fact_cpd_creds") and self._fact_cpd_creds:
+                cpd_creds = CloudPakforDataConfig(**self._fact_cpd_creds)
+
+                aigov_client = AIGovFactsClient(
+                    container_id=self._container_id,
+                    container_type=self._container_type,
+                    cloud_pak_for_data_configs=cpd_creds,
+                    disable_tracing=True,
+                )
+
+            else:
+                aigov_client = AIGovFactsClient(
+                    api_key=self._api_key,
+                    container_id=self._container_id,
+                    container_type=self._container_type,
+                    disable_tracing=True,
+                    region=self.region.factsheet,
+                )
+
+        except Exception as e:
+            logging.error(
+                f"Error connecting to IBM watsonx.governance (factsheets): {e}",
+            )
+            raise
+
+        suppress_output(aigov_client.assets.delete_prompt_asset, pta_id)
+
     def _create_deployment_pta(self, asset_id: str, name: str, model_id: str) -> str:
         from ibm_watsonx_ai import APIClient, Credentials  # type: ignore
 
@@ -975,6 +1079,30 @@ class WatsonxPromptMonitor(PromptMonitor):
         created_deployment = wml_client.deployments.create(asset_id, meta_props)
 
         return wml_client.deployments.get_uid(created_deployment)
+
+    def _delete_deployment_pta(self, deployment_id: str):
+        from ibm_watsonx_ai import APIClient, Credentials  # type: ignore
+
+        try:
+            if hasattr(self, "_wml_cpd_creds") and self._wml_cpd_creds:
+                creds = Credentials(**self._wml_cpd_creds)
+
+                wml_client = APIClient(creds)
+                wml_client.set.default_space(self.space_id)
+
+            else:
+                creds = Credentials(
+                    url=self.region.watsonxai,
+                    api_key=self._api_key,
+                )
+                wml_client = APIClient(creds)
+                wml_client.set.default_space(self.space_id)
+
+        except Exception as e:
+            logging.error(f"Error connecting to IBM watsonx.ai Runtime: {e}")
+            raise
+
+        suppress_output(wml_client.deployments.delete, deployment_id)
 
     @deprecated(
         reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'create_prompt_monitor()' instead.",
@@ -1085,6 +1213,8 @@ class WatsonxPromptMonitor(PromptMonitor):
             ```
         """
         task_id = TaskType.from_value(task_id).value
+        rollback_stack = []
+
         # DEPRECATION NOTICE
         if input_text is not None:
             warnings.warn(
@@ -1178,11 +1308,14 @@ class WatsonxPromptMonitor(PromptMonitor):
         pta_id = suppress_output(
             self._create_prompt_template, prompt_details, asset_details
         )
+        rollback_stack.append(lambda: self._delete_detached_prompt(pta_id))
+
         deployment_id = None
         if self._container_type == "space":
             deployment_id = suppress_output(
                 self._create_deployment_pta, pta_id, name, model_id
             )
+            rollback_stack.append(lambda: self._delete_deployment_pta(deployment_id))
 
         monitors = {
             "generative_ai_quality": {
@@ -1243,10 +1376,16 @@ class WatsonxPromptMonitor(PromptMonitor):
 
         generative_ai_monitor_details = generative_ai_monitor_details._to_dict()
 
+        wos_status = generative_ai_monitor_details.get("status", {})
+        if wos_status.get("state") == "ERROR":
+            for rollback_step in reversed(rollback_stack):
+                rollback_step()
+            raise Exception(wos_status.get("failure"))
+
         return {
             "prompt_template_asset_id": pta_id,
             "deployment_id": deployment_id,
-            "subscription_id": generative_ai_monitor_details["subscription_id"],
+            "subscription_id": generative_ai_monitor_details.get("subscription_id", None),
         }
 
     def store_payload_records(
