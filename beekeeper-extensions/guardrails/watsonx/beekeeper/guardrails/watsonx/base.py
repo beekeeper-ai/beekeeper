@@ -1,7 +1,8 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import requests
 from beekeeper.core.guardrails import BaseGuardrail, GuardrailResponse
+from beekeeper.core.prompts import PromptTemplate
 from beekeeper.guardrails.watsonx.supporting_classes.enums import Direction, Region
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
@@ -11,8 +12,7 @@ class WatsonxGuardrail(BaseGuardrail):
     Provides functionality to interact with IBM watsonx.governance Guardrails.
 
     Info:
-        Beekeeper currently does not support all guardrails provided by IBM Watsonx Governance Guardrails manager,
-        including but not limited to context_relevance and answer_relevance.
+        Beekeeper currently does not support agent_function_call_validation policy provided by IBM Watsonx Governance Guardrails manager.
 
     Attributes:
         api_key (str): The API key for IBM watsonx.governance.
@@ -33,7 +33,7 @@ class WatsonxGuardrail(BaseGuardrail):
         # watsonx.governance (IBM Cloud)
         guardrails_manager = WatsonxGuardrail(
             api_key="API_KEY",
-            policy_id="SPACE_ID",
+            policy_id="POLICY_ID",
             inventory_id="INVENTORY_ID",
             instance_id="INSTANCE_ID",
             region=Region.US_SOUTH,
@@ -97,13 +97,21 @@ class WatsonxGuardrail(BaseGuardrail):
 
         return response.json()
 
-    def enforce(self, text: str, direction: Union[Direction, str]) -> GuardrailResponse:
+    def enforce(
+        self,
+        text: str,
+        direction: Union[Direction, str],
+        prompt_template: Union[PromptTemplate, str] = None,
+        context: List = [],
+    ) -> GuardrailResponse:
         """
         Runs policies enforcement to specified guardrail.
 
         Args:
             text (str): The input text that needs to be evaluated or processed according to the guardrail policy.
             direction (Direction): Whether the guardrail is processing the input or generated output.
+            prompt_template (PromptTemplate, optional): The prompt template.
+            context (List, optional): List of context.
 
         Example:
             ```python
@@ -115,13 +123,35 @@ class WatsonxGuardrail(BaseGuardrail):
             )
             ```
         """
+        prompt_template = PromptTemplate.from_value(prompt_template)
         direction = Direction.from_value(direction).value
         access_token = self._get_token(self._api_key)
+
+        if direction == Direction.INPUT.value:
+            detectors_properties = {
+                "prompt_safety_risk": {"system_prompt": prompt_template.template},
+                "topic_relevance": {"system_prompt": prompt_template.template},
+            }
+        if direction == Direction.OUTPUT.value:
+            detectors_properties = {
+                "groundedness": {"context_type": "docs", "context": context},
+                "context_relevance": {"context_type": "docs", "context": context},
+                "answer_relevance": {
+                    "prompt": prompt_template.format(context="\n".join(context)),
+                    "generated_text": text,
+                },
+            }
+
+        payload = {
+            "text": text,
+            "direction": direction,
+            "detectors_properties": detectors_properties,
+        }
 
         response = self._http_post(
             url=self.region.openscale,
             path=f"/guardrails-manager/v1/enforce/{self.policy_id}",
-            payload={"text": text, "direction": direction},
+            payload=payload,
             token=access_token,
             headers={"x-governance-instance-id": self.instance_id},
             params={"inventory_id": self.inventory_id},
