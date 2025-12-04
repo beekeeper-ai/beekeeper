@@ -110,6 +110,8 @@ class WatsonxGuardrail(BaseGuardrail):
         Args:
             text (str): The input text that needs to be evaluated or processed according to the guardrail policy.
             direction (Direction): Whether the guardrail is processing the input or generated output.
+            prompt_template (PromptTemplate, optional): The prompt template.
+            context (List, optional): List of context.
 
         Example:
             ```python
