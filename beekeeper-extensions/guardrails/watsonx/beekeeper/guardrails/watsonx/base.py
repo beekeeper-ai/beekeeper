@@ -12,7 +12,7 @@ class WatsonxGuardrail(BaseGuardrail):
     Provides functionality to interact with IBM watsonx.governance Guardrails.
 
     Info:
-        Beekeeper currently does not support agent_function_call_validation policy provided by IBM Watsonx Governance Guardrails manager.
+        Beekeeper currently does not support **agent_function_call_validation** policy provided by IBM Watsonx Governance Guardrails manager.
 
     Attributes:
         api_key (str): The API key for IBM watsonx.governance.
