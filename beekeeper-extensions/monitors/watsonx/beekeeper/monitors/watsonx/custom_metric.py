@@ -7,7 +7,7 @@ from beekeeper.monitors.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
     IntegratedSystemCredentials,
 )
-from beekeeper.monitors.watsonx.supporting_classes.enums import Region
+from beekeeper.monitors.watsonx.supporting_classes.enums import DataSetType, Region
 from beekeeper.monitors.watsonx.supporting_classes.metric import (
     WatsonxLocalMetric,
     WatsonxMetric,
@@ -531,6 +531,49 @@ class WatsonxCustomMetricsManager:
             json_patch_operation=patch_payload,
         ).result
 
+    def store_record_metric_data(
+        self,
+        custom_data_set_id: str,
+        computed_on: Union[DataSetType, str],
+        run_id: str,
+        request_records: List[Dict],
+    ):
+        """
+        Stores computed metrics data to the specified transaction record.
+
+        Args:
+            custom_data_set_id (str): The ID of the custom metric data set.
+            computed_on (DataSetType): The dataset on which the metric was calculated (e.g., payload or feedback).
+            run_id (str): The ID of the monitor run that generated the metrics.
+            request_records (List[Dict]): A list of dictionaries containing the records to be stored.
+
+        Example:
+            ```python
+            wxgov_client.store_record_metric_data(
+                reference_record_id="0196ad39-1b75-7e77-bddb-cc5393d575c2",
+                run_id="RUN_ID",
+                request_records=[
+                    {
+                        "reference_record_id": "304a9270-44a1-4c4d-bfd4-f756541011f8",
+                        "record_timestamp": "2025-12-09T00:00:00Z",
+                        "context_quality": 0.786,
+                        "pii": 0.05,
+                    }
+                ],
+            )
+            ```
+        """
+        computed_on = DataSetType.from_value(computed_on).value
+
+        for record in request_records:
+            record["run_id"] = run_id
+            record["computed_on"] = computed_on
+
+        return self._wos_client.data_sets.store_records(
+            data_set_id=custom_data_set_id,
+            request_body=request_records,
+        ).result
+
     # ===== Local Custom Metrics =====
     @deprecated(
         reason="'add_local_metric_definition()' is deprecated and will be removed in a future version. Use 'create_local_metric_definition()' from 'beekeeper-monitors-watsonx' instead.",
@@ -560,27 +603,6 @@ class WatsonxCustomMetricsManager:
         metrics: List[WatsonxLocalMetric],
         subscription_id: str,
     ) -> str:
-        """
-        Creates a custom metric definition to compute metrics at the local (transaction) level for IBM watsonx.governance.
-
-        Args:
-            name (str): The name of the custom transaction metric group.
-            metrics (List[WatsonxLocalMetric]): A list of metrics to be monitored at the local (transaction) level.
-            subscription_id (str): The IBM watsonx.governance subscription ID associated with the metric definition.
-
-        Example:
-            ```python
-            from beekeeper.monitors.watsonx import WatsonxLocalMetric
-
-            wxgov_client.create_local_metric_definition(
-                name="Custom LLM Local Metric",
-                subscription_id="019674ca-0c38-745f-8e9b-58546e95174e",
-                metrics=[
-                    WatsonxLocalMetric(name="context_quality", data_type="double")
-                ],
-            )
-            ```
-        """
         from ibm_watson_openscale.base_classes.watson_open_scale_v2 import (
             LocationTableName,
             SparkStruct,
@@ -651,28 +673,6 @@ class WatsonxCustomMetricsManager:
         metric_instance_id: str,
         request_records: List[Dict],
     ):
-        """
-        Stores computed metrics data to the specified transaction record.
-
-        Args:
-            metric_instance_id (str): The unique ID of the custom transaction metric.
-            request_records (List[Dict]): A list of dictionaries containing the records to be stored.
-
-        Example:
-            ```python
-            wxgov_client.store_local_metric_data(
-                metric_instance_id="0196ad39-1b75-7e77-bddb-cc5393d575c2",
-                request_records=[
-                    {
-                        "scoring_id": "304a9270-44a1-4c4d-bfd4-f756541011f8",
-                        "run_id": "RUN_ID",
-                        "computed_on": "payload",
-                        "context_quality": 0.786,
-                    }
-                ],
-            )
-            ```
-        """
         return self._wos_client.data_sets.store_records(
             data_set_id=metric_instance_id,
             request_body=request_records,
@@ -687,19 +687,6 @@ class WatsonxCustomMetricsManager:
         self,
         metric_instance_id: str,
     ):
-        """
-        Lists records from a custom local metric definition.
-
-        Args:
-            metric_instance_id (str): The unique ID of the custom transaction metric.
-
-        Example:
-            ```python
-            wxgov_client.list_local_metrics(
-                metric_instance_id="0196ad47-c505-73c0-9d7b-91c082b697e3"
-            )
-            ```
-        """
         return self._get_dataset_data(metric_instance_id)
 
 
