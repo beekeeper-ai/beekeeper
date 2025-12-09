@@ -10,11 +10,12 @@ from deprecated import deprecated
 
 logger = getLogger(__name__)
 
+
 @deprecated(
-        reason="'llm_chat_observer()' is deprecated and will be removed in a future version. Use 'llm_chat_monitor()'.",
-        version="1.0.8",
-        action="always",
-    )
+    reason="'llm_chat_observer()' is deprecated and will be removed in a future version. Use 'llm_chat_monitor()'.",
+    version="1.0.8",
+    action="always",
+)
 def llm_chat_observer() -> Callable:
     """
     Decorator to wrap a method with llm handler logic.
@@ -86,6 +87,7 @@ def llm_chat_observer() -> Callable:
         return async_wrapper
 
     return decorator
+
 
 def llm_chat_monitor() -> Callable:
     """
