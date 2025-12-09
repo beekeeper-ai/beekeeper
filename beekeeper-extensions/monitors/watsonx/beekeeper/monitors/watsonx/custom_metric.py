@@ -549,6 +549,11 @@ class WatsonxCustomMetricsManager:
             subscription_id=subscription_id,
         )
 
+    @deprecated(
+        reason="'create_local_metric_definition()' is deprecated and will be removed in a future version. Use OOB record level metrics instead.",
+        version="1.1.3",
+        action="always",
+    )
     def create_local_metric_definition(
         self,
         name: str,
@@ -636,6 +641,11 @@ class WatsonxCustomMetricsManager:
             request_records=request_records,
         )
 
+    @deprecated(
+        reason="'store_local_metric_data()' is deprecated and will be removed in a future version. Use OOB record level metrics instead.",
+        version="1.1.3",
+        action="always",
+    )
     def store_local_metric_data(
         self,
         metric_instance_id: str,
@@ -668,6 +678,11 @@ class WatsonxCustomMetricsManager:
             request_body=request_records,
         ).result
 
+    @deprecated(
+        reason="'list_local_metrics()' is deprecated and will be removed in a future version. Use OOB record level metrics instead.",
+        version="1.1.3",
+        action="always",
+    )
     def list_local_metrics(
         self,
         metric_instance_id: str,
