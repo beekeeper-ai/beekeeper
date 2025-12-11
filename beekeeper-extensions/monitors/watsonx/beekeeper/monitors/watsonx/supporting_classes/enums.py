@@ -111,3 +111,35 @@ class TaskType(Enum):
         raise TypeError(
             f"Invalid type for parameter 'task_id'. Expected str or TaskType, but received {type(value).__name__}."
         )
+
+
+class DataSetType(Enum):
+    """
+    Supported IBM watsonx.governance tasks.
+
+    Attributes:
+        PAYLOAD (str): "payload"
+        FEEDBACK (str): "feedback"
+    """
+
+    PAYLOAD = "payload"
+    FEEDBACK = "feedback"
+
+    @classmethod
+    def from_value(cls, value: str) -> "DataSetType":
+        if isinstance(value, cls):
+            return value
+
+        if isinstance(value, str):
+            try:
+                return cls(value.lower())
+            except ValueError:
+                raise ValueError(
+                    "Invalid value. Received: '{}'. Valid values are: {}.".format(
+                        value, [item.value for item in DataSetType]
+                    )
+                )
+
+        raise TypeError(
+            f"Invalid type. Expected str or DataSetType, but received {type(value).__name__}."
+        )

@@ -171,7 +171,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-ai"
-version = "1.0.7"
+version = "1.0.8"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
@@ -187,7 +187,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beekeeper-core", specifier = ">=1.0.7,<2.0.0" },
+    { name = "beekeeper-core", specifier = ">=1.0.8,<2.0.0" },
     { name = "beekeeper-embeddings-huggingface", specifier = ">=1.0.3,<2.0.0" },
     { name = "beekeeper-llms-litellm", specifier = ">=1.0.0,<2.0.0" },
     { name = "beekeeper-readers-file", specifier = ">=1.0.1,<2.0.0" },
@@ -197,7 +197,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "beekeeper-core"
-version = "1.0.7"
+version = "1.0.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "deprecated" },
@@ -206,9 +206,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "tiktoken" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d3/74/18a19d17495ebac4d2cf772d52b6414a3a519a0b856f465d64756b7cc447/beekeeper_core-1.0.7.tar.gz", hash = "sha256:0ed5142722228fd27d22908841b82972d0cd24018128a163063116d886e23be7", size = 14771, upload-time = "2025-11-17T14:14:18.315Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c1/cb/007cb606a668b536669b880b82c739834a7daffcbd361fe21bf1481abd18/beekeeper_core-1.0.8.tar.gz", hash = "sha256:3dbb09f8c60dd3b0d654d0af6afac2f39039a5aab93d0a90a9b5f9d056f40bf1", size = 14874, upload-time = "2025-12-11T12:33:27.33Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2a/20/df397fd3d4b7b03d41dd5d0f7040d83ed6e5ed07db95863719cddb4c4798/beekeeper_core-1.0.7-py3-none-any.whl", hash = "sha256:27c181ec1693b35abd8564e085dad344da508f9e9f83595307d03b4371468b20", size = 27549, upload-time = "2025-11-17T14:14:16.896Z" },
+    { url = "https://files.pythonhosted.org/packages/34/80/440d51d5ad7141bd96a21cc99d8ab8fd42ac641ce1ccc5fa6c2b6be44115/beekeeper_core-1.0.8-py3-none-any.whl", hash = "sha256:078bfd48b1593dcdc885fe6690ef50a134bdba53a8cda7f1f2a0d8c667401c91", size = 27687, upload-time = "2025-12-11T12:33:28.371Z" },
 ]
 
 [[package]]
