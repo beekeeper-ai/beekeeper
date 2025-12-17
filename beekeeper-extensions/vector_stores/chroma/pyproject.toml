@@ -9,10 +9,10 @@ description = "beekeeper vector_stores chroma extension"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "Apache-2.0" }
 readme = "README.md"
-requires-python = ">=3.10,<4.0"
+requires-python = ">=3.11,<4.0"
 dependencies = [
     "chromadb>=1.0.13,<1.1.0",
-    "beekeeper-core>=1.0.3,<2.0.0",
+    "beekeeper-core>=1.0.8,<2.0.0",
 ]
 
 [tool.hatch.build.targets.sdist]
@@ -23,5 +23,5 @@ include = ["beekeeper/"]
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.11.13",
+    "ruff>=0.14.9",
 ]

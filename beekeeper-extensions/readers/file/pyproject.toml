@@ -4,18 +4,18 @@ build-backend = "hatchling.build"
 
 [project]
 name = "beekeeper-readers-file"
-version = "1.0.1"
+version = "1.0.2"
 description = "beekeeper readers file extension"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "Apache-2.0" }
 readme = "README.md"
-requires-python = ">=3.10,<4.0"
+requires-python = ">=3.11,<4.0"
 dependencies = [
-    "beautifulsoup4>=4.13.4,<5.0.0",
-    "pypdf>=5.6.0,<6.0.0",
-    "jq>=1.9.1,<2.0.0",
+    "beautifulsoup4>=4.14.3,<5.0.0",
+    "pypdf>=6.4.2,<7.0.0",
+    "jq>=1.10.0,<2.0.0",
     "docx2txt>=0.9,<1.0.0",
-    "beekeeper-core>=1.0.0,<2.0.0",
+    "beekeeper-core>=1.0.8,<2.0.0",
 ]
 
 [tool.hatch.build.targets.sdist]
@@ -26,5 +26,5 @@ include = ["beekeeper/"]
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.11.13",
+    "ruff>=0.14.9",
 ]
