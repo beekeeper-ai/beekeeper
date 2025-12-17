@@ -9,7 +9,7 @@ description = "beekeeper guardrails watsonx extension"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "Apache-2.0" }
 readme = "README.md"
-requires-python = ">=3.11,<4.0"
+requires-python = ">=3.11,<3.14"
 dependencies = [
     "ibm-cloud-sdk-core>=3.16.5,<3.19.2",
     "beekeeper-core>=1.0.8,<2.0.0",

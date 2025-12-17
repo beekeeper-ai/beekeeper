@@ -9,7 +9,7 @@ description = "beekeeper monitors watsonx extension"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "Apache-2.0" }
 readme = "README.md"
-requires-python = ">=3.11,<4.0"
+requires-python = ">=3.11,<3.14"
 dependencies = [
     "certifi>=2025.11.12,<2026.0.0",
     "ipython==9.8.0",

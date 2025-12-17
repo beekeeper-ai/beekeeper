@@ -9,7 +9,7 @@ description = "beekeeper retrievers watson discovery extension"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "Apache-2.0" }
 readme = "README.md"
-requires-python = ">=3.11,<4.0"
+requires-python = ">=3.11,<3.14"
 dependencies = [
     "ibm-watson>=11.1.0,<12.0.0",
     "beekeeper-core>=1.0.8,<2.0.0",
