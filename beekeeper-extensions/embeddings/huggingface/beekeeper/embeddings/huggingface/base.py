@@ -40,4 +40,4 @@ class HuggingFaceEmbedding(BaseModel, BaseEmbedding):
         Args:
             input (List[str]): Input for which to compute embeddings.
         """
-        return self._client.encode(input).tolist()
+        return self._client.encode_document(input).tolist()
