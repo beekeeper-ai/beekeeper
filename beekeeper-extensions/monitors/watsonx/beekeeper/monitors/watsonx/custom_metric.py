@@ -453,6 +453,11 @@ class WatsonxCustomMetricsManager:
                 existing_instance_id,
             )
 
+        self._wos_client.custom_monitor.create_custom_dataset(
+            data_mart_id=data_mart_id,
+            subscription_id=subscription_id,
+            custom_monitor_id=monitor_definition_id)
+
         return monitor_instance_details
 
     @deprecated(
