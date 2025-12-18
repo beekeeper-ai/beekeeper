@@ -18,6 +18,10 @@ class ChatMessage(BaseModel):
     role: MessageRole = Field(default=MessageRole.USER)
     content: Optional[str] = Field(default=None)
 
+    def to_dict(self) -> dict:
+        """Convert ChatMessage to dict."""
+        return self.model_dump(exclude_none=True)
+
 
 class GenerateResponse(BaseModel):
     """Generate response."""

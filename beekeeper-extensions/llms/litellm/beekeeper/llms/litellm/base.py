@@ -1,7 +1,7 @@
 from typing import Any, Dict, List
 
 from beekeeper.core.llms import BaseLLM, ChatMessage, ChatResponse, GenerateResponse
-from beekeeper.core.llms.decorators import llm_chat_observer
+from beekeeper.core.llms.decorators import llm_chat_monitor
 from pydantic import Field
 
 import litellm
@@ -67,23 +67,7 @@ class LiteLLM(BaseLLM):
             raw=response,
         )
 
-    def text_completion(self, prompt: str, **kwargs: Any) -> str:
-        """
-        Generates a chat completion for LLM. Using OpenAI's standard endpoint (/completions).
-
-        Args:
-            prompt (str): The input prompt to generate a completion for.
-            **kwargs (Any): Additional keyword arguments to customize the LLM completion request.
-        """
-        all_kwargs = self._get_all_kwargs(**kwargs)
-
-        response = litellm.text_completion(prompt=prompt, **all_kwargs).model_dump(
-            exclude_none=True
-        )
-
-        return response["choices"][0]["text"]
-
-    @llm_chat_observer()
+    @llm_chat_monitor()
     def chat_completion(
         self, messages: List[ChatMessage], **kwargs: Any
     ) -> ChatResponse:
@@ -95,7 +79,7 @@ class LiteLLM(BaseLLM):
             **kwargs (Any): Additional keyword arguments to customize the LLM completion request.
         """
         all_kwargs = self._get_all_kwargs(**kwargs)
-        input_messages_dict = self.convert_chat_messages(messages)
+        input_messages_dict = [message.to_dict() for message in messages]
 
         response = litellm.completion(
             messages=input_messages_dict, **all_kwargs

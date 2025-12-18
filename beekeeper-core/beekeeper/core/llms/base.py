@@ -16,17 +16,21 @@ class BaseLLM(ABC, BaseModel):
     def class_name(cls) -> str:
         return "BaseLLM"
 
-    def convert_chat_messages(self, messages: List[ChatMessage]) -> List[dict]:
-        """Convert ChatMessage to LLM message dict format."""
-        return [message.model_dump() for message in messages]
+    def text_completion(self, prompt: str, **kwargs: Any) -> str:
+        """
+        Generates a chat completion for LLM. Using OpenAI's standard endpoint (/completions).
+
+        Args:
+            prompt (str): The input prompt to generate a completion for.
+            **kwargs (Any): Additional keyword arguments to customize the LLM completion request.
+        """
+        response = self.completion(prompt=prompt, **kwargs)
+
+        return response.text
 
     @abstractmethod
     def completion(self, prompt: str, **kwargs: Any) -> GenerateResponse:
         """Generates a completion for LLM."""
-
-    @abstractmethod
-    def text_completion(self, prompt: str, **kwargs: Any) -> str:
-        """Generates a text completion for LLM."""
 
     @abstractmethod
     def chat_completion(
