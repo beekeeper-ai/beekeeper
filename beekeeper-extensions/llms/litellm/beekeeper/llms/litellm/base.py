@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any
 
 from beekeeper.core.llms import BaseLLM, ChatMessage, ChatResponse, GenerateResponse
 from beekeeper.core.llms.decorators import llm_chat_monitor
@@ -20,7 +20,7 @@ class LiteLLM(BaseLLM):
             output more deterministic. Default is 1.0.
         max_tokens (int, optional): The maximum number of tokens to generate in the completion.
         api_key (str): API key used for authenticating with the LLM provider.
-        additional_kwargs (Dict[str, Any], optional): A dictionary of additional parameters passed
+        additional_kwargs (dict[str, Any], optional): A dictionary of additional parameters passed
             to the LLM during completion. This allows customization of the request beyond
             the standard parameters.
         callback_manager: (ModelMonitor, optional): The callback manager is used for observability.
@@ -36,16 +36,16 @@ class LiteLLM(BaseLLM):
     )
     max_tokens: int = Field(ge=0)
     api_key: str
-    additional_kwargs: Dict[str, Any] = Field(default_factory=Dict)
+    additional_kwargs: dict[str, Any] = Field(default_factory=dict)
 
-    def _get_all_kwargs(self, **kwargs: Any) -> Dict[str, any]:
+    def _get_all_kwargs(self, **kwargs: Any) -> dict[str, any]:
         return {
             "temperature": self.temperature,
             "max_tokens": self.max_tokens,
             **self.additional_kwargs,
-            **kwargs,
-            "model": self.model,  # always enforced from class
-            "api_key": self.api_key,  # always enforced from class
+            **kwargs,  # Method-provided kwargs override class-level kwargs
+            "model": self.model,  # Always enforced from class
+            "api_key": self.api_key,  # Always enforced from class
         }
 
     def completion(self, prompt: str, **kwargs: Any) -> GenerateResponse:
@@ -69,17 +69,19 @@ class LiteLLM(BaseLLM):
 
     @llm_chat_monitor()
     def chat_completion(
-        self, messages: List[ChatMessage], **kwargs: Any
+        self, messages: list[ChatMessage | dict], **kwargs: Any
     ) -> ChatResponse:
         """
         Generates a chat completion for LLM. Using OpenAI's standard endpoint (/chat/completions).
 
         Args:
-            messages (List[ChatMessage]): A list of chat messages as input for the LLM.
+            messages (list[ChatMessage]): A list of chat messages as input for the LLM.
             **kwargs (Any): Additional keyword arguments to customize the LLM completion request.
         """
         all_kwargs = self._get_all_kwargs(**kwargs)
-        input_messages_dict = [message.to_dict() for message in messages]
+        input_messages_dict = [
+            ChatMessage.from_value(message).to_dict() for message in messages
+        ]
 
         response = litellm.completion(
             messages=input_messages_dict, **all_kwargs

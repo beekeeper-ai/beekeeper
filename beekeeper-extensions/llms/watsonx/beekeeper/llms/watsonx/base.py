@@ -19,7 +19,7 @@ class WatsonxLLM(BaseLLM):
             Defaults to `us-south`.
         project_id (str, optional): The project ID in watsonx.ai.
         space_id (str, optional): The space ID in watsonx.ai.
-        additional_kwargs (Dict[str, Any], optional): A dictionary of additional parameters passed
+        additional_kwargs (dict[str, Any], optional): A dictionary of additional parameters passed
             to the LLM during completion. This allows customization of the request beyond
             the standard parameters.
         callback_manager: (PromptMonitor, optional): The callback manager is used for observability.
@@ -70,7 +70,7 @@ class WatsonxLLM(BaseLLM):
         Args:
             prompt (str): The input prompt to generate a completion for.
             guardrails (bool, optional): The detection filter for potentially hateful, abusive, and/or profane language (HAP).
-            params (dict, optional): MetaProps for text generation. Will override class-level params.
+            params (dict, optional): MetaProps for text generation. Method-provided params override class-level params.
             **kwargs (Any, optional): Additional keyword arguments to customize the LLM completion request.
         """
         response = self._model_inference.generate(
@@ -96,8 +96,8 @@ class WatsonxLLM(BaseLLM):
         Generates a chat completion for LLM. Using OpenAI's standard endpoint (/chat/completions).
 
         Args:
-            messages (List[ChatMessage]): A list of chat messages as input for the LLM.
-            params (dict, optional): MetaProps for text generation. Will override class-level params.
+            messages (list[ChatMessage]): A list of chat messages as input for the LLM.
+            params (dict, optional): MetaProps for text generation. Method-provided params override class-level params.
             **kwargs (Any, optional): Additional keyword arguments to customize the LLM completion request.
         """
         input_messages_dict = [
