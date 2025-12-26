@@ -139,7 +139,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-ai"
-version = "1.0.10"
+version = "1.0.11"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
