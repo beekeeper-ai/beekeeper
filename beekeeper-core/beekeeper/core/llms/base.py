@@ -1,15 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from beekeeper.core.llms.types import ChatMessage, ChatResponse, GenerateResponse
 from beekeeper.core.monitors import BaseMonitor
 from pydantic import BaseModel
 
 
-class BaseLLM(ABC, BaseModel):
+class BaseLLM(BaseModel, ABC):
     """Abstract base class defining the interface for LLMs."""
 
     model_config = {"arbitrary_types_allowed": True}
+    model: str
     callback_manager: Optional[BaseMonitor] = None
 
     @classmethod
@@ -34,6 +35,6 @@ class BaseLLM(ABC, BaseModel):
 
     @abstractmethod
     def chat_completion(
-        self, messages: List[ChatMessage], **kwargs: Any
+        self, messages: list[ChatMessage | dict], **kwargs: Any
     ) -> ChatResponse:
         """Generates a chat completion for LLM."""

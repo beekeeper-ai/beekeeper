@@ -22,6 +22,26 @@ class ChatMessage(BaseModel):
         """Convert ChatMessage to dict."""
         return self.model_dump(exclude_none=True)
 
+    @classmethod
+    def from_value(cls, value: dict) -> "ChatMessage":
+        if value is None:
+            raise ValueError("Invalid 'ChatMessage', cannot be None")
+
+        if isinstance(value, cls):
+            return value
+
+        if isinstance(value, dict):
+            try:
+                return cls.model_validate(value)
+            except Exception as e:
+                raise ValueError(
+                    "Invalid 'ChatMessage' dict. Received: '{}'.".format(e)
+                )
+
+        raise TypeError(
+            f"Invalid 'ChatMessage' type. Expected dict or ChatMessage, but received {type(value).__name__}."
+        )
+
 
 class GenerateResponse(BaseModel):
     """Generate response."""

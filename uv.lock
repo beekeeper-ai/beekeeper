@@ -139,7 +139,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-ai"
-version = "1.0.10"
+version = "1.0.11"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
@@ -155,9 +155,9 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beekeeper-core", specifier = ">=1.0.10,<2.0.0" },
+    { name = "beekeeper-core", specifier = ">=1.0.11,<2.0.0" },
     { name = "beekeeper-embeddings-huggingface", specifier = ">=1.0.4,<2.0.0" },
-    { name = "beekeeper-llms-litellm", specifier = ">=1.0.2,<2.0.0" },
+    { name = "beekeeper-llms-litellm", specifier = ">=1.0.3,<2.0.0" },
     { name = "beekeeper-readers-file", specifier = ">=1.0.2,<2.0.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.14.9" },
 ]
@@ -165,7 +165,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "beekeeper-core"
-version = "1.0.10"
+version = "1.0.11"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "deprecated" },
@@ -174,9 +174,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "tiktoken" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d7/52/baf6621db1e54c98fa8402bdcf4300d46753188a04c9212cf2126ad7a6d7/beekeeper_core-1.0.10.tar.gz", hash = "sha256:55a83668b8cdf334d257ea97bfe8b367196f42ddccce98c5ff8c6963063f6c0a", size = 14964, upload-time = "2025-12-18T12:30:11.363Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/20/45/ce423a2ac18f048b6d16b2b5906bb247607491e166bf545672427beeb422/beekeeper_core-1.0.11.tar.gz", hash = "sha256:bc2d067fff7ceca92ab8ce1df2a91cfdf8d673ed93f17a1de2935485e6e2af1b", size = 14993, upload-time = "2025-12-26T17:56:06.671Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/43/bd/979795a114da5290a22e932b5df1678c8bf916e041cdee75d28b87764e2c/beekeeper_core-1.0.10-py3-none-any.whl", hash = "sha256:a6b5c4652fd1cb705faca8d3a1e3c754c49dfa0e32908b5f7c5716e8e68133c3", size = 27844, upload-time = "2025-12-18T12:30:10.368Z" },
+    { url = "https://files.pythonhosted.org/packages/c9/e4/9131b7edf094814d4ed34a430c928248a8d05f6c6ac18fb65214a0297004/beekeeper_core-1.0.11-py3-none-any.whl", hash = "sha256:71913ef46662e14d95bd2128c36534619519120b1113293d1fa5d7577171fef7", size = 27932, upload-time = "2025-12-26T17:56:08.057Z" },
 ]
 
 [[package]]
@@ -194,15 +194,15 @@ wheels = [
 
 [[package]]
 name = "beekeeper-llms-litellm"
-version = "1.0.2"
+version = "1.0.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beekeeper-core" },
     { name = "litellm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/31/68/85cab1f3a24e5ba9186115595ad8e52476db56a9bfd19676c75be8e7a1f8/beekeeper_llms_litellm-1.0.2.tar.gz", hash = "sha256:9b112fef418c713b99a8efa563a4394c30f984270808fa6fcfa1eb63f88b8426", size = 2759, upload-time = "2025-12-18T12:40:09.452Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d7/50/7cb3a449c1a09602d7c42e01d6f6d601f6ea9800d890143e1e7f3b4ae560/beekeeper_llms_litellm-1.0.3.tar.gz", hash = "sha256:3a640cf766f2c939840b57c713cb51c0f3afd0d32deb70789d231f04b34ee06e", size = 2798, upload-time = "2025-12-26T18:20:52.296Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ec/74/203330cb1687a408a0200f2e76313b27259168b3f270c3306c6377fafc21/beekeeper_llms_litellm-1.0.2-py3-none-any.whl", hash = "sha256:47f41a14a743ac98b1a2d5ee6238f3e765df9c384ae26e88023c414671b6dc6e", size = 2808, upload-time = "2025-12-18T12:40:08.61Z" },
+    { url = "https://files.pythonhosted.org/packages/e3/e5/05d763510c8165e2e0c2f1e48f36a80cf75121ee26343f065afc3e19aec9/beekeeper_llms_litellm-1.0.3-py3-none-any.whl", hash = "sha256:10b53d81eb6aec6ccec3de704d636504a8db9c1b5205cb8a57e54746dcfce571", size = 2842, upload-time = "2025-12-26T18:20:53.391Z" },
 ]
 
 [[package]]
