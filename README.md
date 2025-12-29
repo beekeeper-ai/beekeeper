@@ -1,6 +1,7 @@
 # 🗂️ Beekeeper 🐝
 
 ![PyPI - Version](https://img.shields.io/pypi/v/beekeeper-ai)
+![Python Version](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fbeekeeper-ai%2Fbeekeeper%2Frefs%2Fheads%2Fmain%2Fpyproject.toml&style=flat)
 [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch)
 ![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)
 ![Pepy Total Downloads](https://img.shields.io/pepy/dt/beekeeper-ai)
