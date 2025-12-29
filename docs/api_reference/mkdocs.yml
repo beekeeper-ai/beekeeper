@@ -43,6 +43,7 @@ plugins:
             - ../../beekeeper-extensions/embeddings/watsonx
             - ../../beekeeper-extensions/guardrails/watsonx
             - ../../beekeeper-extensions/llms/litellm
+            - ../../beekeeper-extensions/llms/watsonx
             - ../../beekeeper-extensions/monitors/watsonx
             - ../../beekeeper-extensions/readers/docling
             - ../../beekeeper-extensions/readers/file
