@@ -139,7 +139,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-ai"
-version = "1.0.11"
+version = "1.0.12"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
@@ -155,7 +155,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beekeeper-core", specifier = ">=1.0.11,<2.0.0" },
+    { name = "beekeeper-core", specifier = ">=1.0.12,<2.0.0" },
     { name = "beekeeper-embeddings-huggingface", specifier = ">=1.0.4,<2.0.0" },
     { name = "beekeeper-llms-litellm", specifier = ">=1.0.3,<2.0.0" },
     { name = "beekeeper-readers-file", specifier = ">=1.0.2,<2.0.0" },
@@ -165,7 +165,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "beekeeper-core"
-version = "1.0.11"
+version = "1.0.12"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "deprecated" },
@@ -174,9 +174,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "tiktoken" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/20/45/ce423a2ac18f048b6d16b2b5906bb247607491e166bf545672427beeb422/beekeeper_core-1.0.11.tar.gz", hash = "sha256:bc2d067fff7ceca92ab8ce1df2a91cfdf8d673ed93f17a1de2935485e6e2af1b", size = 14993, upload-time = "2025-12-26T17:56:06.671Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/15/7a/4dfd428270ca34fc4fceacd01d063240ac3a66676ee2751d133a83946be6/beekeeper_core-1.0.12.tar.gz", hash = "sha256:9bc5d15e792092ff9fa1bb5a0f9d5ccd1cb2867bf06935e6be2effa074e8291a", size = 15139, upload-time = "2026-02-02T17:09:24.863Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c9/e4/9131b7edf094814d4ed34a430c928248a8d05f6c6ac18fb65214a0297004/beekeeper_core-1.0.11-py3-none-any.whl", hash = "sha256:71913ef46662e14d95bd2128c36534619519120b1113293d1fa5d7577171fef7", size = 27932, upload-time = "2025-12-26T17:56:08.057Z" },
+    { url = "https://files.pythonhosted.org/packages/8f/84/82a251321a5bd3d525f331d1cd246a71ce8f012c8fda6e59e1c96c9db476/beekeeper_core-1.0.12-py3-none-any.whl", hash = "sha256:b290d956e7115defa0bcb007162e8eac61d4ea3befb42fe5d76b7ac821f560a4", size = 28168, upload-time = "2026-02-02T17:09:23.47Z" },
 ]
 
 [[package]]
