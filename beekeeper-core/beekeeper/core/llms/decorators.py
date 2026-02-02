@@ -6,6 +6,7 @@ from typing import Callable
 
 from beekeeper.core.llms.types import ChatMessage
 from beekeeper.core.monitors.types import PayloadRecord
+from beekeeper.core.prompts.utils import extract_template_vars
 
 logger = getLogger(__name__)
 
@@ -54,15 +55,28 @@ def llm_chat_monitor() -> Callable:
                             system_messages[0].content if system_messages else None
                         )
 
+                        # Extract template variables values from the prompt template if available
+                        template_var_values = (
+                            extract_template_vars(
+                                callback_manager_fns.prompt_template.template,
+                                (system_message or ""),
+                            )
+                            if callback_manager_fns.prompt_template
+                            else {}
+                        )
+
                         callback = callback_manager_fns(
                             payload=PayloadRecord(
-                                input_text=(system_message or "") + last_user_message,
+                                system_prompt=(system_message or ""),
+                                input_text=last_user_message,
+                                prompt_variables=list(template_var_values.keys()),
+                                prompt_variable_values=template_var_values,
                                 generated_text=llm_return_val.message.content,
-                                generated_token_count=llm_return_val.raw["usage"][
-                                    "completion_tokens"
-                                ],
                                 input_token_count=llm_return_val.raw["usage"][
                                     "prompt_tokens"
+                                ],
+                                generated_token_count=llm_return_val.raw["usage"][
+                                    "completion_tokens"
                                 ],
                                 response_time=response_time,
                             )

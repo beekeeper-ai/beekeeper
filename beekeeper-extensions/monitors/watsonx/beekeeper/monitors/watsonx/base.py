@@ -9,7 +9,6 @@ import certifi
 from beekeeper.core.monitors import PromptMonitor
 from beekeeper.core.monitors.types import PayloadRecord
 from beekeeper.core.prompts import PromptTemplate
-from beekeeper.core.prompts.utils import extract_template_vars
 from beekeeper.monitors.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
 )
@@ -855,13 +854,17 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         return {"status": "success"}
 
     def __call__(self, payload: PayloadRecord) -> None:
-        template_vars = (
-            extract_template_vars(self.prompt_template.template, payload.input_text)
-            if self.prompt_template
-            else {}
+        self.store_payload_records(
+            [
+                {
+                    **payload.prompt_variable_values,
+                    **payload.model_dump(
+                        exclude_none=True,
+                        exclude={"system_prompt", "prompt_variable_values"},
+                    ),
+                }
+            ]
         )
-
-        self.store_payload_records([{**payload.model_dump(), **template_vars}])
 
 
 class WatsonxPromptMonitor(PromptMonitor):
@@ -1609,10 +1612,14 @@ class WatsonxPromptMonitor(PromptMonitor):
         return {"status": "success"}
 
     def __call__(self, payload: PayloadRecord) -> None:
-        template_vars = (
-            extract_template_vars(self.prompt_template.template, payload.input_text)
-            if self.prompt_template
-            else {}
+        self.store_payload_records(
+            [
+                {
+                    **payload.prompt_variable_values,
+                    **payload.model_dump(
+                        exclude_none=True,
+                        exclude={"system_prompt", "prompt_variable_values"},
+                    ),
+                }
+            ]
         )
-
-        self.store_payload_records([{**payload.model_dump(), **template_vars}])
