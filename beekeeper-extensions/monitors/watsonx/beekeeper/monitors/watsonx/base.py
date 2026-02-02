@@ -855,15 +855,13 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         return {"status": "success"}
 
     def __call__(self, payload: PayloadRecord) -> None:
-        if self.prompt_template:
-            template_vars = extract_template_vars(
-                self.prompt_template.template, payload.input_text
-            )
+        template_vars = (
+            extract_template_vars(self.prompt_template.template, payload.input_text)
+            if self.prompt_template
+            else {}
+        )
 
-        if not template_vars:
-            self.store_payload_records([payload.model_dump()])
-        else:
-            self.store_payload_records([{**payload.model_dump(), **template_vars}])
+        self.store_payload_records([{**payload.model_dump(), **template_vars}])
 
 
 class WatsonxPromptMonitor(PromptMonitor):
@@ -1611,12 +1609,10 @@ class WatsonxPromptMonitor(PromptMonitor):
         return {"status": "success"}
 
     def __call__(self, payload: PayloadRecord) -> None:
-        if self.prompt_template:
-            template_vars = extract_template_vars(
-                self.prompt_template.template, payload.input_text
-            )
+        template_vars = (
+            extract_template_vars(self.prompt_template.template, payload.input_text)
+            if self.prompt_template
+            else {}
+        )
 
-        if not template_vars:
-            self.store_payload_records([payload.model_dump()])
-        else:
-            self.store_payload_records([{**payload.model_dump(), **template_vars}])
+        self.store_payload_records([{**payload.model_dump(), **template_vars}])
