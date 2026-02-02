@@ -17,7 +17,7 @@ class PromptMonitor(BaseMonitor):
     """Abstract base class defining the interface for prompt observability."""
 
     def __init__(self, prompt_template: Optional[PromptTemplate] = None) -> None:
-        self.prompt_template = prompt_template
+        self.prompt_template = PromptTemplate.from_value(prompt_template)
 
     @classmethod
     def class_name(cls) -> str:
