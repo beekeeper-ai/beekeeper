@@ -25,9 +25,7 @@ class PromptTemplate(BaseModel):
         super().__init__(template=template)
 
     @classmethod
-    def from_value(
-        cls, value: str | PromptTemplate | None
-    ) -> PromptTemplate | None:
+    def from_value(cls, value: str | PromptTemplate | None) -> PromptTemplate | None:
         if value is None:
             return None
 
