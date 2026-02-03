@@ -33,7 +33,9 @@ def llm_chat_monitor() -> Callable:
                         if len(args) > 0 and isinstance(args[0], ChatMessage):
                             input_chat_messages = args[0]
                         elif "messages" in kwargs:
-                            input_chat_messages = kwargs["messages"]
+                            input_chat_messages = ChatMessage.from_value(
+                                kwargs["messages"]
+                            )
                         else:
                             raise ValueError(
                                 "No messages provided in positional or keyword arguments"
