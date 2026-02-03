@@ -40,7 +40,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-core"
-version = "1.0.12"
+version = "1.0.12.post2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "deprecated" },
@@ -49,14 +49,14 @@ dependencies = [
     { name = "pydantic" },
     { name = "tiktoken" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/15/7a/4dfd428270ca34fc4fceacd01d063240ac3a66676ee2751d133a83946be6/beekeeper_core-1.0.12.tar.gz", hash = "sha256:9bc5d15e792092ff9fa1bb5a0f9d5ccd1cb2867bf06935e6be2effa074e8291a", size = 15139, upload-time = "2026-02-02T17:09:24.863Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/aa/19/0d2d4f4a3db0316403d6f344b8397e77ad5dfbe95d42cf5a91f637aae754/beekeeper_core-1.0.12.post2.tar.gz", hash = "sha256:d2b2ae5bfdde59e311261f2d1996d5869fba22794e3e8cd403e93d16b43c6332", size = 15172, upload-time = "2026-02-03T11:42:35.58Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8f/84/82a251321a5bd3d525f331d1cd246a71ce8f012c8fda6e59e1c96c9db476/beekeeper_core-1.0.12-py3-none-any.whl", hash = "sha256:b290d956e7115defa0bcb007162e8eac61d4ea3befb42fe5d76b7ac821f560a4", size = 28168, upload-time = "2026-02-02T17:09:23.47Z" },
+    { url = "https://files.pythonhosted.org/packages/86/71/d009876fca40b3b9798c88b9e62aa338c572b495d21e6db1fc6314c5ccfc/beekeeper_core-1.0.12.post2-py3-none-any.whl", hash = "sha256:46f936fbb5572e956eaa4d1b9310c211b32d3ac719b5eb8537a446bf835f057c", size = 28243, upload-time = "2026-02-03T11:42:34.47Z" },
 ]
 
 [[package]]
 name = "beekeeper-monitors-watsonx"
-version = "1.1.4.post1"
+version = "1.1.4.post2"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
@@ -74,7 +74,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beekeeper-core", specifier = ">=1.0.12,<2.0.0" },
+    { name = "beekeeper-core", specifier = ">=1.0.12.post2,<2.0.0" },
     { name = "certifi", specifier = ">=2025.11.12,<2026.0.0" },
     { name = "ibm-aigov-facts-client", specifier = ">=1.0.104,<1.0.200" },
     { name = "ibm-watson-openscale", specifier = ">=3.1.3,<3.2.0" },

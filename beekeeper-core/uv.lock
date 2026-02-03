@@ -13,7 +13,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-core"
-version = "1.0.12"
+version = "1.0.12.post2"
 source = { editable = "." }
 dependencies = [
     { name = "deprecated" },

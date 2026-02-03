@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from beekeeper.core.prompts.utils import SafeFormatter
 from pydantic import BaseModel
 
@@ -23,7 +25,10 @@ class PromptTemplate(BaseModel):
         super().__init__(template=template)
 
     @classmethod
-    def from_value(cls, value: str) -> "PromptTemplate":
+    def from_value(cls, value: str | PromptTemplate | None) -> PromptTemplate | None:
+        if value is None:
+            return None
+
         if isinstance(value, cls):
             return value
 
@@ -31,7 +36,7 @@ class PromptTemplate(BaseModel):
             return cls(value)
 
         raise TypeError(
-            f"Invalid type for parameter 'prompt_template'. Expected str or PromptTemplate, but received {type(value).__name__}."
+            f"Invalid type for parameter 'template'. Expected str or PromptTemplate, but received {type(value).__name__}."
         )
 
     def format(self, **kwargs):
