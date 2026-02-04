@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -15,8 +15,8 @@ class ChatMessage(BaseModel):
     """Chat message."""
 
     model_config = {"use_enum_values": True}
-    role: MessageRole = Field(default=MessageRole.USER)
-    content: Optional[str] = Field(default=None)
+    role: MessageRole | str = None
+    content: str | None = None
 
     def to_dict(self) -> dict:
         """Convert ChatMessage to dict."""
@@ -25,7 +25,7 @@ class ChatMessage(BaseModel):
     @classmethod
     def from_value(cls, value: dict) -> "ChatMessage":
         if value is None:
-            raise ValueError("Invalid 'ChatMessage', cannot be None")
+            raise ValueError("Unexpected 'ChatMessage', cannot be None")
 
         if isinstance(value, cls):
             return value
@@ -35,11 +35,11 @@ class ChatMessage(BaseModel):
                 return cls.model_validate(value)
             except Exception as e:
                 raise ValueError(
-                    "Invalid 'ChatMessage' dict. Received: '{}'.".format(e)
+                    "Unexpected 'ChatMessage' dict. Received: '{}'.".format(e)
                 )
 
         raise TypeError(
-            f"Invalid 'ChatMessage' type. Expected dict or ChatMessage, but received {type(value).__name__}."
+            f"Unexpected 'ChatMessage' type. Expected dict or ChatMessage, but received {type(value).__name__}."
         )
 
 
@@ -47,11 +47,11 @@ class GenerateResponse(BaseModel):
     """Generate response."""
 
     text: str = Field(..., description="Generated text response")
-    raw: Optional[Any] = Field(default=None)
+    raw: Any | None = None
 
 
 class ChatResponse(BaseModel):
     """Chat completion response."""
 
     message: ChatMessage
-    raw: Optional[Any] = None
+    raw: Any | None = None

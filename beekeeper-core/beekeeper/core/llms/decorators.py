@@ -33,7 +33,10 @@ def llm_chat_monitor() -> Callable:
                         if len(args) > 0 and isinstance(args[0], ChatMessage):
                             input_chat_messages = args[0]
                         elif "messages" in kwargs:
-                            input_chat_messages = kwargs["messages"]
+                            input_chat_messages = [
+                                ChatMessage.from_value(msg)
+                                for msg in kwargs["messages"]
+                            ]
                         else:
                             raise ValueError(
                                 "No messages provided in positional or keyword arguments"
@@ -47,19 +50,25 @@ def llm_chat_monitor() -> Callable:
                             user_messages[-1].content if user_messages else None
                         )
 
-                        # Get the system/instruct (first) message to chat observability.
-                        system_messages = [
-                            msg for msg in input_chat_messages if msg.role == "system"
-                        ]
-                        system_message = (
-                            system_messages[0].content if system_messages else None
+                        # Get the system/instruct (top) messages to chat observability.
+                        top_system_messages = []
+                        for msg in input_chat_messages:
+                            if msg.role == "system":
+                                top_system_messages.append(msg.content)
+                            else:
+                                break  # stop at the first non-system message
+
+                        system_prompt = (
+                            "\n".join(top_system_messages)
+                            if top_system_messages
+                            else None
                         )
 
                         # Extract template variables values from the prompt template if available
                         template_var_values = (
                             extract_template_vars(
                                 callback_manager_fns.prompt_template.template,
-                                (system_message or ""),
+                                (system_prompt or ""),
                             )
                             if callback_manager_fns.prompt_template
                             else {}
@@ -67,7 +76,7 @@ def llm_chat_monitor() -> Callable:
 
                         callback = callback_manager_fns(
                             payload=PayloadRecord(
-                                system_prompt=(system_message or ""),
+                                system_prompt=(system_prompt or ""),
                                 input_text=last_user_message,
                                 prompt_variables=list(template_var_values.keys()),
                                 prompt_variable_values=template_var_values,
