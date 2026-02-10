@@ -3,20 +3,20 @@ import threading
 import time
 from logging import getLogger
 from typing import Callable
-from deprecated import deprecated
 
 from beekeeper.core.llms.types import ChatMessage
 from beekeeper.core.monitors.types import PayloadRecord
 from beekeeper.core.prompts.utils import extract_template_vars
+from deprecated import deprecated
 
 logger = getLogger(__name__)
 
 
 @deprecated(
-        reason="'llm_chat_monitor()' is deprecated and will be removed in a future version. Use 'monitor_llm_chat()' instead.",
-        version="1.0.15",
-        action="always",
-    )
+    reason="'llm_chat_monitor()' is deprecated and will be removed in a future version. Use 'monitor_llm_chat()' instead.",
+    version="1.0.15",
+    action="always",
+)
 def llm_chat_monitor() -> Callable:
     """
     Decorator to wrap a method with llm handler logic.
@@ -111,6 +111,7 @@ def llm_chat_monitor() -> Callable:
 
     return decorator
 
+
 def monitor_llm_chat() -> Callable:
     """
     Decorator to wrap a method with llm handler logic.
@@ -204,6 +205,7 @@ def monitor_llm_chat() -> Callable:
         return async_wrapper
 
     return decorator
+
 
 def monitor_llm_completion() -> Callable:
     """
