@@ -3,6 +3,7 @@ import threading
 import time
 from logging import getLogger
 from typing import Callable
+from deprecated import deprecated
 
 from beekeeper.core.llms.types import ChatMessage
 from beekeeper.core.monitors.types import PayloadRecord
@@ -11,6 +12,11 @@ from beekeeper.core.prompts.utils import extract_template_vars
 logger = getLogger(__name__)
 
 
+@deprecated(
+        reason="'llm_chat_monitor()' is deprecated and will be removed in a future version. Use 'monitor_llm_chat()' instead.",
+        version="1.0.15",
+        action="always",
+    )
 def llm_chat_monitor() -> Callable:
     """
     Decorator to wrap a method with llm handler logic.
@@ -105,10 +111,104 @@ def llm_chat_monitor() -> Callable:
 
     return decorator
 
-def llm_completion_monitor() -> Callable:
+def monitor_llm_chat() -> Callable:
     """
     Decorator to wrap a method with llm handler logic.
-    Looks for observability instances in `self.callback_manager`.
+    Looks for observability instances in `self.callback_manager`. For chat-based LLMs (/chat/completion).
+    """
+
+    def decorator(f: Callable) -> Callable:
+        def async_wrapper(self, *args, **kwargs):
+            callback_manager_fns = getattr(self, "callback_manager", None)
+
+            start_time = time.time()
+            llm_return_val = f(self, *args, **kwargs)
+            response_time = int((time.time() - start_time) * 1000)
+
+            if callback_manager_fns:
+
+                def async_callback_thread():
+                    try:
+                        # Extract input messages
+                        if len(args) > 0 and isinstance(args[0], ChatMessage):
+                            input_chat_messages = args[0]
+                        elif "messages" in kwargs:
+                            input_chat_messages = [
+                                ChatMessage.from_value(msg)
+                                for msg in kwargs["messages"]
+                            ]
+                        else:
+                            raise ValueError(
+                                "No messages provided in positional or keyword arguments"
+                            )
+
+                        # Get the user's latest message after each interaction to chat observability.
+                        user_messages = [
+                            msg for msg in input_chat_messages if msg.role == "user"
+                        ]
+                        last_user_message = (
+                            user_messages[-1].content if user_messages else None
+                        )
+
+                        # Get the system/instruct (top) messages to chat observability.
+                        top_system_messages = []
+                        for msg in input_chat_messages:
+                            if msg.role == "system":
+                                top_system_messages.append(msg.content)
+                            else:
+                                break  # stop at the first non-system message
+
+                        system_prompt = (
+                            "\n".join(top_system_messages)
+                            if top_system_messages
+                            else None
+                        )
+
+                        # Extract template variables values from the prompt template if available
+                        template_var_values = (
+                            extract_template_vars(
+                                callback_manager_fns.prompt_template.template,
+                                (system_prompt or ""),
+                            )
+                            if callback_manager_fns.prompt_template
+                            else {}
+                        )
+
+                        callback = callback_manager_fns(
+                            payload=PayloadRecord(
+                                system_prompt=(system_prompt or ""),
+                                input_text=last_user_message,
+                                prompt_variables=list(template_var_values.keys()),
+                                prompt_variable_values=template_var_values,
+                                generated_text=llm_return_val.message.content,
+                                input_token_count=llm_return_val.raw["usage"][
+                                    "prompt_tokens"
+                                ],
+                                generated_token_count=llm_return_val.raw["usage"][
+                                    "completion_tokens"
+                                ],
+                                response_time=response_time,
+                            )
+                        )
+
+                        if asyncio.iscoroutine(callback):
+                            asyncio.run(callback)
+
+                    except Exception as e:
+                        logger.error(f"Observability callback: {e}")
+
+                threading.Thread(target=async_callback_thread).start()
+
+            return llm_return_val
+
+        return async_wrapper
+
+    return decorator
+
+def monitor_llm_completion() -> Callable:
+    """
+    Decorator to wrap a method with llm handler logic.
+    Looks for observability instances in `self.callback_manager`. For prompt-based LLMs (/completion).
     """
 
     def decorator(f: Callable) -> Callable:
