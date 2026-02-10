@@ -104,3 +104,71 @@ def llm_chat_monitor() -> Callable:
         return async_wrapper
 
     return decorator
+
+def llm_completion_monitor() -> Callable:
+    """
+    Decorator to wrap a method with llm handler logic.
+    Looks for observability instances in `self.callback_manager`.
+    """
+
+    def decorator(f: Callable) -> Callable:
+        def async_wrapper(self, *args, **kwargs):
+            callback_manager_fns = getattr(self, "callback_manager", None)
+
+            start_time = time.time()
+            llm_return_val = f(self, *args, **kwargs)
+            response_time = int((time.time() - start_time) * 1000)
+
+            if callback_manager_fns:
+
+                def async_callback_thread():
+                    try:
+                        # Extract input messages
+                        if len(args) > 0 and isinstance(args[0], str):
+                            input_prompt = args[0]
+                        elif "prompt" in kwargs:
+                            input_prompt = kwargs["prompt"]
+                        else:
+                            raise ValueError(
+                                "No prompt provided in positional or keyword arguments"
+                            )
+
+                        # Extract template variables values from the prompt template if available
+                        template_var_values = (
+                            extract_template_vars(
+                                callback_manager_fns.prompt_template.template,
+                                (input_prompt or ""),
+                            )
+                            if callback_manager_fns.prompt_template
+                            else {}
+                        )
+
+                        callback = callback_manager_fns(
+                            payload=PayloadRecord(
+                                system_prompt=(input_prompt or ""),
+                                prompt_variables=list(template_var_values.keys()),
+                                prompt_variable_values=template_var_values,
+                                generated_text=llm_return_val.message.content,
+                                input_token_count=llm_return_val.raw["usage"][
+                                    "prompt_tokens"
+                                ],
+                                generated_token_count=llm_return_val.raw["usage"][
+                                    "completion_tokens"
+                                ],
+                                response_time=response_time,
+                            )
+                        )
+
+                        if asyncio.iscoroutine(callback):
+                            asyncio.run(callback)
+
+                    except Exception as e:
+                        logger.error(f"Observability callback: {e}")
+
+                threading.Thread(target=async_callback_thread).start()
+
+            return llm_return_val
+
+        return async_wrapper
+
+    return decorator
