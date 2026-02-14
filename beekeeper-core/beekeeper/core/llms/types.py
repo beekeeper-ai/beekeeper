@@ -47,6 +47,9 @@ class GenerateResponse(BaseModel):
     """Generate response."""
 
     text: str = Field(..., description="Generated text response")
+
+    input_token_count: int
+    generated_token_count: int
     raw: Any | None = None
 
 
