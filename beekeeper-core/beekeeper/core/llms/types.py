@@ -43,10 +43,23 @@ class ChatMessage(BaseModel):
         )
 
 
+class CompletionResponse(BaseModel):
+    """Completion response."""
+
+    text: str = Field(..., description="Generated text response")
+
+    input_token_count: int | None = None
+    generated_token_count: int | None = None
+    raw: Any | None = None
+
+
 class GenerateResponse(BaseModel):
     """Generate response."""
 
     text: str = Field(..., description="Generated text response")
+
+    input_token_count: int
+    generated_token_count: int
     raw: Any | None = None
 
 
@@ -54,4 +67,7 @@ class ChatResponse(BaseModel):
     """Chat completion response."""
 
     message: ChatMessage
+
+    input_token_count: int | None = None
+    generated_token_count: int | None = None
     raw: Any | None = None
