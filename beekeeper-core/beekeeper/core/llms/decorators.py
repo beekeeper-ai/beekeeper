@@ -209,7 +209,7 @@ def _run_chat_callback(
     )
 
 
-def instrument_llm_chat() -> Callable:
+def llm_chat_callback() -> Callable:
     """
     Decorator to wrap observability method with llm.
     Looks for observability instances in `self.callback_manager`. For chat-based LLMs (/chat/completion).
@@ -324,7 +324,7 @@ def instrument_llm_chat() -> Callable:
 #     )
 
 
-# def instrument_llm_completion() -> Callable:
+# def llm_completion_callback() -> Callable:
 #     """
 #     Decorator to wrap observability method with llm.
 #     Looks for observability instances in `self.callback_manager`. For prompt-based LLMs (/completion).
