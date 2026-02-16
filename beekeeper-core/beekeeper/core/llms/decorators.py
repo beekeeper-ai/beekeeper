@@ -23,7 +23,7 @@ atexit.register(_callback_executor.shutdown, wait=False)
 
 
 @deprecated(
-    reason="'llm_chat_monitor()' is deprecated and will be removed in a future version. Use 'instrument_llm_chat()' instead.",
+    reason="'llm_chat_monitor()' is deprecated and will be removed in a future version. Use 'llm_chat_callback()' instead.",
     version="1.0.15",
     action="always",
 )

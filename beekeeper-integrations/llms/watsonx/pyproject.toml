@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "beekeeper-llms-watsonx"
-version = "1.0.0"
+version = "1.0.1"
 description = "beekeeper llms watsonx extension"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "Apache-2.0" }
@@ -12,7 +12,7 @@ readme = "README.md"
 requires-python = ">=3.11,<3.14"
 dependencies = [
     "ibm-watsonx-ai>=1.4.11,<2.0.0",
-    "beekeeper-core>=1.0.11,<2.0.0",
+    "beekeeper-core>=1.0.17,<2.0.0",
 ]
 
 [tool.hatch.build.targets.sdist]
