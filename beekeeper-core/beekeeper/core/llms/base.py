@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
-from beekeeper.core.llms.types import ChatMessage, ChatResponse, GenerateResponse
+from beekeeper.core.llms.types import ChatMessage, ChatResponse, CompletionResponse
 from beekeeper.core.monitors import BaseMonitor
 from pydantic import BaseModel
 
@@ -30,7 +30,7 @@ class BaseLLM(BaseModel, ABC):
         return response.text
 
     @abstractmethod
-    def completion(self, prompt: str, **kwargs: Any) -> GenerateResponse:
+    def completion(self, prompt: str, **kwargs: Any) -> CompletionResponse:
         """Generates a completion for LLM."""
 
     @abstractmethod
