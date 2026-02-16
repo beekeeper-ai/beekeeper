@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from logging import getLogger
 from typing import Any, Callable, Dict, Tuple
 
-from beekeeper.core.llms.types import ChatMessage, ChatResponse
+from beekeeper.core.llms.types import ChatMessage, ChatResponse, CompletionResponse
 from beekeeper.core.monitors.types import PayloadRecord
 from beekeeper.core.prompts.utils import extract_template_vars
 from deprecated import deprecated
@@ -255,116 +255,116 @@ def llm_chat_callback() -> Callable:
     return decorator
 
 
-# async def _process_completion_callback(
-#     callback_manager_fns: Any,
-#     args: Tuple[Any, ...],
-#     kwargs: Dict[str, Any],
-#     llm_return_val: Any,
-#     response_time: int,
-# ) -> None:
-#     """
-#     Process observability callback for completion-based LLMs.
+async def _process_completion_callback(
+    callback_manager_fns: Any,
+    args: Tuple[Any, ...],
+    kwargs: Dict[str, Any],
+    llm_return_val: CompletionResponse,
+    response_time: int,
+) -> None:
+    """
+    Process observability callback for completion-based LLMs.
 
-#     Extracts prompt, template_variables, and sends payload to callback manager.
-#     """
-#     try:
-#         # Extract input prompt
-#         if len(args) > 0 and isinstance(args[0], str):
-#             input_prompt = args[0]
-#         elif "prompt" in kwargs:
-#             input_prompt = kwargs["prompt"]
-#         else:
-#             raise ValueError("No prompt provided in positional or keyword arguments")
+    Extracts prompt, template_variables, and sends payload to callback manager.
+    """
+    try:
+        # Extract input prompt
+        if len(args) > 0 and isinstance(args[0], str):
+            input_prompt = args[0]
+        elif "prompt" in kwargs:
+            input_prompt = kwargs["prompt"]
+        else:
+            raise ValueError("No prompt provided in positional or keyword arguments")
 
-#         # Extract template variables values from the prompt template if available
-#         template_var_values = (
-#             extract_template_vars(
-#                 callback_manager_fns.prompt_template.template,
-#                 input_prompt or "",
-#             )
-#             if callback_manager_fns.prompt_template
-#             else {}
-#         )
+        # Extract template variables values from the prompt template if available
+        template_var_values = (
+            extract_template_vars(
+                callback_manager_fns.prompt_template.template,
+                input_prompt or "",
+            )
+            if callback_manager_fns.prompt_template
+            else {}
+        )
 
-#         callback = callback_manager_fns(
-#             payload=PayloadRecord(
-#                 system_prompt=input_prompt or "",
-#                 prompt_variables=list(template_var_values.keys()),
-#                 prompt_variable_values=template_var_values,
-#                 generated_text=llm_return_val.text,
-#                 input_token_count=llm_return_val.raw["usage"]["prompt_tokens"],
-#                 generated_token_count=llm_return_val.raw["usage"]["completion_tokens"],
-#                 response_time=response_time,
-#             )
-#         )
+        callback = callback_manager_fns(
+            payload=PayloadRecord(
+                system_prompt=input_prompt or "",
+                prompt_variables=list(template_var_values.keys()),
+                prompt_variable_values=template_var_values,
+                generated_text=llm_return_val.text,
+                input_token_count=llm_return_val.input_token_count,
+                generated_token_count=llm_return_val.generated_token_count,
+                response_time=response_time,
+            )
+        )
 
-#         if asyncio.iscoroutine(callback):
-#             await callback
+        if asyncio.iscoroutine(callback):
+            await callback
 
-#     except Exception as e:
-#         logger.error(
-#             f"Unexpected error in observability callback manager: {e}", exc_info=True
-#         )
-
-
-# def _run_completion_callback(
-#     callback_manager_fns: Any,
-#     args: Tuple[Any, ...],
-#     kwargs: Dict[str, Any],
-#     llm_return_val: Any,
-#     response_time: int,
-# ) -> None:
-#     """
-#     Wrapper to run async callback in sync context via ThreadPoolExecutor.
-#     """
-#     asyncio.run(
-#         _process_completion_callback(
-#             callback_manager_fns, args, kwargs, llm_return_val, response_time
-#         )
-#     )
+    except Exception as e:
+        logger.error(
+            f"Unexpected error in observability callback manager: {e}", exc_info=True
+        )
 
 
-# def llm_completion_callback() -> Callable:
-#     """
-#     Decorator to wrap observability method with llm.
-#     Looks for observability instances in `self.callback_manager`. For prompt-based LLMs (/completion).
-#     """
+def _run_completion_callback(
+    callback_manager_fns: Any,
+    args: Tuple[Any, ...],
+    kwargs: Dict[str, Any],
+    llm_return_val: CompletionResponse,
+    response_time: int,
+) -> None:
+    """
+    Wrapper to run async callback in sync context via ThreadPoolExecutor.
+    """
+    asyncio.run(
+        _process_completion_callback(
+            callback_manager_fns, args, kwargs, llm_return_val, response_time
+        )
+    )
 
-#     def decorator(f: Callable) -> Callable:
-#         @functools.wraps(f)
-#         def async_wrapper(self, *args, **kwargs):
-#             callback_manager_fns = getattr(self, "callback_manager", None)
 
-#             start_time = time.perf_counter()
-#             llm_return_val = f(self, *args, **kwargs)
-#             response_time = int((time.perf_counter() - start_time) * 1000)
+def llm_completion_callback() -> Callable:
+    """
+    Decorator to wrap observability method with llm.
+    Looks for observability instances in `self.callback_manager`. For prompt-based LLMs (/completion).
+    """
 
-#             if callback_manager_fns:
-#                 try:
-#                     # Try to use existing event loop (async)
-#                     loop = asyncio.get_running_loop()
-#                     loop.create_task(
-#                         _process_completion_callback(
-#                             callback_manager_fns,
-#                             args,
-#                             kwargs,
-#                             llm_return_val,
-#                             response_time,
-#                         )
-#                     )
-#                 except RuntimeError:
-#                     # No event loop - use ThreadPoolExecutor (sync)
-#                     _callback_executor.submit(
-#                         _run_completion_callback,
-#                         callback_manager_fns,
-#                         args,
-#                         kwargs,
-#                         llm_return_val,
-#                         response_time,
-#                     )
+    def decorator(f: Callable) -> Callable:
+        @functools.wraps(f)
+        def async_wrapper(self, *args, **kwargs):
+            callback_manager_fns = getattr(self, "callback_manager", None)
 
-#             return llm_return_val
+            start_time = time.perf_counter()
+            llm_return_val = f(self, *args, **kwargs)
+            response_time = int((time.perf_counter() - start_time) * 1000)
 
-#         return async_wrapper
+            if callback_manager_fns:
+                try:
+                    # Try to use existing event loop (async)
+                    loop = asyncio.get_running_loop()
+                    loop.create_task(
+                        _process_completion_callback(
+                            callback_manager_fns,
+                            args,
+                            kwargs,
+                            llm_return_val,
+                            response_time,
+                        )
+                    )
+                except RuntimeError:
+                    # No event loop - use ThreadPoolExecutor (sync)
+                    _callback_executor.submit(
+                        _run_completion_callback,
+                        callback_manager_fns,
+                        args,
+                        kwargs,
+                        llm_return_val,
+                        response_time,
+                    )
 
-#     return decorator
+            return llm_return_val
+
+        return async_wrapper
+
+    return decorator
