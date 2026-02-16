@@ -1,7 +1,7 @@
 from typing import Any
 
 from beekeeper.core.llms import BaseLLM, ChatMessage, ChatResponse, GenerateResponse
-from beekeeper.core.llms.decorators import llm_chat_monitor
+from beekeeper.core.llms.decorators import llm_chat_callback, llm_completion_callback
 from beekeeper.llms.watsonx.supporting_classes.enums import Region
 from pydantic import Field
 
@@ -57,6 +57,7 @@ class WatsonxLLM(BaseLLM):
             space_id=self.space_id,
         )
 
+    @llm_completion_callback()
     def completion(
         self,
         prompt: str,
@@ -65,7 +66,7 @@ class WatsonxLLM(BaseLLM):
         **kwargs: Any,
     ) -> GenerateResponse:
         """
-        Generates a chat completion for LLM. Using OpenAI's standard endpoint (/completions).
+        Creates a completion for the provided prompt and parameters. Using OpenAI's standard endpoint (/completions).
 
         Args:
             prompt (str): The input prompt to generate a completion for.
@@ -81,11 +82,13 @@ class WatsonxLLM(BaseLLM):
         )
 
         return GenerateResponse(
-            text=response["results"][0]["generated_text"],
+            text=response["results"][0].get("generated_text"),
+            input_token_count=response["results"][0].get("input_token_count"),
+            generated_token_count=response["results"][0].get("generated_token_count"),
             raw=response,
         )
 
-    @llm_chat_monitor()
+    @llm_chat_callback()
     def chat_completion(
         self,
         messages: list[ChatMessage | dict],
@@ -93,7 +96,7 @@ class WatsonxLLM(BaseLLM):
         **kwargs: Any,
     ) -> ChatResponse:
         """
-        Generates a chat completion for LLM. Using OpenAI's standard endpoint (/chat/completions).
+        Creates a chat completion for LLM. Using OpenAI's standard endpoint (/chat/completions).
 
         Args:
             messages (list[ChatMessage]): A list of chat messages as input for the LLM.

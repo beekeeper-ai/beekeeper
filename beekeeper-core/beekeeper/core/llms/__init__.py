@@ -6,4 +6,11 @@ from beekeeper.core.llms.types import (
     MessageRole,
 )
 
-__all__ = ["BaseLLM", "ChatMessage", "ChatResponse", "GenerateResponse", "MessageRole"]
+__all__ = [
+    "BaseLLM",
+    "ChatMessage",
+    "ChatResponse",
+    "CompletionResponse",
+    "GenerateResponse",
+    "MessageRole",
+]
