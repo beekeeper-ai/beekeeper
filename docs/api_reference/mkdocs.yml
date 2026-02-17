@@ -39,19 +39,19 @@ plugins:
             show_root_toc_entry: false
           paths:
             - ../../beekeeper-core/
-            - ../../beekeeper-extensions/embeddings/huggingface
-            - ../../beekeeper-extensions/embeddings/watsonx
-            - ../../beekeeper-extensions/guardrails/watsonx
-            - ../../beekeeper-extensions/llms/litellm
-            - ../../beekeeper-extensions/llms/watsonx
-            - ../../beekeeper-extensions/monitors/watsonx
-            - ../../beekeeper-extensions/readers/docling
-            - ../../beekeeper-extensions/readers/file
-            - ../../beekeeper-extensions/readers/ibm_cos
-            - ../../beekeeper-extensions/readers/watson_discovery
-            - ../../beekeeper-extensions/retrievers/watson_discovery
-            - ../../beekeeper-extensions/vector_stores/chroma
-            - ../../beekeeper-extensions/vector_stores/elasticsearch
+            - ../../beekeeper-integrations/embeddings/huggingface
+            - ../../beekeeper-integrations/embeddings/watsonx
+            - ../../beekeeper-integrations/guardrails/watsonx
+            - ../../beekeeper-integrations/llms/litellm
+            - ../../beekeeper-integrations/llms/watsonx
+            - ../../beekeeper-integrations/monitors/watsonx
+            - ../../beekeeper-integrations/readers/docling
+            - ../../beekeeper-integrations/readers/file
+            - ../../beekeeper-integrations/readers/ibm_cos
+            - ../../beekeeper-integrations/readers/watson_discovery
+            - ../../beekeeper-integrations/retrievers/watson_discovery
+            - ../../beekeeper-integrations/vector_stores/chroma
+            - ../../beekeeper-integrations/vector_stores/elasticsearch
 
 nav:
   - API Reference: index.md
