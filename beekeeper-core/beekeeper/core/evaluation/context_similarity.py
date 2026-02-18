@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 import numpy as np
-from beekeeper.core.embeddings import BaseEmbedding, SimilarityMode
+from beekeeper.core.embedding import BaseEmbedding, SimilarityMode
 from pydantic.v1 import BaseModel
 
 
@@ -20,7 +20,7 @@ class ContextSimilarityEvaluator(BaseModel):
     Example:
         ```python
         from beekeeper.core.evaluation import ContextSimilarityEvaluator
-        from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
+        from beekeeper.embedding.huggingface import HuggingFaceEmbedding
 
         embedding = HuggingFaceEmbedding()
         ctx_sim_evaluator = ContextSimilarityEvaluator(embed_model=embedding)
