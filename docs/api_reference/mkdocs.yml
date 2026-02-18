@@ -13,7 +13,7 @@ markdown_extensions:
   - md_in_html
 
 extra:
-  version: "1.0.17"
+  version: "2.0.0"
 extra_css:
   - _static/css/style.css
 
@@ -39,35 +39,35 @@ plugins:
             show_root_toc_entry: false
           paths:
             - ../../beekeeper-core/
-            - ../../beekeeper-integrations/embeddings/huggingface
-            - ../../beekeeper-integrations/embeddings/watsonx
-            - ../../beekeeper-integrations/guardrails/watsonx
-            - ../../beekeeper-integrations/llms/litellm
-            - ../../beekeeper-integrations/llms/watsonx
-            - ../../beekeeper-integrations/monitors/watsonx
-            - ../../beekeeper-integrations/readers/docling
-            - ../../beekeeper-integrations/readers/file
-            - ../../beekeeper-integrations/readers/ibm_cos
-            - ../../beekeeper-integrations/readers/watson_discovery
-            - ../../beekeeper-integrations/retrievers/watson_discovery
-            - ../../beekeeper-integrations/vector_stores/chroma
-            - ../../beekeeper-integrations/vector_stores/elasticsearch
+            - ../../beekeeper-integrations/embedding/huggingface
+            - ../../beekeeper-integrations/embedding/watsonx
+            - ../../beekeeper-integrations/guardrail/watsonx
+            - ../../beekeeper-integrations/llm/litellm
+            - ../../beekeeper-integrations/llm/watsonx
+            - ../../beekeeper-integrations/observability/watsonx
+            - ../../beekeeper-integrations/loader/docling
+            - ../../beekeeper-integrations/loader/file
+            - ../../beekeeper-integrations/loader/ibm_cos
+            - ../../beekeeper-integrations/loader/watson_discovery
+            - ../../beekeeper-integrations/retriever/watson_discovery
+            - ../../beekeeper-integrations/vector_store/chroma
+            - ../../beekeeper-integrations/vector_store/elasticsearch
 
 nav:
   - API Reference: index.md
   # - Getting Started:
   #   - Installation: getting-started/installation.md
-  - Embeddings: embeddings/
+  - Embedding: embedding/
   - Evaluation: evaluation/
-  - Flows: flows/
-  - Guardrails: guardrails/
-  - LLMs: llms/
-  - Observability: monitors/
-  - Prompts: prompts/
-  - Readers: readers/
-  - Retrievers: retrievers/
-  - Text Chunkers: text_chunkers/
-  - Vector Stores: vector_stores/
+  - Guardrail: guardrail/
+  - LLM: llm/
+  - Observability: observability/
+  - Prompt: prompt/
+  - Loader: loader/
+  - Retriever: retriever/
+  - Text Chunker: text_chunker/
+  - Vector Store: vector_store/
+  - Workflow: workflow/
 
 theme:
   name: material
