@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from beekeeper.core.observability.types import PayloadRecord
-from beekeeper.core.prompt import PromptTemplate
+from beekeeper.core.prompts import PromptTemplate
 
 
 class BaseMonitor(ABC):

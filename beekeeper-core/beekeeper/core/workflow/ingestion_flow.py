@@ -2,9 +2,9 @@ from enum import Enum
 from typing import List, Optional
 
 from beekeeper.core.document import Document
-from beekeeper.core.loader import BaseReader
+from beekeeper.core.loaders import BaseReader
 from beekeeper.core.schema import TransformerComponent
-from beekeeper.core.vector_store import BaseVectorStore
+from beekeeper.core.vector_stores import BaseVectorStore
 
 
 class DocStrategy(Enum):

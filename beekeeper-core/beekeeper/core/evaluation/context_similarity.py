@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 import numpy as np
-from beekeeper.core.embedding import BaseEmbedding, SimilarityMode
+from beekeeper.core.embeddings import BaseEmbedding, SimilarityMode
 from pydantic.v1 import BaseModel
 
 
