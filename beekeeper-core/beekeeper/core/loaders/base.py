@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import List
 
 from beekeeper.core.document import Document
 from pydantic.v1 import BaseModel
@@ -13,5 +12,5 @@ class BaseReader(ABC, BaseModel):
         return "BaseReader"
 
     @abstractmethod
-    def load_data(self) -> List[Document]:
+    def load_data(self) -> list[Document]:
         """Loads data."""

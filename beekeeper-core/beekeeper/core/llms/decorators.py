@@ -5,7 +5,7 @@ import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from logging import getLogger
-from typing import Any, Callable, Dict, Tuple
+from typing import Any, Callable
 
 from beekeeper.core.llms.types import ChatMessage, ChatResponse, CompletionResponse
 from beekeeper.core.observability.types import PayloadRecord
@@ -125,8 +125,8 @@ def llm_chat_monitor() -> Callable:
 
 async def _process_chat_callback(
     callback_manager_fns: Any,
-    args: Tuple[Any, ...],
-    kwargs: Dict[str, Any],
+    args: tuple[Any, ...],
+    kwargs: dict[str, Any],
     llm_return_val: ChatResponse,
     response_time: int,
 ) -> None:
@@ -194,8 +194,8 @@ async def _process_chat_callback(
 
 def _run_chat_callback(
     callback_manager_fns: Any,
-    args: Tuple[Any, ...],
-    kwargs: Dict[str, Any],
+    args: tuple[Any, ...],
+    kwargs: dict[str, Any],
     llm_return_val: ChatResponse,
     response_time: int,
 ) -> None:
@@ -257,8 +257,8 @@ def llm_chat_callback() -> Callable:
 
 async def _process_completion_callback(
     callback_manager_fns: Any,
-    args: Tuple[Any, ...],
-    kwargs: Dict[str, Any],
+    args: tuple[Any, ...],
+    kwargs: dict[str, Any],
     llm_return_val: CompletionResponse,
     response_time: int,
 ) -> None:
@@ -309,8 +309,8 @@ async def _process_completion_callback(
 
 def _run_completion_callback(
     callback_manager_fns: Any,
-    args: Tuple[Any, ...],
-    kwargs: Dict[str, Any],
+    args: tuple[Any, ...],
+    kwargs: dict[str, Any],
     llm_return_val: CompletionResponse,
     response_time: int,
 ) -> None:

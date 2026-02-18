@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import List, Tuple
 
 from beekeeper.core.document import Document
 
@@ -12,22 +11,22 @@ class BaseVectorStore(ABC):
         return "BaseVectorStore"
 
     @abstractmethod
-    def add_documents(self, documents: List[Document]) -> List[str]:
+    def add_documents(self, documents: list[Document]) -> list[str]:
         """Add documents to vector store."""
 
     @abstractmethod
-    def query_documents(self, query: str, top_k: int = 4) -> List[Document]:
+    def query_documents(self, query: str, top_k: int = 4) -> list[Document]:
         """Query for similar documents in the vector store based on the input query provided."""
 
     @abstractmethod
-    def delete_documents(self, ids: List[str]) -> None:
+    def delete_documents(self, ids: list[str]) -> None:
         """Delete documents from vector store."""
 
     @abstractmethod
-    def get_all_documents(self, include_fields: List[str]) -> List[Document]:
+    def get_all_documents(self, include_fields: list[str]) -> list[Document]:
         """Get all documents from vector store."""
 
-    def get_all_document_hashes(self) -> Tuple[List[str], List[str], List[str]]:
+    def get_all_document_hashes(self) -> tuple[list[str], list[str], list[str]]:
         """Get all ref hashes from vector store."""
         hits = self.get_all_documents()
 

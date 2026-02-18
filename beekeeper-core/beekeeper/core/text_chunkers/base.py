@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import List
 
 from beekeeper.core.document import Document
 from beekeeper.core.schema import TransformerComponent
@@ -14,11 +13,11 @@ class BaseTextChunker(TransformerComponent, ABC):
         return "BaseTextChunker"
 
     @abstractmethod
-    def chunk_text(self, text: str) -> List[str]:
+    def chunk_text(self, text: str) -> list[str]:
         """Split a single string of text into smaller chunks."""
 
     @abstractmethod
-    def chunk_documents(self, documents: List[Document]) -> List[Document]:
+    def chunk_documents(self, documents: list[Document]) -> list[Document]:
         """Split a list of documents into smaller document chunks."""
 
     @deprecated(
@@ -26,7 +25,7 @@ class BaseTextChunker(TransformerComponent, ABC):
         version="1.0.2",
         action="always",
     )
-    def from_text(self, text: str) -> List[str]:
+    def from_text(self, text: str) -> list[str]:
         return self.chunk_text(text)
 
     @deprecated(
@@ -34,8 +33,8 @@ class BaseTextChunker(TransformerComponent, ABC):
         version="1.0.2",
         action="always",
     )
-    def from_documents(self, documents: List[Document]) -> List[Document]:
+    def from_documents(self, documents: list[Document]) -> list[Document]:
         return self.chunk_documents(documents)
 
-    def __call__(self, documents: List[Document]) -> List[Document]:
+    def __call__(self, documents: list[Document]) -> list[Document]:
         return self.chunk_documents(documents)

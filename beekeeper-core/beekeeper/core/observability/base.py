@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from beekeeper.core.observability.types import PayloadRecord
 from beekeeper.core.prompts import PromptTemplate
@@ -16,7 +15,7 @@ class BaseMonitor(ABC):
 class PromptMonitor(BaseMonitor):
     """Abstract base class defining the interface for prompt observability."""
 
-    def __init__(self, prompt_template: Optional[PromptTemplate] = None) -> None:
+    def __init__(self, prompt_template: PromptTemplate | None = None) -> None:
         self.prompt_template = PromptTemplate.from_value(prompt_template)
 
     @classmethod

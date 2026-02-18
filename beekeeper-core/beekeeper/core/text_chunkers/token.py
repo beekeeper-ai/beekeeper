@@ -1,5 +1,3 @@
-from typing import List
-
 from beekeeper.core.document import Document
 from beekeeper.core.text_chunkers.base import BaseTextChunker
 from beekeeper.core.text_chunkers.utils import (
@@ -48,7 +46,7 @@ class TokenTextChunker(BaseTextChunker):
 
         self._sub_split_fns = [split_by_char()]
 
-    def chunk_text(self, text: str) -> List[str]:
+    def chunk_text(self, text: str) -> list[str]:
         """
         Split a single string of text into smaller chunks.
 
@@ -56,7 +54,7 @@ class TokenTextChunker(BaseTextChunker):
             text (str): Input text to split.
 
         Returns:
-            List[str]: List of text chunks.
+            list[str]: List of text chunks.
 
         Example:
             ```python
@@ -69,15 +67,15 @@ class TokenTextChunker(BaseTextChunker):
 
         return merge_splits(splits, self.chunk_size, self.chunk_overlap)
 
-    def chunk_documents(self, documents: List[Document]) -> List[Document]:
+    def chunk_documents(self, documents: list[Document]) -> list[Document]:
         """
         Split a list of documents into smaller document chunks.
 
         Args:
-            documents (List[Document]): List of `Document` objects to split.
+            documents (list[Document]): List of `Document` objects to split.
 
         Returns:
-            List[Document]: List of chunked documents objects.
+            list[Document]: List of chunked documents objects.
         """
         chunks = []
 
@@ -99,7 +97,7 @@ class TokenTextChunker(BaseTextChunker):
 
         return chunks
 
-    def _split(self, text: str) -> List[dict]:
+    def _split(self, text: str) -> list[dict]:
         text_len = len(tokenizer(text))
         if text_len <= self.chunk_size:
             return [{"text": text, "is_sentence": True, "token_size": text_len}]

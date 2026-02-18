@@ -1,13 +1,12 @@
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import List, Union
 
 import numpy as np
 from beekeeper.core.document import Document
 from beekeeper.core.schema import TransformerComponent
 from beekeeper.core.utils.pairwise import cosine_similarity
 
-Embedding = List[float]
+Embedding = list[float]
 
 
 class SimilarityMode(str, Enum):
@@ -43,11 +42,11 @@ class BaseEmbedding(TransformerComponent, ABC):
 
     @abstractmethod
     def embed_text(
-        self, input: Union[str, List[str]]
-    ) -> List[Embedding]:
+        self, input: str | list[str]
+    ) -> list[Embedding]:
         """Embed one or more text strings."""
 
-    def embed_documents(self, documents: List[Document]) -> List[Document]:
+    def embed_documents(self, documents: list[Document]) -> list[Document]:
         """
         Embed a list of documents and assign the computed embeddings to the 'embedding' attribute.
 
@@ -71,5 +70,5 @@ class BaseEmbedding(TransformerComponent, ABC):
         """Get embedding similarity."""
         return similarity(embedding1, embedding2, mode)
 
-    def __call__(self, documents: List[Document]) -> List[Document]:
+    def __call__(self, documents: list[Document]) -> list[Document]:
         return self.embed_documents(documents)

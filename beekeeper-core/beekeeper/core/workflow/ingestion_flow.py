@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import List, Optional
 
 from beekeeper.core.document import Document
 from beekeeper.core.loaders import BaseReader
@@ -23,7 +22,7 @@ class IngestionFlow:
     An ingestion flow for processing and storing data.
 
     Attributes:
-        transformers (List[TransformerComponent]): A list of transformer components applied to the input documents.
+        transformers (list[TransformerComponent]): A list of transformer components applied to the input documents.
         doc_strategy (DocStrategy): The strategy used for handling document duplicates.
             Defaults to `DocStrategy.DUPLICATE_ONLY`.
         post_transformer (bool): Whether document de-duplication should be applied after transformation step.
@@ -48,11 +47,11 @@ class IngestionFlow:
 
     def __init__(
         self,
-        transformers: List[TransformerComponent],
+        transformers: list[TransformerComponent],
         doc_strategy: DocStrategy = DocStrategy.DUPLICATE_ONLY,
         post_transformer: bool = False,
-        readers: Optional[List[BaseReader]] = None,
-        vector_store: Optional[BaseVectorStore] = None,
+        readers: list[BaseReader] | None = None,
+        vector_store: BaseVectorStore | None = None,
     ) -> None:
         self.doc_strategy = doc_strategy
         self.post_transformer = post_transformer
@@ -60,7 +59,7 @@ class IngestionFlow:
         self.readers = readers
         self.vector_store = vector_store
 
-    def _read_documents(self, documents: Optional[List[Document]]):
+    def _read_documents(self, documents: list[Document] | None):
         input_documents = []
 
         if documents is not None:
@@ -72,7 +71,7 @@ class IngestionFlow:
 
         return input_documents
 
-    def _handle_duplicates(self, documents) -> List[Document]:
+    def _handle_duplicates(self, documents) -> list[Document]:
         ids, existing_hashes, existing_ref_hashes = (
             self.vector_store.get_all_document_hashes()
         )
@@ -121,9 +120,9 @@ class IngestionFlow:
 
     def _run_transformers(
         self,
-        documents: List[Document],
+        documents: list[Document],
         transformers: TransformerComponent,
-    ) -> List[Document]:
+    ) -> list[Document]:
         _documents = documents.copy()
 
         for transformer in transformers:
@@ -131,7 +130,7 @@ class IngestionFlow:
 
         return _documents
 
-    def run(self, documents: List[Document] = None) -> List[Document]:
+    def run(self, documents: list[Document] = None) -> list[Document]:
         """
         Run an ingestion flow.
 
@@ -140,7 +139,7 @@ class IngestionFlow:
 
         Example:
             ```python
-            ingestion_flow.run(documents: List[Document])
+            ingestion_flow.run(documents: list[Document])
             ```
         """
         documents_processed = []

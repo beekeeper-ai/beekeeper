@@ -1,7 +1,7 @@
 import uuid
 from abc import ABC, abstractmethod
 from hashlib import sha256
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import numpy as np
 from pydantic.v1 import BaseModel, Field, validator
@@ -14,11 +14,11 @@ class BaseDocument(ABC, BaseModel):
         default_factory=lambda: str(uuid.uuid4()),
         description="Unique ID of the document.",
     )
-    metadata: Dict[str, Any] = Field(
+    metadata: dict[str, Any] = Field(
         default_factory=dict,
         description="A flat dictionary of metadata fields.",
     )
-    embedding: Optional[Union[List[float], np.ndarray]] = Field(
+    embedding: list[float] | np.ndarray | None = Field(
         default_factory=None,
         description="Embedding of the document.",
     )
@@ -27,7 +27,7 @@ class BaseDocument(ABC, BaseModel):
         arbitrary_types_allowed = True
 
     @validator("metadata", pre=True)
-    def _validate_metadata(cls, v) -> Dict:
+    def _validate_metadata(cls, v) -> dict:
         if v is None:
             return {}
         return v
@@ -40,7 +40,7 @@ class BaseDocument(ABC, BaseModel):
         """Get metadata."""
         return self.metadata
 
-    def get_embedding(self) -> List[float]:
+    def get_embedding(self) -> list[float] | np.ndarray | None:
         """Get metadata."""
         return self.embedding
 
@@ -71,7 +71,7 @@ class Document(BaseDocument):
 
 class DocumentWithScore(BaseModel):
     document: BaseDocument
-    score: Optional[float] = None
+    score: float | None = None
 
     @classmethod
     def class_name(cls) -> str:
@@ -99,5 +99,5 @@ class DocumentWithScore(BaseModel):
     def get_content(self) -> str:
         return self.document.get_content()
 
-    def get_metadata(self) -> str:
+    def get_metadata(self) -> dict:
         return self.document.get_metadata()

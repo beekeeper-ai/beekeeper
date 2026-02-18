@@ -1,5 +1,5 @@
 import re
-from typing import List, Literal, Tuple
+from typing import Literal
 
 import numpy as np
 from beekeeper.core.document import Document
@@ -41,7 +41,7 @@ class SemanticChunker(BaseTextChunker, BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def _combine_sentences(self, sentences: List[dict]) -> List[dict]:
+    def _combine_sentences(self, sentences: list[dict]) -> list[dict]:
         """Combine sentences with neighbors based on buffer size."""
         for i in range(len(sentences)):
             combined_sentence = ""
@@ -65,8 +65,8 @@ class SemanticChunker(BaseTextChunker, BaseModel):
 
     def _calculate_cosine_distances(
         self,
-        single_sentences_list: List[str],
-    ) -> Tuple[List[float], List[dict]]:
+        single_sentences_list: list[str],
+    ) -> tuple[list[float], list[dict]]:
         _sentences = [
             {"sentence": x, "index": i} for i, x in enumerate(single_sentences_list)
         ]
@@ -94,12 +94,12 @@ class SemanticChunker(BaseTextChunker, BaseModel):
 
         return distances, sentences
 
-    def _calculate_breakpoint(self, distances: List[float]) -> List:
+    def _calculate_breakpoint(self, distances: list[float]) -> list:
         distance_threshold = np.percentile(distances, self.breakpoint_threshold_amount)
 
         return [i for i, x in enumerate(distances) if x > distance_threshold]
 
-    def chunk_text(self, text: str) -> List[str]:
+    def chunk_text(self, text: str) -> list[str]:
         """
         Split a single string of text into smaller chunks.
 
@@ -107,7 +107,7 @@ class SemanticChunker(BaseTextChunker, BaseModel):
             text (str): Input text to split.
 
         Returns:
-            List[str]: List of text chunks.
+            list[str]: List of text chunks.
         """
         single_sentences_list = re.split(r"(?<=[.?!])\s+", text)
         distances, sentences = self._calculate_cosine_distances(single_sentences_list)
@@ -133,15 +133,15 @@ class SemanticChunker(BaseTextChunker, BaseModel):
 
         return chunks
 
-    def chunk_documents(self, documents: List[Document]) -> List[Document]:
+    def chunk_documents(self, documents: list[Document]) -> list[Document]:
         """
         Split a list of documents into smaller document chunks.
 
         Args:
-            documents (List[Document]): List of `Document` objects to split.
+            documents (list[Document]): List of `Document` objects to split.
 
         Returns:
-            List[Document]: List of chunked documents objects.
+            list[Document]: List of chunked documents objects.
         """
         chunks = []
 

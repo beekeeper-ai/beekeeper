@@ -1,8 +1,6 @@
-from typing import List
-
 import numpy as np
 
-Matrix = List[float]
+Matrix = list[float]
 
 
 def cosine_similarity(X: Matrix, Y: Matrix) -> np.ndarray:

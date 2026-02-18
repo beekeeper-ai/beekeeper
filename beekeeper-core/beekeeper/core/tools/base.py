@@ -1,6 +1,6 @@
 import re
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Literal
+from typing import Any, Literal
 
 from pydantic.v1 import BaseModel, validator
 
@@ -11,7 +11,7 @@ class ToolInputSchema(BaseModel):
     description: str
     input_type: Literal["integer", "string"]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         self.dict()
 
 
@@ -20,7 +20,7 @@ class BaseTool(ABC, BaseModel):
 
     name: str
     description: str
-    input_schema: Dict[str, ToolInputSchema]
+    input_schema: dict[str, ToolInputSchema]
 
     @validator("name")
     def _validate_name(cls, v):

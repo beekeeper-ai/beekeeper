@@ -1,5 +1,3 @@
-from typing import Dict, List
-
 import numpy as np
 from beekeeper.core.embeddings import BaseEmbedding, SimilarityMode
 from pydantic.v1 import BaseModel
@@ -34,7 +32,7 @@ class ContextSimilarityEvaluator(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def evaluate(self, contexts: List[str], generated_text: str) -> Dict:
+    def evaluate(self, contexts: list[str], generated_text: str) -> dict:
         """
         Args:
             contexts (List[str]): List contexts used to generate LLM response.

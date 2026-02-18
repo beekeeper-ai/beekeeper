@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -7,7 +7,7 @@ class GuardrailResponse(BaseModel):
     """Guardrail response."""
 
     text: str = Field(..., description="Generated text response")
-    action: Optional[str] = Field(
+    action: str | None = Field(
         default=None, description="Action taken by the guardrail"
     )
-    raw: Optional[Any] = Field(default=None)
+    raw: Any | None = Field(default=None)

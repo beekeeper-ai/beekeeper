@@ -1,7 +1,7 @@
 import glob
 import os
 from pathlib import Path
-from typing import List, Optional, Type
+from typing import Type
 
 from beekeeper.core.document import Document
 from beekeeper.core.loaders import BaseReader
@@ -30,7 +30,7 @@ class DirectoryReader(BaseReader):
     allowing recursive directory traversal.
 
     Attributes:
-        required_exts (List[str], optional): List of file extensions to filter by.
+        required_exts (list[str], optional): List of file extensions to filter by.
             Only files with these extensions will be loaded. Defaults to `None` (no filtering).
         recursive (bool, optional): Whether to recursively search subdirectories for files.
             Defaults to `False`.
@@ -43,11 +43,11 @@ class DirectoryReader(BaseReader):
         ```
     """
 
-    required_exts: List[str] = [".pdf", ".docx", ".html"]
-    recursive: Optional[bool] = False
-    file_loader: Optional[dict[str, Type[BaseReader]]] = None
+    required_exts: list[str] = [".pdf", ".docx", ".html"]
+    recursive: bool | None = False
+    file_loader: dict[str, Type[BaseReader]] | None = None
 
-    def load_data(self, input_dir: str) -> List[Document]:
+    def load_data(self, input_dir: str) -> list[Document]:
         """
         Loads data from the specified directory.
 
@@ -55,7 +55,7 @@ class DirectoryReader(BaseReader):
             input_dir (str): Directory path from which to load the documents.
 
         Returns:
-            List[Document]: A list of documents loaded from the directory.
+            list[Document]: A list of documents loaded from the directory.
         """
         if not os.path.isdir(input_dir):
             raise ValueError(f"`{input_dir}` is not a valid directory.")
