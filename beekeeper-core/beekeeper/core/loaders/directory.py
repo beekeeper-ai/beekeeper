@@ -4,29 +4,27 @@ from pathlib import Path
 from typing import Type
 
 from beekeeper.core.document import Document
-from beekeeper.core.loaders import BaseReader
+from beekeeper.core.loaders import BaseLoader
 
 
-def _loading_default_supported_readers():
+def _get_default_file_loaders():
     try:
-        from beekeeper.loaders.file import DocxReader, HTMLReader, PDFReader
+        from beekeeper.loaders.file import DocxLoader, HTMLLoader, PDFLoader
     except ImportError:
         raise ImportError(
             "beekeeper-loaders-file package not found, please install it with `pip install beekeeper-loaders-file`",
         )
 
     return {
-        ".docx": DocxReader,
-        ".html": HTMLReader,
-        ".pdf": PDFReader,
+        ".docx": DocxLoader,
+        ".html": HTMLLoader,
+        ".pdf": PDFLoader,
     }
 
 
-class DirectoryReader(BaseReader):
+class DirectoryLoader(BaseLoader):
     """
-    Directory reader.
-
-    Reads files from a directory, optionally filtering by file extension and
+    Loads files from a directory, optionally filtering by file extension and
     allowing recursive directory traversal.
 
     Attributes:
@@ -37,15 +35,15 @@ class DirectoryReader(BaseReader):
 
     Example:
         ```python
-        from beekeeper.core.loader import DirectoryReader
+        from beekeeper.core.loader import DirectoryLoader
 
-        directory_reader = DirectoryReader()
+        directory_loader = DirectoryLoader()
         ```
     """
 
     required_exts: list[str] = [".pdf", ".docx", ".html"]
-    recursive: bool | None = False
-    file_loader: dict[str, Type[BaseReader]] | None = None
+    recursive: bool = False
+    file_loader: dict[str, Type[BaseLoader]] | None = None
 
     def load_data(self, input_dir: str) -> list[Document]:
         """
@@ -61,9 +59,9 @@ class DirectoryReader(BaseReader):
             raise ValueError(f"`{input_dir}` is not a valid directory.")
 
         if self.file_loader is None:
-            self.file_loader = _loading_default_supported_readers()
+            self.file_loader = _get_default_file_loaders()
 
-        input_dir = Path(input_dir)
+        input_dir = str(Path(input_dir))
         documents = []
 
         pattern_prefix = "**/*" if self.recursive else ""
@@ -78,13 +76,13 @@ class DirectoryReader(BaseReader):
                 loader_cls = self.file_loader.get(extension)
                 if loader_cls:
                     try:
-                        # TODO add `file_reader_kwargs`
+                        # TODO add `file_loader_kwargs`
                         doc = loader_cls().load_data(file_dir)
                         documents.extend(doc)
                     except Exception as e:
-                        raise f"Error reading {file_dir}: {e}"
+                        raise Exception(f"Error reading {file_dir}: {e}")
                 else:
                     # TODO add `unstructured file` support
-                    raise f"Unsupported file type: {extension}"
+                    raise ValueError(f"Unsupported file type: {extension}")
 
         return documents

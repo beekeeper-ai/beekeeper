@@ -1,4 +1,4 @@
-from beekeeper.core.loaders.base import BaseReader
-from beekeeper.core.loaders.directory import DirectoryReader
+from beekeeper.core.loaders.base import BaseLoader
+from beekeeper.core.loaders.directory import DirectoryLoader
 
-__all__ = ["BaseReader", "DirectoryReader"]
+__all__ = ["BaseLoader", "DirectoryLoader"]

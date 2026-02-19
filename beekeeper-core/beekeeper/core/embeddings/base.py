@@ -1,20 +1,12 @@
 from abc import ABC, abstractmethod
-from enum import Enum
 
 import numpy as np
 from beekeeper.core.document import Document
+from beekeeper.core.embeddings.enums import SimilarityMode
 from beekeeper.core.schema import TransformerComponent
 from beekeeper.core.utils.pairwise import cosine_similarity
 
 Embedding = list[float]
-
-
-class SimilarityMode(str, Enum):
-    """Modes for similarity."""
-
-    COSINE = "cosine"
-    DOT_PRODUCT = "dot_product"
-    EUCLIDEAN = "euclidean"
 
 
 def similarity(

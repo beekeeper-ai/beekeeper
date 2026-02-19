@@ -23,7 +23,7 @@ class BaseVectorStore(ABC):
         """Delete documents from vector store."""
 
     @abstractmethod
-    def get_all_documents(self, include_fields: list[str]) -> list[Document]:
+    def get_all_documents(self, include_fields: list[str] = []) -> list[Document]:
         """Get all documents from vector store."""
 
     def get_all_document_hashes(self) -> tuple[list[str], list[str], list[str]]:

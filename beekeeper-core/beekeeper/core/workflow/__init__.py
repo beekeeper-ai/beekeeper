@@ -1,3 +1,3 @@
-from beekeeper.core.workflow.ingestion_flow import IngestionFlow
+from beekeeper.core.workflow.ingestion_workflow import IngestionWorkflow
 
-__all__ = ["IngestionFlow"]
+__all__ = ["IngestionWorkflow"]

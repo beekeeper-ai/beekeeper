@@ -4,15 +4,15 @@ from beekeeper.core.observability.types import PayloadRecord
 from beekeeper.core.prompts import PromptTemplate
 
 
-class BaseMonitor(ABC):
+class BaseObservability(ABC):
     """Abstract base class defining the interface for observability."""
 
     @classmethod
     def class_name(cls) -> str:
-        return "BaseMonitor"
+        return "BaseObservability"
 
 
-class PromptMonitor(BaseMonitor):
+class PromptObservability(BaseObservability):
     """Abstract base class defining the interface for prompt observability."""
 
     def __init__(self, prompt_template: PromptTemplate | None = None) -> None:
@@ -20,16 +20,8 @@ class PromptMonitor(BaseMonitor):
 
     @classmethod
     def class_name(cls) -> str:
-        return "PromptMonitor"
+        return "PromptObservability"
 
     @abstractmethod
     def __call__(self, payload: PayloadRecord) -> None:
-        """PromptMonitor."""
-
-
-class TelemetryMonitor(BaseMonitor):
-    """Abstract base class defining the interface for telemetry observability."""
-
-    @classmethod
-    def class_name(cls) -> str:
-        return "TelemetryMonitor"
+        """PromptObservability."""

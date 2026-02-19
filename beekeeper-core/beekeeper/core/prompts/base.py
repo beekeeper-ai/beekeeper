@@ -13,7 +13,7 @@ class PromptTemplate(BaseModel):
 
     Example:
         ```python
-        from beekeeper.core.prompt import PromptTemplate
+        from beekeeper.core.prompts import PromptTemplate
 
         PromptTemplate("Summarize the following text: {input_text}")
         ```

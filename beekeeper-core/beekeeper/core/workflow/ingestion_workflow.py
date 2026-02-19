@@ -1,23 +1,11 @@
-from enum import Enum
-
 from beekeeper.core.document import Document
-from beekeeper.core.loaders import BaseReader
+from beekeeper.core.loaders import BaseLoader
 from beekeeper.core.schema import TransformerComponent
 from beekeeper.core.vector_stores import BaseVectorStore
+from beekeeper.core.workflow.enums import DocStrategy
 
 
-class DocStrategy(Enum):
-    """
-    Document de-duplication strategies work by comparing the hashes in the vector store.
-    They require a vector store to be set.
-    """
-
-    DUPLICATE_ONLY = "duplicate_only"
-    DUPLICATE_AND_DELETE = "duplicate_and_delete"
-    DEDUPLICATE_OFF = "deduplicate_off"
-
-
-class IngestionFlow:
+class IngestionWorkflow:
     """
     An ingestion flow for processing and storing data.
 
@@ -27,16 +15,16 @@ class IngestionFlow:
             Defaults to `DocStrategy.DUPLICATE_ONLY`.
         post_transformer (bool): Whether document de-duplication should be applied after transformation step.
             Defaults to `False`.
-        readers (BaseReader, optional): List of readers for loading or fetching documents.
+        readers (BaseLoader, optional): List of loaders for loading or fetching documents.
         vector_store (BaseVectorStore, optional): Vector store for saving processed documents
 
     Example:
         ```python
-        from beekeeper.core.flows import IngestionFlow
+        from beekeeper.core.workflows import IngestionWorkflow
         from beekeeper.core.text_chunkers import TokenTextChunker
         from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
 
-        ingestion_flow = IngestionFlow(
+        ingestion_flow = IngestionWorkflow(
             transformers=[
                 TokenTextChunker(),
                 HuggingFaceEmbedding(model_name="intfloat/multilingual-e5-small"),
@@ -50,7 +38,7 @@ class IngestionFlow:
         transformers: list[TransformerComponent],
         doc_strategy: DocStrategy = DocStrategy.DUPLICATE_ONLY,
         post_transformer: bool = False,
-        readers: list[BaseReader] | None = None,
+        readers: list[BaseLoader] | None = None,
         vector_store: BaseVectorStore | None = None,
     ) -> None:
         self.doc_strategy = doc_strategy

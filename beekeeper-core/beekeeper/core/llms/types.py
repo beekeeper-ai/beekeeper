@@ -1,21 +1,14 @@
-from enum import Enum
 from typing import Any
 
+from beekeeper.core.llms.enums import MessageRole
 from pydantic import BaseModel, Field
-
-
-class MessageRole(str, Enum):
-    ASSISTANT = "assistant"
-    SYSTEM = "system"
-    USER = "user"
-    TOOL = "tool"
 
 
 class ChatMessage(BaseModel):
     """Chat message."""
 
     model_config = {"use_enum_values": True}
-    role: MessageRole | str = None
+    role: MessageRole | str
     content: str | None = None
 
     def to_dict(self) -> dict:
@@ -43,30 +36,20 @@ class ChatMessage(BaseModel):
         )
 
 
-class CompletionResponse(BaseModel):
-    """Completion response."""
+class ChatResponse(BaseModel):
+    """Chat completion response."""
 
-    text: str = Field(..., description="Generated text response")
+    message: ChatMessage
 
     input_token_count: int | None = None
     generated_token_count: int | None = None
     raw: Any | None = None
 
 
-class GenerateResponse(BaseModel):
-    """Generate response."""
+class CompletionResponse(BaseModel):
+    """Completion response."""
 
     text: str = Field(..., description="Generated text response")
-
-    input_token_count: int
-    generated_token_count: int
-    raw: Any | None = None
-
-
-class ChatResponse(BaseModel):
-    """Chat completion response."""
-
-    message: ChatMessage
 
     input_token_count: int | None = None
     generated_token_count: int | None = None
