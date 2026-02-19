@@ -7,7 +7,7 @@ from beekeeper.core.workflow.enums import DocStrategy
 
 class IngestionWorkflow:
     """
-    An ingestion flow for processing and storing data.
+    An ingestion workflow for processing and storing data.
 
     Attributes:
         transformers (list[TransformerComponent]): A list of transformer components applied to the input documents.
@@ -24,7 +24,7 @@ class IngestionWorkflow:
         from beekeeper.core.text_chunkers import TokenTextChunker
         from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
 
-        ingestion_flow = IngestionWorkflow(
+        ingestion_workflow = IngestionWorkflow(
             transformers=[
                 TokenTextChunker(),
                 HuggingFaceEmbedding(model_name="intfloat/multilingual-e5-small"),
@@ -92,7 +92,7 @@ class IngestionWorkflow:
                 dedup_documents_to_run.append(doc)
                 current_unique_hashes.append(
                     doc.hash,
-                )  # Prevent duplicating same document hash in same batch flow execution.
+                )  # Prevent duplicating same document hash in same batch workflow execution.
 
         if self.doc_strategy == DocStrategy.DUPLICATE_AND_DELETE:
             ids_to_remove = [
@@ -120,14 +120,14 @@ class IngestionWorkflow:
 
     def run(self, documents: list[Document] = None) -> list[Document]:
         """
-        Run an ingestion flow.
+        Run an ingestion workflow.
 
         Args:
             documents: Set of documents to be transformed.
 
         Example:
             ```python
-            ingestion_flow.run(documents: list[Document])
+            ingestion_workflow.run(documents: list[Document])
             ```
         """
         documents_processed = []
