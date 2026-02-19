@@ -1,7 +1,7 @@
 from typing import Any
 
+from beekeeper.core.bridge.pydantic import BaseModel, Field
 from beekeeper.core.llms.enums import MessageRole
-from pydantic import BaseModel, Field
 
 
 class ChatMessage(BaseModel):

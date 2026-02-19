@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from beekeeper.core.bridge.pydantic import BaseModel
 from beekeeper.core.prompts.utils import SafeFormatter
-from pydantic import BaseModel
 
 
 class PromptTemplate(BaseModel):

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from beekeeper.core.bridge.pydantic import BaseModel
 
 
 class PayloadRecord(BaseModel):

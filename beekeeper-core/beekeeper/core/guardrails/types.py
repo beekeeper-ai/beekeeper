@@ -1,6 +1,6 @@
 from typing import Any
 
-from pydantic import BaseModel, Field
+from beekeeper.core.bridge.pydantic import BaseModel, Field
 
 
 class GuardrailResponse(BaseModel):

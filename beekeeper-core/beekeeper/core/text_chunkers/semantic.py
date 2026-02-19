@@ -2,11 +2,11 @@ import re
 from typing import Literal
 
 import numpy as np
+from beekeeper.core.bridge.pydantic import BaseModel
 from beekeeper.core.document import Document
 from beekeeper.core.embeddings import BaseEmbedding
 from beekeeper.core.text_chunkers.base import BaseTextChunker
 from beekeeper.core.utils.pairwise import cosine_similarity
-from pydantic.v1 import BaseModel
 
 
 class SemanticChunker(BaseTextChunker, BaseModel):

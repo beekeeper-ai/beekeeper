@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
+from beekeeper.core.bridge.pydantic import BaseModel
 from beekeeper.core.document import Document
-from pydantic.v1 import BaseModel
 
 
 class BaseLoader(ABC, BaseModel):

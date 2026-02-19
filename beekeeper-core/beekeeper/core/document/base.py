@@ -4,7 +4,7 @@ from hashlib import sha256
 from typing import Any
 
 import numpy as np
-from pydantic.v1 import BaseModel, Field, validator
+from beekeeper.core.bridge.pydantic import BaseModel, Field, field_validator
 
 
 class BaseDocument(ABC, BaseModel):
@@ -26,7 +26,7 @@ class BaseDocument(ABC, BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    @validator("metadata", pre=True)
+    @field_validator("metadata", mode="before")
     def _validate_metadata(cls, v) -> dict:
         if v is None:
             return {}

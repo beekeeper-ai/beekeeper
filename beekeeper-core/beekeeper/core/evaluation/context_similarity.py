@@ -1,6 +1,6 @@
 import numpy as np
+from beekeeper.core.bridge.pydantic import BaseModel
 from beekeeper.core.embeddings import BaseEmbedding, SimilarityMode
-from pydantic.v1 import BaseModel
 
 
 class ContextSimilarityEvaluator(BaseModel):

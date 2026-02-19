@@ -2,7 +2,7 @@ import re
 from abc import ABC, abstractmethod
 from typing import Any, Literal
 
-from pydantic.v1 import BaseModel, validator
+from beekeeper.core.bridge.pydantic import BaseModel, field_validator
 
 
 class ToolInputSchema(BaseModel):
@@ -22,7 +22,7 @@ class BaseTool(ABC, BaseModel):
     description: str
     input_schema: dict[str, ToolInputSchema]
 
-    @validator("name")
+    @field_validator("name")
     def _validate_name(cls, v):
         if not re.match(r"^[A-Za-z0-9_]+$", v):
             raise ValueError(
