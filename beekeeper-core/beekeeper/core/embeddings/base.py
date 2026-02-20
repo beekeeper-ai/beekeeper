@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import Optional
 
 import numpy as np
@@ -45,7 +45,7 @@ def similarity(
         return float(cosine_similarity(embedding1, embedding2))
 
 
-class BaseEmbedding(BaseModel, TransformerComponent):
+class BaseEmbedding(BaseModel, TransformerComponent, ABC):
     """
     Abstract base class defining the interface for embedding models.
     """
@@ -53,7 +53,6 @@ class BaseEmbedding(BaseModel, TransformerComponent):
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         validate_assignment=True,
-        extra="forbid",
     )
 
     model_name: Optional[str] = Field(
@@ -61,10 +60,18 @@ class BaseEmbedding(BaseModel, TransformerComponent):
         description="Name of the embedding model"
     )
 
-
     @classmethod
     def class_name(cls) -> str:
         return "BaseEmbedding"
+
+    @staticmethod
+    def similarity(
+        embedding1: Embedding,
+        embedding2: Embedding,
+        mode: SimilarityMode = SimilarityMode.COSINE,
+    ):
+        """Get embedding similarity."""
+        return similarity(embedding1, embedding2, mode)
 
     @abstractmethod
     def embed_text(
@@ -91,15 +98,6 @@ class BaseEmbedding(BaseModel, TransformerComponent):
             document.embedding = embedding
 
         return documents
-
-    @staticmethod
-    def similarity(
-        embedding1: Embedding,
-        embedding2: Embedding,
-        mode: SimilarityMode = SimilarityMode.COSINE,
-    ):
-        """Get embedding similarity."""
-        return similarity(embedding1, embedding2, mode)
 
     def __call__(self, documents: list[Document]) -> list[Document]:
         return self.embed_documents(documents)

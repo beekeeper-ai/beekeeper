@@ -1,11 +1,16 @@
 from abc import ABC, abstractmethod
 
+from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict
 from beekeeper.core.document import Document
 from beekeeper.core.schema import TransformerComponent
 
 
-class BaseTextChunker(TransformerComponent, ABC):
+class BaseTextChunker(BaseModel, TransformerComponent, ABC):
     """Abstract base class defining the interface for text chunker."""
+
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+    )
 
     @classmethod
     def class_name(cls) -> str:

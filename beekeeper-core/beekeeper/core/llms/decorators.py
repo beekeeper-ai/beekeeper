@@ -1,7 +1,6 @@
 import asyncio
 import atexit
 import functools
-import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from logging import getLogger
@@ -10,7 +9,6 @@ from typing import Any, Callable
 from beekeeper.core.llms.types import ChatMessage, ChatResponse, CompletionResponse
 from beekeeper.core.observability.types import PayloadRecord
 from beekeeper.core.prompts.utils import extract_template_vars
-from deprecated import deprecated
 
 logger = getLogger(__name__)
 

@@ -1,5 +1,5 @@
 import uuid
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from hashlib import sha256
 from typing import Any
 
@@ -8,12 +8,12 @@ from beekeeper.core.bridge.pydantic import (
     BaseModel,
     ConfigDict,
     Field,
+    computed_field,
     field_validator,
 )
-from pydantic import computed_field
 
 
-class BaseDocument(BaseModel):
+class BaseDocument(BaseModel, ABC):
     """Abstract base class defining the interface for retrievable documents."""
 
     model_config = ConfigDict(
@@ -108,18 +108,10 @@ class DocumentWithScore(BaseModel):
         return self.document.id_
 
     @property
-    def text(self) -> str:
-        """Get document text (only for Document instances)."""
-        if not isinstance(self.document, Document):
-            raise ValueError("Document must be of type Document to access text.")
-        return self.document.text
-
-    @property
-    def content(self) -> str:
-        """Get document content."""
-        return self.document.get_content()
-
-    @property
     def metadata(self) -> dict:
         """Get document metadata."""
         return self.document.metadata
+
+    def get_content(self) -> str:
+        """Get document content."""
+        return self.document.get_content()

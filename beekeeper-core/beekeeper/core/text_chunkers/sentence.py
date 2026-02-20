@@ -1,3 +1,6 @@
+from typing import Any
+
+from beekeeper.core.bridge.pydantic import field_validator
 from beekeeper.core.document import Document
 from beekeeper.core.text_chunkers.base import BaseTextChunker
 from beekeeper.core.text_chunkers.utils import (
@@ -29,21 +32,28 @@ class SentenceChunker(BaseTextChunker):
         ```
     """
 
+    chunk_size: int = 512
+    chunk_overlap: int = 256
+    separator: str = " "
+
+    @field_validator("chunk_overlap")
+    @classmethod
+    def _validate_chunk_overlap(cls, v: int, info: Any) -> int:
+        chunk_size = info.data.get("chunk_size", 512)
+        if v > chunk_size:
+            raise ValueError(
+                f"Got a larger `chunk_overlap` ({v}) than `chunk_size` "
+                f"({chunk_size}). `chunk_overlap` should be smaller."
+            )
+        return v
+
     def __init__(
         self,
         chunk_size: int = 512,
         chunk_overlap: int = 256,
-        separator=" ",
+        separator: str = " ",
     ) -> None:
-        if chunk_overlap > chunk_size:
-            raise ValueError(
-                f"Got a larger `chunk_overlap` ({chunk_overlap}) than `chunk_size` "
-                f"({chunk_size}). `chunk_overlap` should be smaller.",
-            )
-
-        self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
-
+        super().__init__(chunk_size=chunk_size, chunk_overlap=chunk_overlap, separator=separator)
         self._split_fns = [split_by_sep("\n\n\n"), split_by_sentence_tokenizer()]
         self._sub_split_fns = [
             split_by_regex("[^,.;？！]+[,.;？！]?"),
@@ -86,7 +96,7 @@ class SentenceChunker(BaseTextChunker):
 
         for document in documents:
             texts = self.chunk_text(document.get_content())
-            metadata = {**document.get_metadata()}
+            metadata = {**document.metadata}
 
             for text in texts:
                 if len(texts) > 1:

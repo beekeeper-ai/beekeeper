@@ -109,7 +109,7 @@ class IngestionWorkflow:
     def _run_transformers(
         self,
         documents: list[Document],
-        transformers: TransformerComponent,
+        transformers: list[TransformerComponent],
     ) -> list[Document]:
         _documents = documents.copy()
 

@@ -2,14 +2,13 @@ import re
 from typing import Literal
 
 import numpy as np
-from beekeeper.core.bridge.pydantic import BaseModel
 from beekeeper.core.document import Document
 from beekeeper.core.embeddings import BaseEmbedding
 from beekeeper.core.text_chunkers.base import BaseTextChunker
 from beekeeper.core.utils.pairwise import cosine_similarity
 
 
-class SemanticChunker(BaseTextChunker, BaseModel):
+class SemanticChunker(BaseTextChunker):
     """
     Python class designed to split text into chunks using semantic understanding.
 
@@ -72,7 +71,7 @@ class SemanticChunker(BaseTextChunker, BaseModel):
         ]
 
         sentences = self._combine_sentences(_sentences)
-        embeddings = self.embed_model.get_texts_embedding(
+        embeddings = self.embed_model.embed_text(
             [x["combined_sentence"] for x in sentences],
         )
 
@@ -147,7 +146,7 @@ class SemanticChunker(BaseTextChunker, BaseModel):
 
         for document in documents:
             texts = self.chunk_text(document.get_content())
-            metadata = {**document.get_metadata()}
+            metadata = {**document.metadata}
 
             for text in texts:
                 if len(texts) > 1:
