@@ -1,14 +1,14 @@
 import numpy as np
 from beekeeper.core.bridge.pydantic import (
-    BaseModel,
     ConfigDict,
     Field,
     field_validator,
 )
 from beekeeper.core.embeddings import BaseEmbedding, SimilarityMode
+from beekeeper.core.evaluation.base import BaseEvaluator
 
 
-class ContextSimilarityEvaluator(BaseModel):
+class ContextSimilarityEvaluator(BaseEvaluator):
     """
     Measures how much context has contributed to the answer's.
     A higher value suggests a greater proportion of the context is present in the LLM's response.
@@ -95,7 +95,7 @@ class ContextSimilarityEvaluator(BaseModel):
             contexts_score.append(similarity_score)
 
         if not contexts_score:
-            raise ValueError("No valid contexts provided for evaluation")
+            raise ValueError("Unable to evaluate: no valid contexts provided")
 
         mean_score = float(np.mean(contexts_score))
         passing = mean_score >= self.similarity_threshold
