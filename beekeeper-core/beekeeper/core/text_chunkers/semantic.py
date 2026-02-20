@@ -4,8 +4,9 @@ from typing import Literal
 import numpy as np
 from beekeeper.core.document import Document
 from beekeeper.core.embeddings import BaseEmbedding
+from beekeeper.core.embeddings.base import similarity
+from beekeeper.core.embeddings.enums import SimilarityMode
 from beekeeper.core.text_chunkers.base import BaseTextChunker
-from beekeeper.core.utils.pairwise import cosine_similarity
 
 
 class SemanticChunker(BaseTextChunker):
@@ -83,9 +84,11 @@ class SemanticChunker(BaseTextChunker):
             embedding_current = sentences[i]["combined_sentence_embedding"]
             embedding_next = sentences[i + 1]["combined_sentence_embedding"]
 
-            similarity = cosine_similarity(embedding_current, embedding_next)
+            similarity_score = similarity(
+                embedding_current, embedding_next, SimilarityMode.COSINE
+            )
 
-            distance = 1 - similarity
+            distance = 1 - similarity_score
             distances.append(distance)
 
             # Store distance in the dictionary

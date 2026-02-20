@@ -6,7 +6,6 @@ from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict, Field
 from beekeeper.core.document import Document
 from beekeeper.core.embeddings.enums import SimilarityMode
 from beekeeper.core.schema import TransformerComponent
-from beekeeper.core.utils.pairwise import cosine_similarity
 
 Embedding = list[float]
 
@@ -42,7 +41,12 @@ def similarity(
         return float(np.dot(embedding1, embedding2))
 
     else:
-        return float(cosine_similarity(embedding1, embedding2))
+        # Cosine similarity calculation
+        X = np.array(embedding1)
+        Y = np.array(embedding2)
+        product = np.dot(X, Y)
+        norm = np.linalg.norm(X) * np.linalg.norm(Y)
+        return float(product / norm)
 
 
 class BaseEmbedding(BaseModel, TransformerComponent, ABC):
