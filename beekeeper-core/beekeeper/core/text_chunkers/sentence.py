@@ -53,7 +53,9 @@ class SentenceChunker(BaseTextChunker):
         chunk_overlap: int = 256,
         separator: str = " ",
     ) -> None:
-        super().__init__(chunk_size=chunk_size, chunk_overlap=chunk_overlap, separator=separator)
+        super().__init__(
+            chunk_size=chunk_size, chunk_overlap=chunk_overlap, separator=separator
+        )
         self._split_fns = [split_by_sep("\n\n\n"), split_by_sentence_tokenizer()]
         self._sub_split_fns = [
             split_by_regex("[^,.;？！]+[,.;？！]?"),

@@ -67,8 +67,7 @@ class ContextSimilarityEvaluator(BaseEvaluator):
         Example:
             ```python
             evaluation_result = ctx_sim_evaluator.evaluate(
-                contexts=["context 1", "context 2"],
-                generated_text="<candidate>"
+                contexts=["context 1", "context 2"], generated_text="<candidate>"
             )
             print(f"Score: {evaluation_result['score']}")
             print(f"Passing: {evaluation_result['passing']}")

@@ -12,13 +12,11 @@ class BaseLLM(BaseModel, ABC):
     model_config = {"arbitrary_types_allowed": True}
 
     model: str = Field(
-        ...,
-        min_length=1,
-        description="Name or identifier of the LLM model to use"
+        ..., min_length=1, description="Name or identifier of the LLM model to use"
     )
     callback_manager: BaseObservability | None = Field(
         default=None,
-        description="Optional observability callback manager for tracking LLM interactions"
+        description="Optional observability callback manager for tracking LLM interactions",
     )
 
     @classmethod

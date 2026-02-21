@@ -60,7 +60,6 @@ class PromptTemplate(BaseModel):
             f"Invalid type for parameter 'template'. Expected str or PromptTemplate, but received {type(value).__name__}."
         )
 
-
     def _map_template_vars(self) -> list[str]:
         """
         Extracts all variables from the template.
@@ -74,7 +73,6 @@ class PromptTemplate(BaseModel):
         """
         pattern = re.compile(r"\{([^{}]+)\}")
         return pattern.findall(self.template)
-
 
     def format(self, **kwargs: Any) -> str:
         """
@@ -92,7 +90,6 @@ class PromptTemplate(BaseModel):
             ```
         """
         return self.template.format_map(SafeFormatter(**kwargs))
-
 
     def __str__(self) -> str:
         """Returns the template as a string."""

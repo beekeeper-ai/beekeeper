@@ -51,7 +51,9 @@ class TokenTextChunker(BaseTextChunker):
         chunk_overlap: int = 256,
         separator: str = "\n\n",
     ) -> None:
-        super().__init__(chunk_size=chunk_size, chunk_overlap=chunk_overlap, separator=separator)
+        super().__init__(
+            chunk_size=chunk_size, chunk_overlap=chunk_overlap, separator=separator
+        )
         self._split_fns = [split_by_sep(separator)]
         self._sub_split_fns = [split_by_char()]
 

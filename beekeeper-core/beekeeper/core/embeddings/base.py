@@ -60,8 +60,7 @@ class BaseEmbedding(BaseModel, TransformerComponent, ABC):
     )
 
     model_name: Optional[str] = Field(
-        default=None,
-        description="Name of the embedding model"
+        default=None, description="Name of the embedding model"
     )
 
     @classmethod
@@ -78,9 +77,7 @@ class BaseEmbedding(BaseModel, TransformerComponent, ABC):
         return similarity(embedding1, embedding2, mode)
 
     @abstractmethod
-    def embed_text(
-        self, input: str | list[str]
-    ) -> list[Embedding]:
+    def embed_text(self, input: str | list[str]) -> list[Embedding]:
         """
         Embed one or more text strings.
 

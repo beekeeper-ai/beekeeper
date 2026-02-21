@@ -28,7 +28,7 @@ def extract_template_vars(template_str: str, input_text: str) -> dict[str, str]:
         ```python
         result = extract_template_vars(
             template_str="Hello {name}, you are {age} years old",
-            input_text="Hello Alice, you are 25 years old"
+            input_text="Hello Alice, you are 25 years old",
         )
         # {'name': 'Alice', 'age': '25'}
         ```

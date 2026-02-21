@@ -6,8 +6,9 @@ from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict, Field, field_v
 
 
 class ToolInputSchema(BaseModel):
-    """Schema for defining tool input parameters.
-    
+    """
+    Schema for defining tool input parameters.
+
     Attributes:
         description: Description of the input parameter.
         input_type: Type of the input parameter (integer or string).
@@ -80,8 +81,9 @@ class BaseTool(BaseModel, ABC):
 
     @abstractmethod
     def run(self, tool_input: dict[str, Any]) -> Any:
-        """Execute the tool with the provided parameters.
-        
+        """
+        Execute the tool with the provided parameters.
+
         Args:
             tool_input: Dictionary containing the input parameters.
         """

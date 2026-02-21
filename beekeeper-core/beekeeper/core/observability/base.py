@@ -26,8 +26,7 @@ class PromptObservability(BaseModel, BaseObservability):
     )
 
     prompt_template: PromptTemplate | None = Field(
-        default=None,
-        description="Template for formatting prompts"
+        default=None, description="Template for formatting prompts"
     )
 
     @model_validator(mode="before")
