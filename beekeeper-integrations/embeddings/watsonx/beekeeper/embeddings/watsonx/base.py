@@ -1,10 +1,10 @@
-from typing import Any, List, Optional, Union
+from typing import Any
 
+from beekeeper.core.bridge.pydantic import Field, PrivateAttr
 from beekeeper.core.embeddings import BaseEmbedding, Embedding
-from pydantic.v1 import BaseModel, PrivateAttr
 
 
-class WatsonxEmbedding(BaseModel, BaseEmbedding):
+class WatsonxEmbedding(BaseEmbedding):
     """
     IBM watsonx embedding models.
 
@@ -33,12 +33,15 @@ class WatsonxEmbedding(BaseModel, BaseEmbedding):
         ```
     """
 
-    model_name: str = "ibm/slate-30m-english-rtrvr"
+    model_name: str = Field(
+        default="sentence-transformers/all-MiniLM-L6-v2", 
+        description="Name of the embedding model"
+    )
     api_key: str
     url: str
     truncate_input_tokens: int = 512
-    project_id: Optional[str] = None
-    space_id: Optional[str] = None
+    project_id: str | None = None
+    space_id: str | None = None
 
     _client: Any = PrivateAttr()
 
@@ -71,17 +74,18 @@ class WatsonxEmbedding(BaseModel, BaseEmbedding):
         self._client = WatsonxEmbeddings(**kwargs_params)
 
     def embed_text(
-        self, input: Union[str, List[str]]
-    ) -> Union[Embedding, List[Embedding]]:
+        self, input: str | list[str]
+    ) -> list[Embedding]:
         """
         Embed one or more text strings.
 
         Args:
-            input (str | List[str]): Input for which to compute embeddings.
+            input (str | list[str]): Input for which to compute embeddings.
         """
         if isinstance(input, str):
-            return self._client.embed_query(input)
+            return [self._client.embed_query(input)]
+
         elif isinstance(input, list) and all(isinstance(i, str) for i in input):
             return self._client.embed_documents(input)
         else:
-            raise TypeError(f"Expected str or List[str], got {type(input).__name__}")
+            raise TypeError(f"Expected str or list[str], got {type(input).__name__}")

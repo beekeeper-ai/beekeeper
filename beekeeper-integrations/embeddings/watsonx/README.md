@@ -1,4 +1,4 @@
-# Beekeeper embeddings extension - watsonx
+# Beekeeper embeddings integration - watsonx
 
 ## Installation 
 

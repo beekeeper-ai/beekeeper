@@ -1,12 +1,15 @@
 from logging import getLogger
-from typing import List
 
 from beekeeper.core.document import Document, DocumentWithScore
+from beekeeper.core.retrievers import BaseRetriever
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_watson import DiscoveryV2
+from ibm_watson.discovery_v2 import QueryLargePassages
 
 logger = getLogger(__name__)
 
 
-class WatsonDiscoveryRetriever:
+class WatsonDiscoveryRetriever(BaseRetriever):
     """
     Provides functionality to interact with IBM Watson Discovery for querying documents.
 
@@ -39,8 +42,6 @@ class WatsonDiscoveryRetriever:
         version: str = "2023-03-31",
         disable_passages: bool = False,
     ) -> None:
-        from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-        from ibm_watson import DiscoveryV2
 
         self.disable_passages = disable_passages
         self.project_id = project_id
@@ -54,12 +55,12 @@ class WatsonDiscoveryRetriever:
             logger.error(f"Error connecting to IBM Watson Discovery: {e}")
             raise
 
-    def search_documents(
+    def query_documents(
         self,
         query: str,
-        filter: str = None,
+        filter: str | None = None,
         top_k: int = 4,
-    ) -> List[DocumentWithScore]:
+    ) -> list[DocumentWithScore]:
         """
         Search your data in the Discovery API and return a list of documents.
 
@@ -71,11 +72,9 @@ class WatsonDiscoveryRetriever:
 
         Example:
             ```python
-            docs = doc_retriever.search_documents("What's Beekeeper Framework?")
+            docs = doc_retriever.query_documents("What's Beekeeper Framework?")
             ```
         """
-        from ibm_watson.discovery_v2 import QueryLargePassages
-
         return_fields = ["extracted_metadata.filename", "extracted_metadata.file_type"]
 
         if not self.disable_passages:

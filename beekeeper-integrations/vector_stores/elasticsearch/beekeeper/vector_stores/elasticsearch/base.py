@@ -1,6 +1,6 @@
 import uuid
 from logging import getLogger
-from typing import List, Literal
+from typing import Literal
 
 from beekeeper.core.document import Document, DocumentWithScore
 from beekeeper.core.embeddings import BaseEmbedding
@@ -121,14 +121,14 @@ class ElasticsearchVectorStore(BaseVectorStore):
 
     def add_documents(
         self,
-        documents: List[Document],
+        documents: list[Document],
         create_index_if_not_exists: bool = True,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Add documents to the Elasticsearch index.
 
         Args:
-            documents (List[Document]): List of documents to add to the index.
+            documents (list[Document]): List of documents to add to the index.
             create_index_if_not_exists (bool, optional): Whether to create the index
                 if it doesn't exist. Defaults to `True`.
         """
@@ -138,7 +138,7 @@ class ElasticsearchVectorStore(BaseVectorStore):
         vector_store_data = []
         for doc in documents:
             _id = doc.id_ if doc.id_ else str(uuid.uuid4())
-            _metadata = {**doc.get_metadata(), "hash": doc.hash}
+            _metadata = {**doc.metadata, "hash": doc.hash}
             _metadata_mapping = self._dynamic_metadata_mapping(_metadata)
             vector_store_data.append(
                 {
@@ -163,7 +163,7 @@ class ElasticsearchVectorStore(BaseVectorStore):
 
         return [doc.id_ for doc in documents]
 
-    def query_documents(self, query: str, top_k: int = 4) -> List[DocumentWithScore]:
+    def query_documents(self, query: str, top_k: int = 4) -> list[DocumentWithScore]:
         """
         Performs a similarity search for the top-k most similar documents.
 
@@ -172,7 +172,7 @@ class ElasticsearchVectorStore(BaseVectorStore):
             top_k (int, optional): Number of top results to return. Defaults to `4`.
 
         Returns:
-            List[DocumentWithScore]: List of the most similar documents.
+            list[DocumentWithScore]: List of the most similar documents.
         """
         query_embedding = self._embed_model.embed_text(query)
         #  TO-DO: Add elasticsearch `filter` option
@@ -215,21 +215,21 @@ class ElasticsearchVectorStore(BaseVectorStore):
             for hit in hits
         ]
 
-    def delete_documents(self, ids: List[str]) -> None:
+    def delete_documents(self, ids: list[str]) -> None:
         """
         Delete documents from the Elasticsearch index.
 
         Args:
-            ids (List[str]): List of documents IDs to delete.
+            ids (list[str]): List of documents IDs to delete.
         """
         for id in ids:
             self._client.delete(index=self.index_name, id=id)
 
-    def get_all_documents(self, include_fields: List[str] = []) -> List[Document]:
+    def get_all_documents(self, include_fields: list[str] | None = None) -> list[Document]:
         """Get all documents from vector store."""
         es_query = {"query": {"match_all": {}}}
 
-        if len(include_fields):
+        if include_fields and len(include_fields):
             es_query["_source"] = include_fields
 
         from elasticsearch import NotFoundError

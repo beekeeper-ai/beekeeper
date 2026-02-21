@@ -1,7 +1,7 @@
-# Beekeeper readers extension - File
+# Beekeeper loaders integration - File
 
 ## Installation 
 
 ```bash
-pip install beekeeper-readers-file
+pip install beekeeper-loaders-file
 ```

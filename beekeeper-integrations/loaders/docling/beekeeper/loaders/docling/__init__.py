@@ -1,3 +1,3 @@
-from beekeeper.loaders.docling.base import DoclingReader
+from beekeeper.loaders.docling.base import DoclingLoader
 
-__all__ = ["DoclingReader"]
+__all__ = ["DoclingLoader"]

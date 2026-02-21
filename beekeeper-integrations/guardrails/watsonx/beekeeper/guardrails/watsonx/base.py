@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import requests
 from beekeeper.core.guardrails import BaseGuardrail, GuardrailResponse
@@ -47,7 +47,7 @@ class WatsonxGuardrail(BaseGuardrail):
         policy_id: str,
         inventory_id: str,
         instance_id: str,
-        region: Union[Region, str] = Region.US_SOUTH,
+        region: Region | str = Region.US_SOUTH,
     ) -> None:
         self.region = Region.from_value(region)
         self._api_key = api_key
@@ -63,12 +63,12 @@ class WatsonxGuardrail(BaseGuardrail):
         self,
         url: str,
         path: str,
-        payload: Dict[str, Any],
-        token: Optional[str] = None,
+        payload: dict[str, Any],
+        token: str | None = None,
         timeout: int = 10,
-        headers: Optional[Dict[str, str]] = None,
-        params: Optional[Dict[str, str]] = None,
-    ) -> Dict[str, Any]:
+        headers: dict[str, str] | None = None,
+        params: dict[str, str] | None = None,
+    ) -> dict[str, Any]:
         url = f"{url.rstrip('/')}/{path.lstrip('/')}"
         base_headers = {"Content-Type": "application/json"}
 
@@ -100,9 +100,9 @@ class WatsonxGuardrail(BaseGuardrail):
     def enforce(
         self,
         text: str,
-        direction: Union[Direction, str],
-        prompt_template: Union[PromptTemplate, str] = None,
-        context: List = [],
+        direction: Direction | str,
+        prompt_template: PromptTemplate | str = None,
+        context: list = [],
     ) -> GuardrailResponse:
         """
         Runs policies enforcement to specified guardrail.
@@ -111,7 +111,7 @@ class WatsonxGuardrail(BaseGuardrail):
             text (str): The input text that needs to be evaluated or processed according to the guardrail policy.
             direction (Direction): Whether the guardrail is processing the input or generated output.
             prompt_template (PromptTemplate, optional): The prompt template.
-            context (List, optional): List of context.
+            context (list, optional): List of context.
 
         Example:
             ```python

@@ -3,7 +3,6 @@ from beekeeper.observability.watsonx.base import (
     WatsonxPromptMonitor,
 )
 from beekeeper.observability.watsonx.custom_metric import (
-    WatsonxCustomMetric,
     WatsonxCustomMetricsManager,
 )
 from beekeeper.observability.watsonx.supporting_classes.credentials import (
@@ -19,7 +18,6 @@ from beekeeper.observability.watsonx.supporting_classes.metric import (
 __all__ = [
     "CloudPakforDataCredentials",
     "IntegratedSystemCredentials",
-    "WatsonxCustomMetric",
     "WatsonxExternalPromptMonitor",
     "WatsonxLocalMetric",
     "WatsonxCustomMetricsManager",

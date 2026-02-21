@@ -1,7 +1,7 @@
-# Beekeeper monitors extension - watsonx
+# Beekeeper observability integration - watsonx
 
 ## Installation 
 
 ```bash
-pip install beekeeper-monitors-watsonx
+pip install beekeeper-observability-watsonx
 ```

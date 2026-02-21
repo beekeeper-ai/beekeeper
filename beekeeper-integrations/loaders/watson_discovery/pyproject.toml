@@ -3,16 +3,16 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "beekeeper-readers-watson-discovery"
-version = "1.0.1"
-description = "beekeeper readers watson discovery extension"
+name = "beekeeper-loaders-watson-discovery"
+version = "2.0.0b1"
+description = "beekeeper loaders watson discovery integration"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "Apache-2.0" }
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 dependencies = [
-    "ibm-watson>=11.1.0,<12.0.0",
-    "beekeeper-core>=1.0.8,<2.0.0",
+    "ibm-watson>=11.2.0,<12.0.0",
+    "beekeeper-core>=2.0.0b1,<3.0.0",
 ]
 
 [tool.hatch.build.targets.sdist]
@@ -23,5 +23,5 @@ include = ["beekeeper/"]
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.14.9",
+    "ruff>=0.15.2",
 ]

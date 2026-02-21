@@ -2,15 +2,14 @@ import os
 
 # import re
 import tempfile
-from typing import List
 
 from beekeeper.core.document import Document
-from beekeeper.core.loaders import BaseReader, DirectoryReader
+from beekeeper.core.loaders import BaseLoader, DirectoryLoader
 
 
-class IBMCOSReader(BaseReader):
+class IBMCOSLoader(BaseLoader):
     """
-    IBM Cloud Object Storage bucket reader.
+    IBM Cloud Object Storage bucket loader.
 
     Attributes:
         bucket (str): Name of the bucket.
@@ -20,9 +19,9 @@ class IBMCOSReader(BaseReader):
 
     Example:
         ```python
-        from beekeeper.readers.ibm_cos import IBMCOSReader
+        from beekeeper.loaders.ibm_cos import IBMCOSLoader
 
-        cos_reader = IBMCOSReader(
+        cos_loader = IBMCOSLoader(
             bucket="your_bucket",
             ibm_api_key_id="your_api_key",
             ibm_service_instance_id="your_instance_id",
@@ -34,9 +33,9 @@ class IBMCOSReader(BaseReader):
     def __init__(
         self,
         bucket: str,
-        ibm_api_key_id: str = None,
-        ibm_service_instance_id: str = None,
-        s3_endpoint_url: str = None,
+        ibm_api_key_id: str | None = None,
+        ibm_service_instance_id: str | None = None,
+        s3_endpoint_url: str | None = None,
     ):
         import ibm_boto3
         from ibm_botocore.client import Config
@@ -49,7 +48,7 @@ class IBMCOSReader(BaseReader):
         self.ibm_service_instance_id = ibm_service_instance_id
         self.s3_endpoint_url = s3_endpoint_url
 
-    def load_data(self) -> List[Document]:
+    def load_data(self) -> list[Document]:
         """Loads data from the specified bucket."""
         ibm_s3 = self._ibm_boto3.resource(
             "s3",
@@ -69,4 +68,4 @@ class IBMCOSReader(BaseReader):
 
             # s3_source = re.sub(r"^(https?)://", "", self.s3_endpoint_url)
 
-            return DirectoryReader(input_dir=temp_dir).load_data()
+            return DirectoryLoader(input_dir=temp_dir).load_data()

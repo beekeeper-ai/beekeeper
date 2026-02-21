@@ -1,4 +1,4 @@
-# Beekeeper llms extension - watsonx.ai
+# Beekeeper llms integration - watsonx.ai
 
 ## Installation 
 

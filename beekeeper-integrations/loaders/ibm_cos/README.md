@@ -1,7 +1,7 @@
-# Beekeeper readers extension - IBM Cloud Object Storage
+# Beekeeper loaders integration - IBM Cloud Object Storage
 
 ## Installation 
 
 ```bash
-pip install beekeeper-readers-ibm-cos
+pip install beekeeper-loaders-ibm-cos
 ```

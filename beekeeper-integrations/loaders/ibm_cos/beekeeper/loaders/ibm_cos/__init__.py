@@ -1,3 +1,3 @@
-from beekeeper.loaders.ibm_cos.base import IBMCOSReader
+from beekeeper.loaders.ibm_cos.base import IBMCOSLoader
 
-__all__ = ["IBMCOSReader"]
+__all__ = ["IBMCOSLoader"]

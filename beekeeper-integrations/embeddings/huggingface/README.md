@@ -1,4 +1,4 @@
-# Beekeeper embeddings extension - huggingface
+# Beekeeper embeddings integration - huggingface
 
 ## Installation 
 

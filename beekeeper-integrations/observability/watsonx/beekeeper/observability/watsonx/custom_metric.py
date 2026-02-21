@@ -1,20 +1,17 @@
 import datetime
 import logging
-import uuid
-from typing import Any, Dict, List, Literal, Union
+from typing import Any, Literal
 
-from beekeeper.monitors.watsonx.supporting_classes.credentials import (
+from beekeeper.observability.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
     IntegratedSystemCredentials,
 )
-from beekeeper.monitors.watsonx.supporting_classes.enums import DataSetType, Region
-from beekeeper.monitors.watsonx.supporting_classes.metric import (
-    WatsonxLocalMetric,
+from beekeeper.observability.watsonx.supporting_classes.enums import DataSetType, Region
+from beekeeper.observability.watsonx.supporting_classes.metric import (
     WatsonxMetric,
 )
-from beekeeper.monitors.watsonx.utils.data_utils import validate_and_filter_dict
-from beekeeper.monitors.watsonx.utils.instrumentation import suppress_output
-from deprecated import deprecated
+from beekeeper.observability.watsonx.utils.data_utils import validate_and_filter_dict
+from beekeeper.observability.watsonx.utils.instrumentation import suppress_output
 
 
 class WatsonxCustomMetricsManager:
@@ -56,9 +53,9 @@ class WatsonxCustomMetricsManager:
 
     def __init__(
         self,
-        api_key: str = None,
-        region: Union[Region, str] = Region.US_SOUTH,
-        cpd_creds: Union[CloudPakforDataCredentials, Dict] = None,
+        api_key: str | None = None,
+        region: Region | str = Region.US_SOUTH,
+        cpd_creds: CloudPakforDataCredentials | dict | None = None,
     ) -> None:
         from ibm_cloud_sdk_core.authenticators import IAMAuthenticator  # type: ignore
         from ibm_watson_openscale import APIClient as WosAPIClient  # type: ignore
@@ -124,7 +121,7 @@ class WatsonxCustomMetricsManager:
     def _add_monitor_definitions(
         self,
         name: str,
-        metrics: List[WatsonxMetric],
+        metrics: list[WatsonxMetric],
         schedule: bool,
     ):
         from ibm_watson_openscale.base_classes.watson_open_scale_v2 import (
@@ -202,7 +199,7 @@ class WatsonxCustomMetricsManager:
         field_path: str,
         field_value: Any,
         op_name: str = "replace",
-    ) -> Dict:
+    ) -> dict:
         return {"op": op_name, "path": field_path, "value": field_value}
 
     def _get_dataset_id(
@@ -240,31 +237,11 @@ class WatsonxCustomMetricsManager:
         return data_marts[0].metadata.id
 
     # ===== Global Custom Metrics =====
-    @deprecated(
-        reason="'add_metric_definition()' is deprecated and will be removed in a future version. Use 'create_metric_definition()' instead.",
-        version="1.0.6",
-        action="always",
-    )
-    def add_metric_definition(
-        self,
-        name: str,
-        metrics: List[WatsonxMetric],
-        integrated_system_url: str,
-        integrated_system_credentials: IntegratedSystemCredentials,
-        schedule: bool = False,
-    ):
-        return self.create_metric_definition(
-            name=name,
-            metrics=metrics,
-            integrated_system_url=integrated_system_url,
-            integrated_system_credentials=integrated_system_credentials,
-            schedule=schedule,
-        )
 
     def create_metric_definition(
         self,
         name: str,
-        metrics: List[WatsonxMetric],
+        metrics: list[WatsonxMetric],
         integrated_system_url: str,
         integrated_system_credentials: IntegratedSystemCredentials,
         schedule: bool = False,
@@ -276,7 +253,7 @@ class WatsonxCustomMetricsManager:
 
         Args:
             name (str): The name of the custom metric group.
-            metrics (List[WatsonxMetric]): A list of metrics to be measured.
+            metrics (list[WatsonxMetric]): A list of metrics to be measured.
             schedule (bool, optional): Enable or disable the scheduler. Defaults to `False`.
             integrated_system_url (str): The URL of the external metric provider.
             integrated_system_credentials (IntegratedSystemCredentials): The credentials for the integrated system.
@@ -340,57 +317,6 @@ class WatsonxCustomMetricsManager:
             "integrated_system_id": integrated_system_id,
             "monitor_definition_id": external_monitor_id,
         }
-
-    @deprecated(
-        reason="'add_observer_instance()' is deprecated and will be removed in a future version. Use 'associate_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
-        version="1.0.5",
-        action="always",
-    )
-    def add_observer_instance(
-        self,
-        integrated_system_id: str,
-        monitor_definition_id: str,
-        subscription_id: str,
-    ):
-        return self.associate_monitor_instance(
-            integrated_system_id=integrated_system_id,
-            monitor_definition_id=monitor_definition_id,
-            subscription_id=subscription_id,
-        )
-
-    @deprecated(
-        reason="'add_monitor_instance()' is deprecated and will be removed in a future version. Use 'associate_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
-        version="1.0.6",
-        action="always",
-    )
-    def add_monitor_instance(
-        self,
-        integrated_system_id: str,
-        monitor_definition_id: str,
-        subscription_id: str,
-    ):
-        return self.associate_monitor_instance(
-            integrated_system_id=integrated_system_id,
-            monitor_definition_id=monitor_definition_id,
-            subscription_id=subscription_id,
-        )
-
-    @deprecated(
-        reason="'attach_monitor_instance()' is deprecated and will be removed in a future version. Use 'associate_monitor_instance()' from 'beekeeper-monitors-watsonx' instead.",
-        version="1.1.0",
-        action="always",
-    )
-    def attach_monitor_instance(
-        self,
-        integrated_system_id: str,
-        monitor_definition_id: str,
-        subscription_id: str,
-    ):
-        return self.associate_monitor_instance(
-            integrated_system_id=integrated_system_id,
-            monitor_definition_id=monitor_definition_id,
-            subscription_id=subscription_id,
-        )
 
     def associate_monitor_instance(
         self,
@@ -461,28 +387,11 @@ class WatsonxCustomMetricsManager:
 
         return monitor_instance_details
 
-    @deprecated(
-        reason="'publish_metrics()' is deprecated and will be removed in a future version. Use 'store_metric_data()'",
-        version="1.1.0",
-        action="always",
-    )
-    def publish_metrics(
-        self,
-        monitor_instance_id: str,
-        run_id: str,
-        request_records: Dict[str, Union[float, int]],
-    ):
-        return self.store_metric_data(
-            monitor_instance_id=monitor_instance_id,
-            run_id=run_id,
-            request_records=request_records,
-        )
-
     def store_metric_data(
         self,
         monitor_instance_id: str,
         run_id: str,
-        request_records: Dict[str, Union[float, int]],
+        request_records: dict[str, float | int],
     ):
         """
         Stores computed metrics data to the specified monitor instance.
@@ -490,7 +399,7 @@ class WatsonxCustomMetricsManager:
         Args:
             monitor_instance_id (str): The unique ID of the monitor instance.
             run_id (str): The ID of the monitor run that generated the metrics.
-            request_records (Dict[str | float | int]): Dict containing the metrics to be published.
+            request_records (dict[str | float | int]): dict containing the metrics to be published.
 
         Example:
             ```python
@@ -540,9 +449,9 @@ class WatsonxCustomMetricsManager:
     def store_record_metric_data(
         self,
         custom_data_set_id: str,
-        computed_on: Union[DataSetType, str],
+        computed_on: DataSetType | str,
         run_id: str,
-        request_records: List[Dict],
+        request_records: list[dict],
     ):
         """
         Stores computed metrics data to the specified transaction record.
@@ -551,7 +460,7 @@ class WatsonxCustomMetricsManager:
             custom_data_set_id (str): The ID of the custom metric data set.
             computed_on (DataSetType): The dataset on which the metric was calculated (e.g., payload or feedback).
             run_id (str): The ID of the monitor run that generated the metrics.
-            request_records (List[Dict]): A list of dictionaries containing the records to be stored.
+            request_records (list[dict]): A list of dictionaries containing the records to be stored.
 
         Example:
             ```python
@@ -579,128 +488,3 @@ class WatsonxCustomMetricsManager:
             data_set_id=custom_data_set_id,
             request_body=request_records,
         ).result
-
-    # ===== Local Custom Metrics =====
-    @deprecated(
-        reason="'add_local_metric_definition()' is deprecated and will be removed in a future version. Use 'create_local_metric_definition()' from 'beekeeper-monitors-watsonx' instead.",
-        version="1.0.6",
-        action="always",
-    )
-    def add_local_metric_definition(
-        self,
-        name: str,
-        metrics: List[WatsonxMetric],
-        subscription_id: str,
-    ):
-        return self.create_local_metric_definition(
-            name=name,
-            metrics=metrics,
-            subscription_id=subscription_id,
-        )
-
-    @deprecated(
-        reason="'create_local_metric_definition()' is deprecated and will be removed in a future version. Use OOB record level metrics instead.",
-        version="1.1.3",
-        action="always",
-    )
-    def create_local_metric_definition(
-        self,
-        name: str,
-        metrics: List[WatsonxLocalMetric],
-        subscription_id: str,
-    ) -> str:
-        from ibm_watson_openscale.base_classes.watson_open_scale_v2 import (
-            LocationTableName,
-            SparkStruct,
-            SparkStructFieldPrimitive,
-            Target,
-        )
-
-        target = Target(target_id=subscription_id, target_type="subscription")
-        data_mart_id = self._get_existing_data_mart()
-        metrics = [SparkStructFieldPrimitive(**metric.to_dict()) for metric in metrics]
-
-        schema_fields = [
-            SparkStructFieldPrimitive(
-                name="scoring_id",
-                type="string",
-                nullable=False,
-            ),
-            SparkStructFieldPrimitive(
-                name="run_id",
-                type="string",
-                nullable=True,
-            ),
-            SparkStructFieldPrimitive(
-                name="computed_on",
-                type="string",
-                nullable=False,
-            ),
-        ]
-
-        schema_fields.extend(metrics)
-
-        data_schema = SparkStruct(type="struct", fields=schema_fields)
-
-        return self._wos_client.data_sets.add(
-            target=target,
-            name=name,
-            type="custom",
-            data_schema=data_schema,
-            data_mart_id=data_mart_id,
-            location=LocationTableName(
-                table_name=name.lower().replace(" ", "_") + "_" + str(uuid.uuid4())[:8],
-            ),
-            background_mode=False,
-        ).result.metadata.id
-
-    @deprecated(
-        reason="'publish_local_metrics()' is deprecated and will be removed in a future version. Use 'store_local_metric_data()'",
-        version="1.1.0",
-        action="always",
-    )
-    def publish_local_metrics(
-        self,
-        metric_instance_id: str,
-        request_records: List[Dict],
-    ):
-        return self.store_local_metric_data(
-            metric_instance_id=metric_instance_id,
-            request_records=request_records,
-        )
-
-    @deprecated(
-        reason="'store_local_metric_data()' is deprecated and will be removed in a future version. Use OOB record level metrics instead.",
-        version="1.1.3",
-        action="always",
-    )
-    def store_local_metric_data(
-        self,
-        metric_instance_id: str,
-        request_records: List[Dict],
-    ):
-        return self._wos_client.data_sets.store_records(
-            data_set_id=metric_instance_id,
-            request_body=request_records,
-        ).result
-
-    @deprecated(
-        reason="'list_local_metrics()' is deprecated and will be removed in a future version. Use OOB record level metrics instead.",
-        version="1.1.3",
-        action="always",
-    )
-    def list_local_metrics(
-        self,
-        metric_instance_id: str,
-    ):
-        return self._get_dataset_data(metric_instance_id)
-
-
-@deprecated(
-    reason="'WatsonxCustomMetric()' is deprecated and will be removed in a future version. "
-    "Use 'WatsonxCustomMetricsManager' instead.",
-    version="1.0.6",
-    action="always",
-)
-class WatsonxCustomMetric(WatsonxCustomMetricsManager):
-    pass

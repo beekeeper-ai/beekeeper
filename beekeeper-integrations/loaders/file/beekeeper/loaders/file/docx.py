@@ -1,15 +1,14 @@
 import os
 from pathlib import Path
-from typing import List
 
 from beekeeper.core.document import Document
-from beekeeper.core.loaders import BaseReader
+from beekeeper.core.loaders import BaseLoader
 
 
-class DocxReader(BaseReader):
-    """Microsoft Word (Docx) reader."""
+class DocxLoader(BaseLoader):
+    """Microsoft Word (Docx) loader."""
 
-    def load_data(self, input_file: str) -> List[Document]:
+    def load_data(self, input_file: str) -> list[Document]:
         """
         Loads data from the specified file.
 
@@ -17,7 +16,7 @@ class DocxReader(BaseReader):
             input_file (str): File path to load.
 
         Returns:
-            List[Document]: A list of `Document` objects loaded from the file.
+            list[Document]: A list of `Document` objects loaded from the file.
         """
         try:
             import docx2txt  # noqa: F401

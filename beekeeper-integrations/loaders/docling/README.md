@@ -1,7 +1,7 @@
-# Beekeeper readers extension - Docling
+# Beekeeper loaders integration - Docling
 
 ## Installation 
 
 ```bash
-pip install beekeeper-readers-docling
+pip install beekeeper-loaders-docling
 ```

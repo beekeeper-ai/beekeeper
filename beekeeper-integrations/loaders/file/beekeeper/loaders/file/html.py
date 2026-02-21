@@ -1,12 +1,11 @@
 import os
 from pathlib import Path
-from typing import List
 
 from beekeeper.core.document import Document
-from beekeeper.core.loaders import BaseReader
+from beekeeper.core.loaders import BaseLoader
 
 
-class HTMLReader(BaseReader):
+class HTMLLoader(BaseLoader):
     """
     Load a HTML file and extract text from a specific tag.
 
@@ -16,7 +15,7 @@ class HTMLReader(BaseReader):
 
     tag: str = "section"
 
-    def load_data(self, input_file: str) -> List[Document]:
+    def load_data(self, input_file: str) -> list[Document]:
         """
         Loads data from the specified file.
 
@@ -24,7 +23,7 @@ class HTMLReader(BaseReader):
             input_file (str): File path to load.
 
         Returns:
-            List[Document]: A list of `Document` objects loaded from the file.
+            list[Document]: A list of `Document` objects loaded from the file.
         """
         try:
             from bs4 import BeautifulSoup  # noqa: F401

@@ -1,6 +1,6 @@
 import uuid
 from logging import getLogger
-from typing import List, Literal
+from typing import Literal
 
 from beekeeper.core.document import Document, DocumentWithScore
 from beekeeper.core.embeddings import BaseEmbedding
@@ -33,7 +33,7 @@ class ChromaVectorStore(BaseVectorStore):
     def __init__(
         self,
         embed_model: BaseEmbedding,
-        collection_name: str = None,
+        collection_name: str | None = None,
         distance_strategy: Literal["cosine", "ip", "l2"] = "cosine",
     ) -> None:
         import chromadb
@@ -53,12 +53,12 @@ class ChromaVectorStore(BaseVectorStore):
             metadata={"hnsw:space": distance_strategy},
         )
 
-    def add_documents(self, documents: List[Document]) -> List:
+    def add_documents(self, documents: list[Document]) -> list:
         """
         Add documents to the ChromaDB collection.
 
         Args:
-            documents (List[Document]): List of documents to add to the collection.
+            documents (list[Document]): List of documents to add to the collection.
         """
         embeddings = []
         metadatas = []
@@ -66,7 +66,7 @@ class ChromaVectorStore(BaseVectorStore):
         chroma_documents = []
 
         for doc in documents:
-            metadatas.append({**doc.get_metadata(), "hash": doc.hash})
+            metadatas.append({**doc.metadata, "hash": doc.hash})
 
             embeddings.append(
                 doc.embedding
@@ -85,7 +85,7 @@ class ChromaVectorStore(BaseVectorStore):
 
         return ids
 
-    def query_documents(self, query: str, top_k: int = 4) -> List[DocumentWithScore]:
+    def query_documents(self, query: str, top_k: int = 4) -> list[DocumentWithScore]:
         """
         Performs a similarity search for the top-k most similar documents.
 
@@ -94,7 +94,7 @@ class ChromaVectorStore(BaseVectorStore):
             top_k (int, optional): Number of top results to return. Defaults to `4`.
 
         Returns:
-            List[DocumentWithScore]: List of the most similar documents.
+            list[DocumentWithScore]: List of the most similar documents.
         """
         query_embedding = self._embed_model.embed_text(query)
 
@@ -116,16 +116,16 @@ class ChromaVectorStore(BaseVectorStore):
             )
         ]
 
-    def delete_documents(self, ids: List[str]) -> None:
+    def delete_documents(self, ids: list[str]) -> None:
         """
         Delete documents from the ChromaDB collection.
 
         Args:
-            ids (List[str], optional): List of `Document` IDs to delete. Defaults to `None`.
+            ids (list[str], optional): List of `Document` IDs to delete. Defaults to `None`.
         """
         self._collection.delete(ids=ids)
 
-    def get_all_documents(self, include_fields: List[str] = None) -> List[Document]:
+    def get_all_documents(self, include_fields: list[str] | None = None) -> list[Document]:
         """Get all documents from vector store."""
         default_fields = ["documents", "metadatas", "embeddings"]
         include = include_fields if include_fields else default_fields

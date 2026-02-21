@@ -2,20 +2,17 @@ import json
 import logging
 import os
 import uuid
-import warnings
-from typing import Dict, List, Union
 
 import certifi
-from beekeeper.core.monitors import PromptMonitor
-from beekeeper.core.monitors.types import PayloadRecord
+from beekeeper.core.observability import PromptMonitor
+from beekeeper.core.observability.types import PayloadRecord
 from beekeeper.core.prompts import PromptTemplate
-from beekeeper.monitors.watsonx.supporting_classes.credentials import (
+from beekeeper.observability.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
 )
-from beekeeper.monitors.watsonx.supporting_classes.enums import Region, TaskType
-from beekeeper.monitors.watsonx.utils.data_utils import validate_and_filter_dict
-from beekeeper.monitors.watsonx.utils.instrumentation import suppress_output
-from deprecated import deprecated
+from beekeeper.observability.watsonx.supporting_classes.enums import Region, TaskType
+from beekeeper.observability.watsonx.utils.data_utils import validate_and_filter_dict
+from beekeeper.observability.watsonx.utils.instrumentation import suppress_output
 
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
 logging.getLogger("ibm_watsonx_ai.client").setLevel(logging.ERROR)
@@ -23,9 +20,9 @@ logging.getLogger("ibm_watsonx_ai.wml_resource").setLevel(logging.ERROR)
 
 
 def _convert_payload_format(
-    records: List[Dict],
-    feature_fields: List[str],
-) -> List[Dict]:
+    records: list[dict],
+    feature_fields: list[str],
+) -> list[dict]:
     payload_data = []
     response_fields = ["generated_text", "input_token_count", "generated_token_count"]
 
@@ -103,12 +100,12 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
     def __init__(
         self,
-        api_key: str = None,
-        space_id: str = None,
-        project_id: str = None,
-        region: Union[Region, str] = Region.US_SOUTH,
-        cpd_creds: Union[CloudPakforDataCredentials, Dict] = None,
-        subscription_id: str = None,
+        api_key: str | None = None,
+        space_id: str | None = None,
+        project_id: str | None = None,
+        region: Region | str = Region.US_SOUTH,
+        cpd_creds: CloudPakforDataCredentials | dict | None = None,
+        subscription_id: str | None = None,
         **kwargs,
     ) -> None:
         import ibm_aigov_facts_client  # noqa: F401
@@ -156,9 +153,9 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
     def _create_detached_prompt(
         self,
-        detached_details: Dict,
-        prompt_template_details: Dict,
-        detached_asset_details: Dict,
+        detached_details: dict,
+        prompt_template_details: dict,
+        detached_asset_details: dict,
     ) -> str:
         from ibm_aigov_facts_client import (  # type: ignore
             AIGovFactsClient,
@@ -296,107 +293,24 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
         suppress_output(wml_client.deployments.delete, deployment_id)
 
-    @deprecated(
-        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'create_prompt_monitor()' instead.",
-        version="1.0.5",
-        action="always",
-    )
-    def add_prompt_observer(
-        self,
-        name: str,
-        model_id: str,
-        task_id: Union[TaskType, str],
-        detached_model_provider: str,
-        description: str = "",
-        model_parameters: Dict = None,
-        detached_model_name: str = None,
-        detached_model_url: str = None,
-        detached_prompt_url: str = None,
-        detached_prompt_additional_info: Dict = None,
-        prompt_variables: List[str] = None,
-        locale: str = "en",
-        input_text: str = None,
-        context_fields: List[str] = None,
-        question_field: str = None,
-    ) -> Dict:
-        return self.create_prompt_monitor(
-            name=name,
-            model_id=model_id,
-            task_id=task_id,
-            detached_model_provider=detached_model_provider,
-            description=description,
-            model_parameters=model_parameters,
-            detached_model_name=detached_model_name,
-            detached_model_url=detached_model_url,
-            detached_prompt_url=detached_prompt_url,
-            detached_prompt_additional_info=detached_prompt_additional_info,
-            prompt_variables=prompt_variables,
-            locale=locale,
-            input_text=input_text,
-            context_fields=context_fields,
-            question_field=question_field,
-        )
-
-    @deprecated(
-        reason="'add_prompt_monitor()' is deprecated and will be removed in a future version. Use 'create_prompt_monitor()' instead.",
-        version="1.0.6",
-        action="always",
-    )
-    def add_prompt_monitor(
-        self,
-        name: str,
-        model_id: str,
-        task_id: Union[TaskType, str],
-        detached_model_provider: str,
-        description: str = "",
-        model_parameters: Dict = None,
-        detached_model_name: str = None,
-        detached_model_url: str = None,
-        detached_prompt_url: str = None,
-        detached_prompt_additional_info: Dict = None,
-        prompt_variables: List[str] = None,
-        locale: str = "en",
-        input_text: str = None,
-        context_fields: List[str] = None,
-        question_field: str = None,
-    ) -> Dict:
-        return self.create_prompt_monitor(
-            name=name,
-            model_id=model_id,
-            task_id=task_id,
-            detached_model_provider=detached_model_provider,
-            description=description,
-            model_parameters=model_parameters,
-            detached_model_name=detached_model_name,
-            detached_model_url=detached_model_url,
-            detached_prompt_url=detached_prompt_url,
-            detached_prompt_additional_info=detached_prompt_additional_info,
-            prompt_variables=prompt_variables,
-            locale=locale,
-            input_text=input_text,
-            context_fields=context_fields,
-            question_field=question_field,
-        )
-
     def create_prompt_monitor(
         self,
         name: str,
         model_id: str,
-        task_id: Union[TaskType, str],
+        task_id: TaskType | str,
         detached_model_provider: str,
         description: str = "",
-        model_parameters: Dict = None,
-        detached_model_name: str = None,
-        detached_model_url: str = None,
-        detached_prompt_url: str = None,
-        detached_prompt_additional_info: Dict = None,
-        prompt_template: Union[PromptTemplate, str] = None,
-        prompt_variables: List[str] = None,
+        model_parameters: dict | None = None,
+        detached_model_name: str | None = None,
+        detached_model_url: str | None = None,
+        detached_prompt_url: str | None = None,
+        detached_prompt_additional_info: dict | None = None,
+        prompt_template: PromptTemplate | str | None = None,
+        prompt_variables: list[str] | None = None,
         locale: str = "en",
-        input_text: str = None,  # DEPRECATED
-        context_fields: List[str] = None,
-        question_field: str = None,
-    ) -> Dict:
+        context_fields: list[str] | None = None,
+        question_field: str | None = None,
+    ) -> dict:
         """
         Creates a detached (external) prompt template asset and attaches a monitor to the specified prompt template asset.
 
@@ -406,15 +320,15 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             task_id (TaskType): The task identifier.
             detached_model_provider (str): The external model provider.
             description (str, optional): A description of the External Prompt Template Asset.
-            model_parameters (Dict, optional): Model parameters and their respective values.
+            model_parameters (dict, optional): Model parameters and their respective values.
             detached_model_name (str, optional): The name of the external model.
             detached_model_url (str, optional): The URL of the external model.
             detached_prompt_url (str, optional): The URL of the external prompt.
-            detached_prompt_additional_info (Dict, optional): Additional information related to the external prompt.
+            detached_prompt_additional_info (dict, optional): Additional information related to the external prompt.
             prompt_template (PromptTemplate, optional): The prompt template.
-            prompt_variables (List[str], optional): Values for the prompt variables.
+            prompt_variables (list[str], optional): Values for the prompt variables.
             locale (str, optional): Locale code for the input/output language. eg. "en", "pt", "es".
-            context_fields (List[str], optional): A list of fields that will provide context to the prompt.
+            context_fields (list[str], optional): A list of fields that will provide context to the prompt.
                 Applicable only for "retrieval_augmented_generation" task type.
             question_field (str, optional): The field containing the question to be answered.
                 Applicable only for "retrieval_augmented_generation" task type.
@@ -440,18 +354,6 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         task_id = TaskType.from_value(task_id).value
         rollback_stack = []
 
-        # DEPRECATION NOTICE
-        if input_text is not None:
-            warnings.warn(
-                "DEPRECATION NOTICE: `input_text` is deprecated and will be removed in a future release. "
-                "Use `prompt_template` instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-
-            if prompt_template is None:
-                prompt_template = input_text
-        # END DEPRECATION NOTICE
         prompt_template = PromptTemplate.from_value(prompt_template)
 
         if (not (self.project_id or self.space_id)) or (
@@ -492,7 +394,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         )
 
         # Update list of vars to dict
-        prompt_metadata["prompt_variables"] = Dict.fromkeys(
+        prompt_metadata["prompt_variables"] = dict.fromkeys(
             prompt_metadata["prompt_variables"], ""
         )
 
@@ -636,14 +538,14 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
     def store_payload_records(
         self,
-        request_records: List[Dict],
-        subscription_id: str = None,
-    ) -> List[str]:
+        request_records: list[dict],
+        subscription_id: str | None = None,
+    ) -> list[str]:
         """
         Stores records to the payload logging system.
 
         Args:
-            request_records (List[Dict]): A list of records to be logged, where each record is represented as a dictionary.
+            request_records (list[dict]): A list of records to be logged, where each record is represented as a dictionary.
             subscription_id (str, optional): The subscription ID associated with the records being logged.
 
         Example:
@@ -741,9 +643,9 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
 
     def store_feedback_records(
         self,
-        request_records: List[Dict],
-        subscription_id: str = None,
-    ) -> Dict:
+        request_records: list[dict],
+        subscription_id: str | None = None,
+    ) -> dict:
         """
         Stores records to the feedback logging system.
 
@@ -752,7 +654,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             - For prompt monitors created using Beekeeper, the label field is `reference_output`.
 
         Args:
-            request_records (List[Dict]): A list of records to be logged, where each record is represented as a dictionary.
+            request_records (list[dict]): A list of records to be logged, where each record is represented as a dictionary.
             subscription_id (str, optional): The subscription ID associated with the records being logged.
 
         Example:
@@ -914,12 +816,12 @@ class WatsonxPromptMonitor(PromptMonitor):
 
     def __init__(
         self,
-        api_key: str = None,
-        space_id: str = None,
-        project_id: str = None,
-        region: Union[Region, str] = Region.US_SOUTH,
-        cpd_creds: Union[CloudPakforDataCredentials, Dict] = None,
-        subscription_id: str = None,
+        api_key: str | None = None,
+        space_id: str | None = None,
+        project_id: str | None = None,
+        region: Region | str = Region.US_SOUTH,
+        cpd_creds: CloudPakforDataCredentials | dict | None = None,
+        subscription_id: str | None = None,
         **kwargs,
     ) -> None:
         import ibm_aigov_facts_client  # noqa: F401
@@ -967,8 +869,8 @@ class WatsonxPromptMonitor(PromptMonitor):
 
     def _create_prompt_template(
         self,
-        prompt_template_details: Dict,
-        asset_details: Dict,
+        prompt_template_details: dict,
+        asset_details: dict,
     ) -> str:
         from ibm_aigov_facts_client import (
             AIGovFactsClient,
@@ -1106,82 +1008,19 @@ class WatsonxPromptMonitor(PromptMonitor):
 
         suppress_output(wml_client.deployments.delete, deployment_id)
 
-    @deprecated(
-        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'create_prompt_monitor()' instead.",
-        version="1.0.5",
-        action="always",
-    )
-    def add_prompt_observer(
-        self,
-        name: str,
-        model_id: str,
-        task_id: Union[TaskType, str],
-        description: str = "",
-        model_parameters: Dict = None,
-        prompt_variables: List[str] = None,
-        locale: str = "en",
-        input_text: str = None,
-        context_fields: List[str] = None,
-        question_field: str = None,
-    ) -> Dict:
-        return self.create_prompt_monitor(
-            name=name,
-            model_id=model_id,
-            task_id=task_id,
-            description=description,
-            model_parameters=model_parameters,
-            prompt_variables=prompt_variables,
-            locale=locale,
-            input_text=input_text,
-            context_fields=context_fields,
-            question_field=question_field,
-        )
-
-    @deprecated(
-        reason="'add_prompt_observer()' is deprecated and will be removed in a future version. Use 'create_prompt_monitor()' instead.",
-        version="1.0.6",
-        action="always",
-    )
-    def add_prompt_monitor(
-        self,
-        name: str,
-        model_id: str,
-        task_id: Union[TaskType, str],
-        description: str = "",
-        model_parameters: Dict = None,
-        prompt_variables: List[str] = None,
-        locale: str = "en",
-        input_text: str = None,
-        context_fields: List[str] = None,
-        question_field: str = None,
-    ) -> Dict:
-        return self.create_prompt_monitor(
-            name=name,
-            model_id=model_id,
-            task_id=task_id,
-            description=description,
-            model_parameters=model_parameters,
-            prompt_variables=prompt_variables,
-            locale=locale,
-            input_text=input_text,
-            context_fields=context_fields,
-            question_field=question_field,
-        )
-
     def create_prompt_monitor(
         self,
         name: str,
         model_id: str,
-        task_id: Union[TaskType, str],
+        task_id: TaskType | str,
         description: str = "",
-        model_parameters: Dict = None,
-        prompt_template: Union[PromptTemplate, str] = None,
-        prompt_variables: List[str] = None,
+        model_parameters: dict | None = None,
+        prompt_template: PromptTemplate | str | None = None,
+        prompt_variables: list[str] | None = None,
         locale: str = "en",
-        input_text: str = None,  # DEPRECATED
-        context_fields: List[str] = None,
-        question_field: str = None,
-    ) -> Dict:
+        context_fields: list[str] | None = None,
+        question_field: str | None = None,
+    ) -> dict:
         """
         Creates an IBM Prompt Template Asset and ssetup monitor for the given prompt template asset.
 
@@ -1190,11 +1029,11 @@ class WatsonxPromptMonitor(PromptMonitor):
             model_id (str): The ID of the model associated with the prompt.
             task_id (TaskType): The task identifier.
             description (str, optional): A description of the Prompt Template Asset.
-            model_parameters (Dict, optional): A dictionary of model parameters and their respective values.
+            model_parameters (dict, optional): A dictionary of model parameters and their respective values.
             prompt_template (PromptTemplate, optional): The prompt template.
-            prompt_variables (List[str], optional): A list of values for prompt input variables.
+            prompt_variables (list[str], optional): A list of values for prompt input variables.
             locale (str, optional): Locale code for the input/output language. eg. "en", "pt", "es".
-            context_fields (List[str], optional): A list of fields that will provide context to the prompt.
+            context_fields (list[str], optional): A list of fields that will provide context to the prompt.
                 Applicable only for the `retrieval_augmented_generation` task type.
             question_field (str, optional): The field containing the question to be answered.
                 Applicable only for the `retrieval_augmented_generation` task type.
@@ -1217,18 +1056,6 @@ class WatsonxPromptMonitor(PromptMonitor):
         task_id = TaskType.from_value(task_id).value
         rollback_stack = []
 
-        # DEPRECATION NOTICE
-        if input_text is not None:
-            warnings.warn(
-                "DEPRECATION NOTICE: `input_text` is deprecated and will be removed in a future release. "
-                "Use `prompt_template` instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-
-            if prompt_template is None:
-                prompt_template = input_text
-        # END DEPRECATION NOTICE
         prompt_template = PromptTemplate.from_value(prompt_template)
 
         if (not (self.project_id or self.space_id)) or (
@@ -1258,7 +1085,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         )
 
         # Update list of vars to dict
-        prompt_metadata["prompt_variables"] = Dict.fromkeys(
+        prompt_metadata["prompt_variables"] = dict.fromkeys(
             prompt_metadata["prompt_variables"], ""
         )
 
@@ -1394,14 +1221,14 @@ class WatsonxPromptMonitor(PromptMonitor):
 
     def store_payload_records(
         self,
-        request_records: List[Dict],
-        subscription_id: str = None,
-    ) -> List[str]:
+        request_records: list[dict],
+        subscription_id: str | None = None,
+    ) -> list[str]:
         """
         Stores records to the payload logging system.
 
         Args:
-            request_records (List[Dict]): A list of records to be logged. Each record is represented as a dictionary.
+            request_records (list[dict]): A list of records to be logged. Each record is represented as a dictionary.
             subscription_id (str, optional): The subscription ID associated with the records being logged.
 
         Example:
@@ -1500,9 +1327,9 @@ class WatsonxPromptMonitor(PromptMonitor):
 
     def store_feedback_records(
         self,
-        request_records: List[Dict],
-        subscription_id: str = None,
-    ) -> Dict:
+        request_records: list[dict],
+        subscription_id: str | None = None,
+    ) -> dict:
         """
         Stores records to the feedback logging system.
 
@@ -1510,7 +1337,7 @@ class WatsonxPromptMonitor(PromptMonitor):
             - For prompt monitors created using Beekeeper, the label field is `reference_output`.
 
         Args:
-            request_records (List[Dict]): A list of records to be logged, where each record is represented as a dictionary.
+            request_records (list[dict]): A list of records to be logged, where each record is represented as a dictionary.
             subscription_id (str, optional): The subscription ID associated with the records being logged.
 
         Example:

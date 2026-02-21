@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 
 import numpy as np
 from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict, Field
@@ -59,9 +58,7 @@ class BaseEmbedding(BaseModel, TransformerComponent, ABC):
         validate_assignment=True,
     )
 
-    model_name: Optional[str] = Field(
-        default=None, description="Name of the embedding model"
-    )
+    model_name: str = Field(..., description="Name of the embedding model")
 
     @classmethod
     def class_name(cls) -> str:
@@ -90,7 +87,7 @@ class BaseEmbedding(BaseModel, TransformerComponent, ABC):
         Embed a list of documents and assign the computed embeddings to the 'embedding' attribute.
 
         Args:
-            documents (List[Document]): List of documents to compute embeddings.
+            documents (list[Document]): List of documents to compute embeddings.
         """
         texts = [document.get_content() for document in documents]
         embeddings = self.embed_text(texts)

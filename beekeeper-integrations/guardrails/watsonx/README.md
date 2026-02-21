@@ -1,4 +1,4 @@
-# Beekeeper guardrails extension - watsonx
+# Beekeeper guardrails integration - watsonx
 
 ## Installation 
 

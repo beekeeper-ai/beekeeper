@@ -1,19 +1,19 @@
-from typing import Dict, List
-
-
 def validate_and_filter_dict(
-    original_dict: Dict, optional_keys: List, required_keys: List = []
+    original_dict: dict, optional_keys: list, required_keys: list | None = None
 ):
     """
     Validates that all required keys are present in a dictionary and returns a filtered dictionary
     containing only the required and specified optional keys with non-None values.
 
     Args:
-        original_dict (Dict): The original dictionary.
+        original_dict (dict): The original dictionary.
         optional_keys (list): A list of keys to retain.
         required_keys (list, optional): A list of keys that must be present in the dictionary. Defaults to None.
     """
     # Ensure all required keys are in the source dict
+    if required_keys is None:
+        required_keys = []
+
     missing_keys = [key for key in required_keys if key not in original_dict]
     if missing_keys:
         raise KeyError(

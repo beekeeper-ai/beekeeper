@@ -18,14 +18,14 @@ classifiers = [
 ]
 dependencies = [
     "beekeeper-core>=2.0.0b1,<3.0.0",
-    "beekeeper-embeddings-huggingface>=1.0.4,<2.0.0",
-    "beekeeper-llms-litellm>=1.0.3,<2.0.0",
-    "beekeeper-readers-file>=1.0.2,<2.0.0",
+    "beekeeper-embeddings-huggingface>=2.0.0b1,<3.0.0",
+    "beekeeper-llms-litellm>=2.0.0b1,<3.0.0",
+    "beekeeper-loaders-file>=2.0.0b1,<3.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.15.1",
+    "ruff>=0.15.2",
 ]
 
 [project.urls]
