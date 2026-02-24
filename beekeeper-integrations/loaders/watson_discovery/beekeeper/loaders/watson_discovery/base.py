@@ -64,7 +64,9 @@ class WatsonDiscoveryLoader(BaseLoader):
 
         try:
             authenticator = IAMAuthenticator(self.api_key)
-            self._client = DiscoveryV2(authenticator=authenticator, version=self.version)
+            self._client = DiscoveryV2(
+                authenticator=authenticator, version=self.version
+            )
             self._client.set_service_url(self.url)
         except Exception as e:
             logger.error(f"Error connecting to IBM Watson Discovery: {e}")
