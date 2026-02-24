@@ -1,10 +1,10 @@
 from typing import Any
 
 import requests
+from beekeeper.core.bridge.pydantic import Field, PrivateAttr
 from beekeeper.core.guardrails import BaseGuardrail, GuardrailResponse
 from beekeeper.core.prompts import PromptTemplate
 from beekeeper.guardrails.watsonx.supporting_classes.enums import Direction, Region
-from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
 
 class WatsonxGuardrail(BaseGuardrail):
@@ -41,23 +41,32 @@ class WatsonxGuardrail(BaseGuardrail):
         ```
     """
 
-    def __init__(
-        self,
-        api_key: str,
-        policy_id: str,
-        inventory_id: str,
-        instance_id: str,
-        region: Region | str = Region.US_SOUTH,
-    ) -> None:
-        self.region = Region.from_value(region)
-        self._api_key = api_key
-        self.policy_id = policy_id
-        self.inventory_id = inventory_id
-        self.instance_id = instance_id
+    api_key: str = Field(..., description="The API key for IBM watsonx.governance")
+    policy_id: str = Field(..., description="The policy ID in watsonx.governance")
+    inventory_id: str = Field(
+        ..., description="The inventory ID in watsonx.governance"
+    )
+    instance_id: str = Field(
+        ..., description="The instance ID in watsonx.governance"
+    )
+    region: Region | str = Field(
+        default=Region.US_SOUTH,
+        description="The region where watsonx.governance is hosted when using IBM Cloud",
+    )
 
-    def _get_token(self, api_key: str) -> str:
-        authenticator = IAMAuthenticator(apikey=api_key)
-        return authenticator.token_manager.get_token()
+    _token_manager: Any = PrivateAttr(default=None)
+
+    def model_post_init(self, __context):  # noqa: PYI063
+        """Initialize region and token manager after Pydantic validation."""
+        from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+        self.region = Region.from_value(self.region)
+        authenticator = IAMAuthenticator(apikey=self.api_key)
+        self._token_manager = authenticator.token_manager
+
+    def _get_token(self) -> str:
+        """Get authentication token."""
+        return self._token_manager.get_token()
 
     def _http_post(
         self,
@@ -101,7 +110,7 @@ class WatsonxGuardrail(BaseGuardrail):
         self,
         text: str,
         direction: Direction | str,
-        prompt_template: PromptTemplate | str = None,
+        prompt_template: PromptTemplate | str | None = None,
         context: list = [],
     ) -> GuardrailResponse:
         """
@@ -125,7 +134,7 @@ class WatsonxGuardrail(BaseGuardrail):
         """
         prompt_template = PromptTemplate.from_value(prompt_template)
         direction = Direction.from_value(direction).value
-        access_token = self._get_token(self._api_key)
+        access_token = self._get_token()
 
         if direction == Direction.INPUT.value:
             detectors_properties = {

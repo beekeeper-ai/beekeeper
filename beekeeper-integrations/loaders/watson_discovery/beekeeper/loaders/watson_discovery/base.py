@@ -2,6 +2,7 @@ from datetime import datetime
 from logging import getLogger
 from typing import Any
 
+from beekeeper.core.bridge.pydantic import Field, PrivateAttr
 from beekeeper.core.document import Document
 from beekeeper.core.loaders import BaseLoader
 
@@ -36,29 +37,35 @@ class WatsonDiscoveryLoader(BaseLoader):
         ```
     """
 
-    def __init__(
-        self,
-        url: str,
-        api_key: str,
-        project_id: str,
-        version: str = "2023-03-31",
-        batch_size: int = 50,
-        created_date: str = datetime.today().strftime("%Y-%m-%d"),
-        pre_additional_data_field: str | None = None,
-    ) -> None:
+    url: str = Field(..., description="Watson Discovery instance URL")
+    api_key: str = Field(..., description="Watson Discovery API key")
+    project_id: str = Field(..., description="Watson Discovery project ID")
+    version: str = Field(
+        default="2023-03-31", description="Watson Discovery API version"
+    )
+    batch_size: int = Field(
+        default=50, description="Batch size for bulk operations", ge=1
+    )
+    created_date: str = Field(
+        default_factory=lambda: datetime.today().strftime("%Y-%m-%d"),
+        description="Load documents created after this date (YYYY-MM-DD format)",
+    )
+    pre_additional_data_field: str | None = Field(
+        default=None,
+        description="Additional data field to prepend to the Document content",
+    )
+
+    _client: Any = PrivateAttr()
+
+    def model_post_init(self, __context):  # noqa: PYI063
+        """Initialize Watson Discovery client after Pydantic validation."""
         from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
         from ibm_watson import DiscoveryV2
 
-        self.project_id = project_id
-        self.batch_size = batch_size
-        self.created_date = created_date
-        self.pre_additional_data_field = pre_additional_data_field
-
         try:
-            authenticator = IAMAuthenticator(api_key)
-            self._client = DiscoveryV2(authenticator=authenticator, version=version)
-
-            self._client.set_service_url(url)
+            authenticator = IAMAuthenticator(self.api_key)
+            self._client = DiscoveryV2(authenticator=authenticator, version=self.version)
+            self._client.set_service_url(self.url)
         except Exception as e:
             logger.error(f"Error connecting to IBM Watson Discovery: {e}")
             raise

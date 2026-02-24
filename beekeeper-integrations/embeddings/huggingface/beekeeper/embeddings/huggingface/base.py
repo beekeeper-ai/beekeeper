@@ -28,8 +28,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
 
     _client: Any = PrivateAttr()
 
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__(**kwargs)
+    def model_post_init(self, __context):  # noqa: PYI063
         from sentence_transformers import SentenceTransformer
 
         self._client = SentenceTransformer(self.model_name, device=self.device)

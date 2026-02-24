@@ -1,13 +1,18 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
+from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict
 from beekeeper.core.document import DocumentWithScore
 
 
-class BaseRetriever(ABC):
+class BaseRetriever(ABC, BaseModel):
     """
     Abstract base class for document retrievers.
     """
+
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+    )
 
     @abstractmethod
     def query_documents(

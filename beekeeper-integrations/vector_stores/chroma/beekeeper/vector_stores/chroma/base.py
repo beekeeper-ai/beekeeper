@@ -1,7 +1,8 @@
 import uuid
 from logging import getLogger
-from typing import Literal
+from typing import Any, Literal
 
+from beekeeper.core.bridge.pydantic import Field, PrivateAttr
 from beekeeper.core.document import Document, DocumentWithScore
 from beekeeper.core.embeddings import BaseEmbedding
 from beekeeper.core.vector_stores import BaseVectorStore
@@ -30,19 +31,30 @@ class ChromaVectorStore(BaseVectorStore):
         ```
     """
 
-    def __init__(
-        self,
-        embed_model: BaseEmbedding,
-        collection_name: str | None = None,
-        distance_strategy: Literal["cosine", "ip", "l2"] = "cosine",
-    ) -> None:
+    embed_model: BaseEmbedding = Field(
+        ..., description="Embedding model used to compute vectors"
+    )
+    collection_name: str | None = Field(
+        default=None, description="Name of the ChromaDB collection"
+    )
+    distance_strategy: Literal["cosine", "ip", "l2"] = Field(
+        default="cosine",
+        description="Distance strategy for similarity search (cosine, ip, or l2)",
+    )
+
+    _client_settings: Any = PrivateAttr()
+    _client: Any = PrivateAttr()
+    _collection: Any = PrivateAttr()
+
+    def model_post_init(self, __context):  # noqa: PYI063
+        """Initialize ChromaDB client and collection after Pydantic validation."""
         import chromadb
         import chromadb.config
 
-        self._embed_model = embed_model
         self._client_settings = chromadb.config.Settings()
         self._client = chromadb.Client(self._client_settings)
 
+        collection_name = self.collection_name
         if collection_name is None:
             collection_name = "auto-generated-" + str(uuid.uuid4())[:8]
             logger.info(f"collection_name: {collection_name}")
@@ -50,7 +62,7 @@ class ChromaVectorStore(BaseVectorStore):
         self._collection = self._client.get_or_create_collection(
             name=collection_name,
             embedding_function=None,
-            metadata={"hnsw:space": distance_strategy},
+            metadata={"hnsw:space": self.distance_strategy},
         )
 
     def add_documents(self, documents: list[Document]) -> list:
@@ -71,7 +83,7 @@ class ChromaVectorStore(BaseVectorStore):
             embeddings.append(
                 doc.embedding
                 if doc.embedding
-                else self._embed_model.embed_text(doc.get_content()),
+                else self.embed_model.embed_text(doc.get_content()),
             )
             ids.append(doc.id_ if doc.id_ else str(uuid.uuid4()))
             chroma_documents.append(doc.get_content())
@@ -96,7 +108,7 @@ class ChromaVectorStore(BaseVectorStore):
         Returns:
             list[DocumentWithScore]: List of the most similar documents.
         """
-        query_embedding = self._embed_model.embed_text(query)
+        query_embedding = self.embed_model.embed_text(query)
 
         results = self._collection.query(
             query_embeddings=query_embedding,

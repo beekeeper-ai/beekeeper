@@ -45,8 +45,7 @@ class WatsonxEmbedding(BaseEmbedding):
 
     _client: Any = PrivateAttr()
 
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__(**kwargs)
+    def model_post_init(self, __context):  # noqa: PYI063
         from ibm_watsonx_ai import Credentials
         from ibm_watsonx_ai.foundation_models import Embeddings as WatsonxEmbeddings
 
@@ -54,7 +53,7 @@ class WatsonxEmbedding(BaseEmbedding):
             self.project_id and self.space_id
         ):
             raise ValueError(
-                "Must provide one of these parameters [`project_id`, `space_id`], not both.",
+                "Must provide ONE of these parameters [`project_id`, `space_id`], not both.",
             )
 
         kwargs_params = {

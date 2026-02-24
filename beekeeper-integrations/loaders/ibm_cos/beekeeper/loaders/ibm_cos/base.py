@@ -1,9 +1,8 @@
 import os
-
-# import re
 import tempfile
 from typing import Any
 
+from beekeeper.core.bridge.pydantic import Field, PrivateAttr
 from beekeeper.core.document import Document
 from beekeeper.core.loaders import BaseLoader, DirectoryLoader
 
@@ -14,9 +13,9 @@ class IBMCOSLoader(BaseLoader):
 
     Attributes:
         bucket (str): Name of the bucket.
-        ibm_api_key_id (str): IBM Cloud API key.
-        ibm_service_instance_id (str): Service instance ID for the IBM COS.
-        s3_endpoint_url (str): Endpoint for the IBM Cloud Object Storage service (S3 compatible).
+        ibm_api_key_id (str, optional): IBM Cloud API key.
+        ibm_service_instance_id (str, optional): Service instance ID for the IBM COS.
+        s3_endpoint_url (str, optional): Endpoint for the IBM Cloud Object Storage service (S3 compatible).
 
     Example:
         ```python
@@ -31,23 +30,25 @@ class IBMCOSLoader(BaseLoader):
         ```
     """
 
-    def __init__(
-        self,
-        bucket: str,
-        ibm_api_key_id: str | None = None,
-        ibm_service_instance_id: str | None = None,
-        s3_endpoint_url: str | None = None,
-    ):
+    bucket: str = Field(..., description="Name of the bucket")
+    ibm_api_key_id: str | None = Field(default=None, description="IBM Cloud API key")
+    ibm_service_instance_id: str | None = Field(
+        default=None, description="Service instance ID for the IBM COS"
+    )
+    s3_endpoint_url: str | None = Field(
+        default=None,
+        description="Endpoint for the IBM Cloud Object Storage service (S3 compatible)",
+    )
+
+    _ibm_boto3: Any = PrivateAttr()
+    _boto_config: Any = PrivateAttr()
+
+    def model_post_init(self, __context):  # noqa: PYI063
         import ibm_boto3
         from ibm_botocore.client import Config
 
         self._ibm_boto3 = ibm_boto3
         self._boto_config = Config
-
-        self.bucket = bucket
-        self.ibm_api_key_id = ibm_api_key_id
-        self.ibm_service_instance_id = ibm_service_instance_id
-        self.s3_endpoint_url = s3_endpoint_url
 
     def load_data(self, input_file: str, **kwargs: Any) -> list[Document]:
         """Loads data from the specified bucket."""

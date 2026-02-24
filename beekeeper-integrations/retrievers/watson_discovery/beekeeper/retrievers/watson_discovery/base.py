@@ -1,11 +1,9 @@
 from logging import getLogger
 from typing import Any
 
+from beekeeper.core.bridge.pydantic import Field, PrivateAttr
 from beekeeper.core.document import Document, DocumentWithScore
 from beekeeper.core.retrievers import BaseRetriever
-from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-from ibm_watson import DiscoveryV2
-from ibm_watson.discovery_v2 import QueryLargePassages
 
 logger = getLogger(__name__)
 
@@ -35,23 +33,28 @@ class WatsonDiscoveryRetriever(BaseRetriever):
         ```
     """
 
-    def __init__(
-        self,
-        url: str,
-        api_key: str,
-        project_id: str,
-        version: str = "2023-03-31",
-        disable_passages: bool = False,
-    ) -> None:
+    url: str = Field(..., description="Watson Discovery instance URL")
+    api_key: str = Field(..., description="Watson Discovery API key")
+    project_id: str = Field(..., description="Watson Discovery project ID")
+    version: str = Field(
+        default="2023-03-31", description="Watson Discovery API version"
+    )
+    disable_passages: bool = Field(
+        default=False,
+        description="Return the full document instead of passages. Only enable this if all documents are short",
+    )
 
-        self.disable_passages = disable_passages
-        self.project_id = project_id
+    _client: Any = PrivateAttr()
+
+    def model_post_init(self, __context):  # noqa: PYI063
+        """Initialize Watson Discovery client after Pydantic validation."""
+        from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+        from ibm_watson import DiscoveryV2
 
         try:
-            authenticator = IAMAuthenticator(api_key)
-            self._client = DiscoveryV2(authenticator=authenticator, version=version)
-
-            self._client.set_service_url(url)
+            authenticator = IAMAuthenticator(self.api_key)
+            self._client = DiscoveryV2(authenticator=authenticator, version=self.version)
+            self._client.set_service_url(self.url)
         except Exception as e:
             logger.error(f"Error connecting to IBM Watson Discovery: {e}")
             raise
@@ -73,6 +76,8 @@ class WatsonDiscoveryRetriever(BaseRetriever):
             docs = doc_retriever.query_documents("What's Beekeeper Framework?")
             ```
         """
+        from ibm_watson.discovery_v2 import QueryLargePassages
+
         return_fields = ["extracted_metadata.filename", "extracted_metadata.file_type"]
 
         if not self.disable_passages:
