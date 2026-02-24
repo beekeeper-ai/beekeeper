@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict
 from beekeeper.core.document import Document
@@ -19,13 +20,12 @@ class BaseLoader(BaseModel, ABC):
         return "BaseLoader"
 
     @abstractmethod
-    def load_data(self, *args, **kwargs) -> list[Document]:
+    def load_data(self, input_dir: str, **kwargs: Any) -> list[Document]:
         """
         Loads data and returns a list of documents.
 
         Args:
-            *args: Variable length argument list.
-            **kwargs: Arbitrary keyword arguments.
+            input_dir (str): Directory path from which to load the documents.
 
         Returns:
             list[Document]: A list of loaded documents.

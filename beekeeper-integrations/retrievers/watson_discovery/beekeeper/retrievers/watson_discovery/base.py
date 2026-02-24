@@ -1,4 +1,5 @@
 from logging import getLogger
+from typing import Any
 
 from beekeeper.core.document import Document, DocumentWithScore
 from beekeeper.core.retrievers import BaseRetriever
@@ -56,10 +57,7 @@ class WatsonDiscoveryRetriever(BaseRetriever):
             raise
 
     def query_documents(
-        self,
-        query: str,
-        filter: str | None = None,
-        top_k: int = 4,
+        self, query: str, filter: str | None = None, top_k: int = 4, **kwargs: Any
     ) -> list[DocumentWithScore]:
         """
         Search your data in the Discovery API and return a list of documents.

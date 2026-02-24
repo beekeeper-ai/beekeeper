@@ -1,6 +1,6 @@
 from typing import Any, Literal
 
-from beekeeper.core.bridge.pydantic import PrivateAttr, Field
+from beekeeper.core.bridge.pydantic import Field, PrivateAttr
 from beekeeper.core.embeddings import BaseEmbedding, Embedding
 
 
@@ -21,8 +21,8 @@ class HuggingFaceEmbedding(BaseEmbedding):
     """
 
     model_name: str = Field(
-        default="sentence-transformers/all-MiniLM-L6-v2", 
-        description="Name of the embedding model"
+        default="sentence-transformers/all-MiniLM-L6-v2",
+        description="Name of the embedding model",
     )
     device: Literal["cpu", "cuda"] = "cpu"
 
@@ -34,9 +34,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
 
         self._client = SentenceTransformer(self.model_name, device=self.device)
 
-    def embed_text(
-        self, input: str | list[str]
-    ) -> list[Embedding]:
+    def embed_text(self, input: str | list[str]) -> list[Embedding]:
         """
         Embed one or more text strings.
 

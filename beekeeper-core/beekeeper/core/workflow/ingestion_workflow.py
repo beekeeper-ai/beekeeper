@@ -118,7 +118,7 @@ class IngestionWorkflow:
 
         return _documents
 
-    def run(self, documents: list[Document] = None) -> list[Document]:
+    def run(self, documents: list[Document] = []) -> list[Document]:
         """
         Run an ingestion workflow.
 

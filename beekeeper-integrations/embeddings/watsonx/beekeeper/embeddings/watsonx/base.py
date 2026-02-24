@@ -34,8 +34,8 @@ class WatsonxEmbedding(BaseEmbedding):
     """
 
     model_name: str = Field(
-        default="sentence-transformers/all-MiniLM-L6-v2", 
-        description="Name of the embedding model"
+        default="ibm/slate-30m-english-rtrvr",
+        description="Name of the embedding model",
     )
     api_key: str
     url: str
@@ -73,9 +73,7 @@ class WatsonxEmbedding(BaseEmbedding):
 
         self._client = WatsonxEmbeddings(**kwargs_params)
 
-    def embed_text(
-        self, input: str | list[str]
-    ) -> list[Embedding]:
+    def embed_text(self, input: str | list[str]) -> list[Embedding]:
         """
         Embed one or more text strings.
 

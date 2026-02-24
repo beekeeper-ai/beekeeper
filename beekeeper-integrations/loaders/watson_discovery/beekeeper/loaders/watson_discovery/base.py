@@ -1,5 +1,6 @@
 from datetime import datetime
 from logging import getLogger
+from typing import Any
 
 from beekeeper.core.document import Document
 from beekeeper.core.loaders import BaseLoader
@@ -62,7 +63,7 @@ class WatsonDiscoveryLoader(BaseLoader):
             logger.error(f"Error connecting to IBM Watson Discovery: {e}")
             raise
 
-    def load_data(self) -> list[Document]:
+    def load_data(self, input_file: str, **kwargs: Any) -> list[Document]:
         """
         Loads documents from Watson Discovery.
 

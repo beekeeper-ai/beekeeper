@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict
-from beekeeper.core.document import Document
+from beekeeper.core.document import Document, DocumentWithScore
 
 
 class BaseVectorStore(BaseModel, ABC):
@@ -31,7 +31,7 @@ class BaseVectorStore(BaseModel, ABC):
         )
 
     @abstractmethod
-    def query_documents(self, query: str, top_k: int = 4) -> list[Document]:
+    def query_documents(self, query: str, top_k: int = 4) -> list[DocumentWithScore]:
         """
         Query for similar documents in the vector store based on the input query provided.
 

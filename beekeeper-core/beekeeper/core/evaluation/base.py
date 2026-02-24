@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict
+from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class BaseEvaluator(BaseModel, ABC):
@@ -16,12 +16,33 @@ class BaseEvaluator(BaseModel, ABC):
         validate_assignment=True,
     )
 
+    score_threshold: float = Field(
+        default=0.8,
+        ge=0.0,
+        le=1.0,
+        description="Minimum required score for evaluation approval",
+    )
+
+    @field_validator("score_threshold")
+    @classmethod
+    def _validate_threshold(cls, v: float) -> float:
+        """Validate that threshold is within valid range."""
+        if not 0.0 <= v <= 1.0:
+            raise ValueError(f"score_threshold must be between 0.0 and 1.0, got: {v}")
+        return v
+
     @classmethod
     def class_name(cls) -> str:
         return "BaseEvaluator"
 
     @abstractmethod
-    def evaluate(self, *args: Any, **kwargs: Any) -> dict:
+    def evaluate(
+        self,
+        query: str | None = None,
+        generated_text: str | None = None,
+        contexts: list[str] | None = None,
+        **kwargs: Any,
+    ) -> dict:
         """
         Evaluate the given inputs and return evaluation results.
 

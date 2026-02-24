@@ -125,7 +125,9 @@ class ChromaVectorStore(BaseVectorStore):
         """
         self._collection.delete(ids=ids)
 
-    def get_all_documents(self, include_fields: list[str] | None = None) -> list[Document]:
+    def get_all_documents(
+        self, include_fields: list[str] | None = None
+    ) -> list[Document]:
         """Get all documents from vector store."""
         default_fields = ["documents", "metadatas", "embeddings"]
         include = include_fields if include_fields else default_fields

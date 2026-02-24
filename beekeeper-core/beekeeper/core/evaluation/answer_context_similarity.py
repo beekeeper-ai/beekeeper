@@ -1,32 +1,32 @@
+from typing import Any
+
 import numpy as np
 from beekeeper.core.bridge.pydantic import (
     ConfigDict,
     Field,
-    field_validator,
 )
 from beekeeper.core.embeddings import BaseEmbedding, SimilarityMode
 from beekeeper.core.evaluation.base import BaseEvaluator
 
 
-class ContextSimilarityEvaluator(BaseEvaluator):
+class AnswerContextSimilarityEvaluator(BaseEvaluator):
     """
-    Measures how much context has contributed to the answer's.
+    Measures how much context are related to the given answer.
     A higher value suggests a greater proportion of the context is present in the LLM's response.
 
     Attributes:
         embed_model (BaseEmbedding): The embedding model used to compute vector representations.
         similarity_mode (SimilarityMode, optional): Similarity strategy to use. Supported options are
             `"cosine"`, `"dot_product"`, and `"euclidean"`. Defaults to `"cosine"`.
-        similarity_threshold (float, optional): Embedding similarity threshold for determining
-            whether a context segment "passes". Must be between 0.0 and 1.0. Defaults to `0.8`.
+        score_threshold (float, optional): Determining whether a context segment "passes". Must be between 0.0 and 1.0. Defaults to `0.8`.
 
     Example:
         ```python
-        from beekeeper.core.evaluation import ContextSimilarityEvaluator
+        from beekeeper.core.evaluation import AnswerContextSimilarityEvaluator
         from beekeeper.embedding.huggingface import HuggingFaceEmbedding
 
         embedding = HuggingFaceEmbedding()
-        ctx_sim_evaluator = ContextSimilarityEvaluator(embed_model=embedding)
+        answer_ctx_evaluator = AnswerContextSimilarityEvaluator(embed_model=embedding)
         ```
     """
 
@@ -37,42 +37,36 @@ class ContextSimilarityEvaluator(BaseEvaluator):
     )
     similarity_mode: SimilarityMode = Field(
         default=SimilarityMode.COSINE,
-        description="Similarity strategy to use",
-    )
-    similarity_threshold: float = Field(
-        default=0.8,
-        ge=0.0,
-        le=1.0,
-        description="Similarity threshold for determining if a context 'passes'",
+        description="Similarity computation method",
     )
 
-    @field_validator("similarity_threshold")
-    @classmethod
-    def _validate_threshold(cls, v: float) -> float:
-        """Validate that threshold is within valid range."""
-        if not 0.0 <= v <= 1.0:
-            raise ValueError(
-                f"similarity_threshold must be between 0.0 and 1.0, got: {v}"
-            )
-        return v
-
-    def evaluate(self, contexts: list[str], generated_text: str) -> dict:
+    def evaluate(
+        self,
+        query: str | None = None,
+        generated_text: str | None = None,
+        contexts: list[str] | None = None,
+        **kwargs: Any,
+    ) -> dict:
         """
-        Evaluate similarity between provided contexts and generated text.
+        Evaluate the given inputs and return evaluation results.
 
         Args:
-            contexts (list[str]): List of contexts used to generate LLM response.
             generated_text (str): LLM response based on given context.
+            contexts (list[str]): List of contexts used to generate LLM response.
 
         Example:
             ```python
-            evaluation_result = ctx_sim_evaluator.evaluate(
-                contexts=["context 1", "context 2"], generated_text="<candidate>"
+            evaluation_result = answer_ctx_evaluator.evaluate(
+                contexts=["context 1", "context 2"],
+                generated_text="The capital of France is Paris.",
             )
             print(f"Score: {evaluation_result['score']}")
             print(f"Passing: {evaluation_result['passing']}")
             ```
         """
+        del query  # Unused
+        del kwargs  # Unused
+
         if not contexts or not generated_text:
             raise ValueError(
                 "Must provide these parameters [`contexts`, `generated_text`]",
@@ -86,18 +80,18 @@ class ContextSimilarityEvaluator(BaseEvaluator):
                 continue
 
             context_embedding = self.embed_model.embed_text(context)[0]
-            similarity_score = self.embed_model.similarity(
+            score = self.embed_model.similarity(
                 candidate_embedding,
                 context_embedding,
                 mode=self.similarity_mode,
             )
-            contexts_score.append(similarity_score)
+            contexts_score.append(score)
 
         if not contexts_score:
             raise ValueError("Unable to evaluate: no valid contexts provided")
 
         mean_score = float(np.mean(contexts_score))
-        passing = mean_score >= self.similarity_threshold
+        passing = mean_score >= self.score_threshold
 
         return {
             "contexts_score": contexts_score,

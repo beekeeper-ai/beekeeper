@@ -1,6 +1,7 @@
 import logging
 import os
 from pathlib import Path
+from typing import Any
 
 from beekeeper.core.document import Document
 from beekeeper.core.loaders import BaseLoader
@@ -11,7 +12,7 @@ logging.getLogger("pypdf").setLevel(logging.ERROR)
 class PDFLoader(BaseLoader):
     """PDF loader using PyPDF."""
 
-    def load_data(self, input_file: str) -> list[Document]:
+    def load_data(self, input_file: str, **kwargs: Any) -> list[Document]:
         """
         Loads data from the specified file.
 

@@ -2,6 +2,7 @@ import os
 
 # import re
 import tempfile
+from typing import Any
 
 from beekeeper.core.document import Document
 from beekeeper.core.loaders import BaseLoader, DirectoryLoader
@@ -48,7 +49,7 @@ class IBMCOSLoader(BaseLoader):
         self.ibm_service_instance_id = ibm_service_instance_id
         self.s3_endpoint_url = s3_endpoint_url
 
-    def load_data(self) -> list[Document]:
+    def load_data(self, input_file: str, **kwargs: Any) -> list[Document]:
         """Loads data from the specified bucket."""
         ibm_s3 = self._ibm_boto3.resource(
             "s3",

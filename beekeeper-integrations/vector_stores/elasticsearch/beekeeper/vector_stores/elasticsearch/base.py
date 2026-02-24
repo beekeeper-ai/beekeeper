@@ -225,7 +225,9 @@ class ElasticsearchVectorStore(BaseVectorStore):
         for id in ids:
             self._client.delete(index=self.index_name, id=id)
 
-    def get_all_documents(self, include_fields: list[str] | None = None) -> list[Document]:
+    def get_all_documents(
+        self, include_fields: list[str] | None = None
+    ) -> list[Document]:
         """Get all documents from vector store."""
         es_query = {"query": {"match_all": {}}}
 

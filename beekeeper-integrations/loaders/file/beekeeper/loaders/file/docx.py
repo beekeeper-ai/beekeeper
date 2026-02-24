@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from typing import Any
 
 from beekeeper.core.document import Document
 from beekeeper.core.loaders import BaseLoader
@@ -8,7 +9,7 @@ from beekeeper.core.loaders import BaseLoader
 class DocxLoader(BaseLoader):
     """Microsoft Word (Docx) loader."""
 
-    def load_data(self, input_file: str) -> list[Document]:
+    def load_data(self, input_file: str, **kwargs: Any) -> list[Document]:
         """
         Loads data from the specified file.
 

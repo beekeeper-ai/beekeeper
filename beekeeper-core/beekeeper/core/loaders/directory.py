@@ -1,7 +1,7 @@
 import glob
 import os
 from pathlib import Path
-from typing import Type
+from typing import Any, Type
 
 from beekeeper.core.bridge.pydantic import Field, field_validator
 from beekeeper.core.document import Document
@@ -94,7 +94,7 @@ class DirectoryLoader(BaseLoader):
 
         return validated_exts
 
-    def load_data(self, input_dir: str) -> list[Document]:
+    def load_data(self, input_dir: str, **kwargs: Any) -> list[Document]:
         """
         Loads data from the specified directory.
 
@@ -132,7 +132,7 @@ class DirectoryLoader(BaseLoader):
                         doc = loader_cls().load_data(file_dir)
                         documents.extend(doc)
                     except Exception as e:
-                        raise Exception(f"Error reading {file_dir}: {e}")
+                        raise Exception(f"Error loading {file_dir}: {e}")
                 else:
                     # TODO add `unstructured file` support
                     raise ValueError(f"Unsupported file type: {extension}")

@@ -1,7 +1,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from beekeeper.core.document import Document
 from beekeeper.core.loaders import BaseLoader
@@ -26,7 +26,7 @@ class DoclingLoader(BaseLoader):
     detached_tables: bool = False
     export_table_format: Literal["markdown", "html"] = "markdown"
 
-    def load_data(self, input_file: str) -> list[Document]:
+    def load_data(self, input_file: str, **kwargs: Any) -> list[Document]:
         """
         Loads data from the given input file.
 

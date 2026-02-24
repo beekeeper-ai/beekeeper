@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 from beekeeper.core.document import DocumentWithScore
 
@@ -12,6 +13,7 @@ class BaseRetriever(ABC):
     def query_documents(
         self,
         query: str,
+        **kwargs: Any,
     ) -> list[DocumentWithScore]:
         """
         Query and retrieve relevant documents.

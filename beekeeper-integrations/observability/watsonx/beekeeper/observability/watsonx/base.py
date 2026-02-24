@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import uuid
+from typing import Any
 
 import certifi
 from beekeeper.core.observability import PromptMonitor
@@ -106,7 +107,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         region: Region | str = Region.US_SOUTH,
         cpd_creds: CloudPakforDataCredentials | dict | None = None,
         subscription_id: str | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         import ibm_aigov_facts_client  # noqa: F401
         import ibm_cloud_sdk_core.authenticators  # noqa: F401
@@ -822,7 +823,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         region: Region | str = Region.US_SOUTH,
         cpd_creds: CloudPakforDataCredentials | dict | None = None,
         subscription_id: str | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         import ibm_aigov_facts_client  # noqa: F401
         import ibm_cloud_sdk_core.authenticators  # noqa: F401
