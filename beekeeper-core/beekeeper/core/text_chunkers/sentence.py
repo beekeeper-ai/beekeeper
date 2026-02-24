@@ -47,19 +47,11 @@ class SentenceChunker(BaseTextChunker):
             )
         return v
 
-    def __init__(
-        self,
-        chunk_size: int = 512,
-        chunk_overlap: int = 256,
-        separator: str = " ",
-    ) -> None:
-        super().__init__(
-            chunk_size=chunk_size, chunk_overlap=chunk_overlap, separator=separator
-        )
+    def model_post_init(self, __context):  # noqa: PYI063
         self._split_fns = [split_by_sep("\n\n\n"), split_by_sentence_tokenizer()]
         self._sub_split_fns = [
             split_by_regex("[^,.;？！]+[,.;？！]?"),
-            split_by_sep(separator),
+            split_by_sep(self.separator),
             split_by_char(),
         ]
 
