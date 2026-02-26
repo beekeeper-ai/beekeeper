@@ -4,7 +4,7 @@ _REGION_DATA = {
     "us-south": {
         "watsonxai": "https://us-south.ml.cloud.ibm.com",
         "openscale": "https://api.aiopenscale.cloud.ibm.com",
-        "factsheet": "us-south",
+        "factsheet": "dallas",
     },
     "eu-de": {
         "watsonxai": "https://eu-de.ml.cloud.ibm.com",

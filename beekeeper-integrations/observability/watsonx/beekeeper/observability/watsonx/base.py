@@ -109,11 +109,6 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         subscription_id: str | None = None,
         **kwargs: Any,
     ) -> None:
-        import ibm_aigov_facts_client  # noqa: F401
-        import ibm_cloud_sdk_core.authenticators  # noqa: F401
-        import ibm_watson_openscale  # noqa: F401
-        import ibm_watsonx_ai  # noqa: F401
-
         super().__init__(**kwargs)
 
         self.space_id = space_id
@@ -825,11 +820,6 @@ class WatsonxPromptMonitor(PromptMonitor):
         subscription_id: str | None = None,
         **kwargs: Any,
     ) -> None:
-        import ibm_aigov_facts_client  # noqa: F401
-        import ibm_cloud_sdk_core.authenticators  # noqa: F401
-        import ibm_watson_openscale  # noqa: F401
-        import ibm_watsonx_ai  # noqa: F401
-
         super().__init__(**kwargs)
 
         self.space_id = space_id
