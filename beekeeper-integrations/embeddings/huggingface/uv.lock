@@ -51,10 +51,11 @@ wheels = [
 
 [[package]]
 name = "beekeeper-embeddings-huggingface"
-version = "2.0.0b1"
+version = "2.0.0b2"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
+    { name = "hf-xet" },
     { name = "sentence-transformers" },
 ]
 
@@ -66,6 +67,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "beekeeper-core", specifier = ">=2.0.0b1,<3.0.0" },
+    { name = "hf-xet", specifier = ">=1.4.2,<1.5.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.15.8" },
     { name = "sentence-transformers", specifier = ">=5.2.3,<6.0.0" },
 ]
