@@ -288,7 +288,9 @@ class WatsonxCustomMetricsManager:
             ```
         """
         if len(name) > 27:
-            raise ValueError(f"Invalid parameter 'name': length must be less than or equal to 27 (received {len(name)}).")
+            raise ValueError(
+                f"Invalid parameter 'name': length must be less than or equal to 27 (received {len(name)})."
+            )
 
         integrated_system_id = self._add_integrated_system(
             integrated_system_credentials,
