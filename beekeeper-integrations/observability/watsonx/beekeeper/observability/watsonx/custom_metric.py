@@ -243,7 +243,7 @@ class WatsonxCustomMetricsManager:
         integrated_system_url: str,
         integrated_system_credentials: IntegratedSystemCredentials,
         schedule: bool = False,
-    ):
+    ) -> dict[str, Any]:
         """
         Creates a custom metric definition for IBM watsonx.governance.
 
