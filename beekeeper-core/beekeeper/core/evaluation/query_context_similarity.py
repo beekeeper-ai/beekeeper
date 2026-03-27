@@ -11,7 +11,7 @@ from beekeeper.core.evaluation.base import BaseEvaluator
 
 class QueryContextSimilarityEvaluator(BaseEvaluator):
     """
-    Measures how much context are related to the given query.
+    Measures how much context are related to the given **query**.
     A higher value suggests a greater proportion of the context is related with input query.
 
     Attributes:

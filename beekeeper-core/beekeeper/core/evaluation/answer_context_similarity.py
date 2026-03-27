@@ -11,7 +11,7 @@ from beekeeper.core.evaluation.base import BaseEvaluator
 
 class AnswerContextSimilarityEvaluator(BaseEvaluator):
     """
-    Measures how much context are related to the given answer.
+    Measures how much context are related to the given **answer**.
     A higher value suggests a greater proportion of the context is present in the LLM's response.
 
     Attributes:
