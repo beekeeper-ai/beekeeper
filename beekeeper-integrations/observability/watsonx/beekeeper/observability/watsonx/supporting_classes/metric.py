@@ -3,31 +3,6 @@ from typing import Literal
 from beekeeper.core.bridge.pydantic import BaseModel
 
 
-class WatsonxLocalMetric(BaseModel):
-    """
-    Provides the IBM watsonx.governance local monitor metric definition.
-
-    Attributes:
-        name (str): The name of the metric.
-        data_type (str): The data type of the metric. Currently supports "string", "integer", "double", and "timestamp".
-        nullable (bool, optional): Indicates whether the metric can be null. Defaults to `False`.
-
-    Example:
-        ```python
-        from beekeeper.monitors.watsonx import WatsonxLocalMetric
-
-        WatsonxLocalMetric(name="context_quality", data_type="double")
-        ```
-    """
-
-    name: str
-    data_type: Literal["string", "integer", "double", "timestamp"]
-    nullable: bool = True
-
-    def to_dict(self) -> dict:
-        return {"name": self.name, "type": self.data_type, "nullable": self.nullable}
-
-
 class WatsonxMetricThreshold(BaseModel):
     """
     Defines the metric threshold for IBM watsonx.governance.
@@ -45,13 +20,13 @@ class WatsonxMetricThreshold(BaseModel):
     """
 
     threshold_type: Literal["lower_limit", "upper_limit"]
-    default_value: float = None
+    default_value: float | None = None
 
     def to_dict(self) -> dict:
         return {"type": self.threshold_type, "default": self.default_value}
 
 
-class WatsonxMetric(BaseModel):
+class WatsonxMetricSpec(BaseModel):
     """
     Defines the IBM watsonx.governance global monitor metric.
 
@@ -64,11 +39,11 @@ class WatsonxMetric(BaseModel):
     Example:
         ```python
         from beekeeper.monitors.watsonx import (
-            WatsonxMetric,
+            WatsonxMetricSpec,
             WatsonxMetricThreshold,
         )
 
-        WatsonxMetric(
+        WatsonxMetricSpec(
             name="context_quality",
             applies_to=["retrieval_augmented_generation", "summarization"],
             thresholds=[

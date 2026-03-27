@@ -5,7 +5,7 @@ from beekeeper.core.observability.types import PayloadRecord
 from beekeeper.core.prompts import PromptTemplate
 
 
-class BaseObservability(ABC):
+class BaseObservability(BaseModel, ABC):
     """Abstract base class defining the interface for observability."""
 
     @classmethod
@@ -13,7 +13,7 @@ class BaseObservability(ABC):
         return "BaseObservability"
 
 
-class PromptObservability(BaseModel, BaseObservability):
+class PromptObservability(BaseObservability):
     """
     Abstract base class for prompt observability with Pydantic validation.
 

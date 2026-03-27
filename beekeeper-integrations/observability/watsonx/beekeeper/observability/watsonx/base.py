@@ -5,7 +5,7 @@ import uuid
 from typing import Any
 
 import certifi
-from beekeeper.core.observability import PromptMonitor
+from beekeeper.core.observability import PromptObservability
 from beekeeper.core.observability.types import PayloadRecord
 from beekeeper.core.prompts import PromptTemplate
 from beekeeper.observability.watsonx.supporting_classes.credentials import (
@@ -53,7 +53,7 @@ def _convert_payload_format(
     return payload_data
 
 
-class WatsonxExternalPromptMonitor(PromptMonitor):
+class WatsonxExternalPromptMonitor(PromptObservability):
     """
     Provides functionality to interact with IBM watsonx.governance for monitoring prompts executed on external LLMs.
 
@@ -69,6 +69,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             Defaults to `us-south`.
         cpd_creds (CloudPakforDataCredentials, optional): The Cloud Pak for Data environment credentials.
         subscription_id (str, optional): The subscription ID associated with the records being logged.
+        service_instance_id (str, optional): The service instance ID.
 
     Example:
         ```python
@@ -89,7 +90,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
             url="CPD_URL",
             username="USERNAME",
             password="PASSWORD",
-            version="5.0",
+            version="5.2",
             instance_id="openshift",
         )
 
@@ -107,6 +108,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         region: Region | str = Region.US_SOUTH,
         cpd_creds: CloudPakforDataCredentials | dict | None = None,
         subscription_id: str | None = None,
+        service_instance_id: str | None = None,
         **kwargs: Any,
     ) -> None:
         super().__init__(**kwargs)
@@ -115,6 +117,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         self.project_id = project_id
         self.region = Region.from_value(region)
         self.subscription_id = subscription_id
+        self.service_instance_id = service_instance_id
         self._api_key = api_key
         self._wos_client = None
 
@@ -407,6 +410,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self._wos_cpd_creds["url"],
+                        service_instance_id=self._service_instance_id,
                     )
 
                 else:
@@ -418,6 +422,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
+                        service_instance_id=self._service_instance_id,
                     )
 
             except Exception as e:
@@ -588,6 +593,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self._wos_cpd_creds["url"],
+                        service_instance_id=self.service_instance_id,
                     )
 
                 else:
@@ -599,6 +605,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
+                        service_instance_id=self.service_instance_id,
                     )
 
             except Exception as e:
@@ -696,6 +703,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self._wos_cpd_creds["url"],
+                        service_instance_id=self.service_instance_id,
                     )
 
                 else:
@@ -707,6 +715,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
+                        service_instance_id=self.service_instance_id,
                     )
 
             except Exception as e:
@@ -765,7 +774,7 @@ class WatsonxExternalPromptMonitor(PromptMonitor):
         )
 
 
-class WatsonxPromptMonitor(PromptMonitor):
+class WatsonxPromptMonitor(PromptObservability):
     """
     Provides functionality to interact with IBM watsonx.governance for monitoring prompts executed within
     IBM watsonx.ai LLMs.
@@ -782,6 +791,7 @@ class WatsonxPromptMonitor(PromptMonitor):
             Defaults to `us-south`.
         cpd_creds (CloudPakforDataCredentials, optional): The Cloud Pak for Data environment credentials.
         subscription_id (str, optional): The subscription ID associated with the records being logged.
+        service_instance_id (str, optional): The service instance ID.
 
     Example:
         ```python
@@ -802,7 +812,7 @@ class WatsonxPromptMonitor(PromptMonitor):
             url="CPD_URL",
             username="USERNAME",
             password="PASSWORD",
-            version="5.0",
+            version="5.2",
             instance_id="openshift",
         )
 
@@ -818,6 +828,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         region: Region | str = Region.US_SOUTH,
         cpd_creds: CloudPakforDataCredentials | dict | None = None,
         subscription_id: str | None = None,
+        service_instance_id: str | None = None,
         **kwargs: Any,
     ) -> None:
         super().__init__(**kwargs)
@@ -826,6 +837,7 @@ class WatsonxPromptMonitor(PromptMonitor):
         self.project_id = project_id
         self.region = Region.from_value(region)
         self.subscription_id = subscription_id
+        self.service_instance_id = service_instance_id
         self._api_key = api_key
         self._wos_client = None
 
@@ -1095,6 +1107,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self._wos_cpd_creds["url"],
+                        service_instance_id=self.service_instance_id,
                     )
 
                 else:
@@ -1106,6 +1119,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
+                        service_instance_id=self.service_instance_id,
                     )
 
             except Exception as e:
@@ -1267,6 +1281,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self._wos_cpd_creds["url"],
+                        service_instance_id=self.service_instance_id,
                     )
 
                 else:
@@ -1278,6 +1293,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
+                        service_instance_id=self.service_instance_id,
                     )
 
             except Exception as e:
@@ -1374,6 +1390,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self._wos_cpd_creds["url"],
+                        service_instance_id=self.service_instance_id,
                     )
 
                 else:
@@ -1385,6 +1402,7 @@ class WatsonxPromptMonitor(PromptMonitor):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
+                        service_instance_id=self.service_instance_id,
                     )
 
             except Exception as e:

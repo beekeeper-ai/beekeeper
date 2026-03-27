@@ -5,7 +5,7 @@ from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict
 from beekeeper.core.document import DocumentWithScore
 
 
-class BaseRetriever(ABC, BaseModel):
+class BaseRetriever(BaseModel, ABC):
     """
     Abstract base class for document retrievers.
     """

@@ -10,8 +10,7 @@ from beekeeper.observability.watsonx.supporting_classes.credentials import (
     IntegratedSystemCredentials,
 )
 from beekeeper.observability.watsonx.supporting_classes.metric import (
-    WatsonxLocalMetric,
-    WatsonxMetric,
+    WatsonxMetricSpec,
     WatsonxMetricThreshold,
 )
 
@@ -19,9 +18,8 @@ __all__ = [
     "CloudPakforDataCredentials",
     "IntegratedSystemCredentials",
     "WatsonxExternalPromptMonitor",
-    "WatsonxLocalMetric",
     "WatsonxCustomMetricsManager",
-    "WatsonxMetric",
+    "WatsonxMetricSpec",
     "WatsonxMetricThreshold",
     "WatsonxPromptMonitor",
 ]

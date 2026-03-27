@@ -4,7 +4,7 @@ from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict
 from beekeeper.core.guardrails.types import GuardrailResponse
 
 
-class BaseGuardrail(ABC, BaseModel):
+class BaseGuardrail(BaseModel, ABC):
     """
     Abstract base class defining the interface for guardrails.
 

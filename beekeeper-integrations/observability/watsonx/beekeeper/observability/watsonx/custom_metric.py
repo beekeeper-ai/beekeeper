@@ -8,7 +8,7 @@ from beekeeper.observability.watsonx.supporting_classes.credentials import (
 )
 from beekeeper.observability.watsonx.supporting_classes.enums import DataSetType, Region
 from beekeeper.observability.watsonx.supporting_classes.metric import (
-    WatsonxMetric,
+    WatsonxMetricSpec,
 )
 from beekeeper.observability.watsonx.utils.data_utils import validate_and_filter_dict
 from beekeeper.observability.watsonx.utils.instrumentation import suppress_output
@@ -43,7 +43,7 @@ class WatsonxCustomMetricsManager:
             url="CPD_URL",
             username="USERNAME",
             password="PASSWORD",
-            version="5.0",
+            version="5.2",
             instance_id="openshift",
         )
 
@@ -121,7 +121,7 @@ class WatsonxCustomMetricsManager:
     def _add_monitor_definitions(
         self,
         name: str,
-        metrics: list[WatsonxMetric],
+        metrics: list[WatsonxMetricSpec],
         schedule: bool,
     ):
         from ibm_watson_openscale.base_classes.watson_open_scale_v2 import (
@@ -236,12 +236,10 @@ class WatsonxCustomMetricsManager:
 
         return data_marts[0].metadata.id
 
-    # ===== Global Custom Metrics =====
-
     def create_metric_definition(
         self,
         name: str,
-        metrics: list[WatsonxMetric],
+        metrics: list[WatsonxMetricSpec],
         integrated_system_url: str,
         integrated_system_credentials: IntegratedSystemCredentials,
         schedule: bool = False,
@@ -253,7 +251,7 @@ class WatsonxCustomMetricsManager:
 
         Args:
             name (str): The name of the custom metric group.
-            metrics (list[WatsonxMetric]): A list of metrics to be measured.
+            metrics (list[WatsonxMetricSpec]): A list of metrics to be measured.
             schedule (bool, optional): Enable or disable the scheduler. Defaults to `False`.
             integrated_system_url (str): The URL of the external metric provider.
             integrated_system_credentials (IntegratedSystemCredentials): The credentials for the integrated system.
@@ -261,7 +259,7 @@ class WatsonxCustomMetricsManager:
         Example:
             ```python
             from beekeeper.monitors.watsonx import (
-                WatsonxMetric,
+                WatsonxMetricSpec,
                 IntegratedSystemCredentials,
                 WatsonxMetricThreshold,
             )
@@ -269,7 +267,7 @@ class WatsonxCustomMetricsManager:
             wxgov_client.create_metric_definition(
                 name="Custom Metric - Custom LLM Quality",
                 metrics=[
-                    WatsonxMetric(
+                    WatsonxMetricSpec(
                         name="context_quality",
                         applies_to=[
                             "retrieval_augmented_generation",
@@ -289,6 +287,9 @@ class WatsonxCustomMetricsManager:
             )
             ```
         """
+        if len(name) > 27:
+            raise ValueError(f"Invalid parameter 'name': length must be less than or equal to 27 (received {len(name)}).")
+
         integrated_system_id = self._add_integrated_system(
             integrated_system_credentials,
             name,
