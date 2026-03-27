@@ -1,1 +1,1 @@
-::: beekeeper.readers.docling
+::: beekeeper.loaders.docling

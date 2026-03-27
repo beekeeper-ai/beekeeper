@@ -4,14 +4,14 @@ title: watsonx.governance
 
 ## Monitors
 
-::: beekeeper.monitors.watsonx.WatsonxPromptMonitor
+::: beekeeper.observability.watsonx.WatsonxPromptMonitor
     options:
       members_order: source
       show_root_heading: true
       show_root_full_path: false
       heading_level: 3
 
-::: beekeeper.monitors.watsonx.WatsonxExternalPromptMonitor
+::: beekeeper.observability.watsonx.WatsonxExternalPromptMonitor
     options:
       members_order: source
       show_root_heading: true
@@ -19,7 +19,7 @@ title: watsonx.governance
       heading_level: 3
 
 ## Custom Metrics
-::: beekeeper.monitors.watsonx.WatsonxCustomMetricsManager
+::: beekeeper.observability.watsonx.WatsonxCustomMetricsManager
     options:
       members_order: alphabetical
       show_root_heading: true
@@ -27,14 +27,14 @@ title: watsonx.governance
       heading_level: 3
 
 ## Credentials
-::: beekeeper.monitors.watsonx.CloudPakforDataCredentials
+::: beekeeper.observability.watsonx.CloudPakforDataCredentials
     options:
       members_order: source
       show_root_heading: true
       show_root_full_path: false
       heading_level: 3
 
-::: beekeeper.monitors.watsonx.IntegratedSystemCredentials
+::: beekeeper.observability.watsonx.IntegratedSystemCredentials
     options:
       members_order: source
       show_root_heading: true
@@ -42,21 +42,14 @@ title: watsonx.governance
       heading_level: 3
 
 ## Supporting Classes
-::: beekeeper.monitors.watsonx.WatsonxMetric
-    options:
-      members_order: source
-      show_root_heading: true
-      show_root_full_path: false
-      heading_level: 3
-
-::: beekeeper.monitors.watsonx.WatsonxLocalMetric
+::: beekeeper.observability.watsonx.WatsonxMetricSpec
     options:
       members_order: source
       show_root_heading: true
       show_root_full_path: false
       heading_level: 3
       
-::: beekeeper.monitors.watsonx.WatsonxMetricThreshold
+::: beekeeper.observability.watsonx.WatsonxMetricThreshold
     options:
       members_order: source
       show_root_heading: true
@@ -64,14 +57,14 @@ title: watsonx.governance
       heading_level: 3
 
 ## Enums
-::: beekeeper.monitors.watsonx.supporting_classes.enums.Region
+::: beekeeper.observability.watsonx.supporting_classes.enums.Region
     options:
       members_order: source
       show_root_heading: true
       show_root_full_path: false
       heading_level: 3
 
-::: beekeeper.monitors.watsonx.supporting_classes.enums.TaskType
+::: beekeeper.observability.watsonx.supporting_classes.enums.TaskType
     options:
       members_order: source
       show_root_heading: true
