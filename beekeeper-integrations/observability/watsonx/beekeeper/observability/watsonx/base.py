@@ -5,6 +5,7 @@ import uuid
 from typing import Any
 
 import certifi
+from beekeeper.core.bridge.pydantic import PrivateAttr, SecretStr
 from beekeeper.core.observability import PromptObservability
 from beekeeper.core.observability.types import PayloadRecord
 from beekeeper.core.prompts import PromptTemplate
@@ -100,46 +101,56 @@ class WatsonxExternalPromptMonitor(PromptObservability):
         ```
     """
 
-    def __init__(
-        self,
-        api_key: str | None = None,
-        space_id: str | None = None,
-        project_id: str | None = None,
-        region: Region | str = Region.US_SOUTH,
-        cpd_creds: CloudPakforDataCredentials | dict | None = None,
-        subscription_id: str | None = None,
-        service_instance_id: str | None = None,
-        **kwargs: Any,
-    ) -> None:
-        super().__init__(**kwargs)
+    api_key: SecretStr | None = None
+    space_id: str | None = None
+    project_id: str | None = None
+    region: Region | str = Region.US_SOUTH
+    cpd_creds: CloudPakforDataCredentials | dict | None = None
+    subscription_id: str | None = None
+    service_instance_id: str | None = None
 
-        self.space_id = space_id
-        self.project_id = project_id
-        self.region = Region.from_value(region)
-        self.subscription_id = subscription_id
-        self.service_instance_id = service_instance_id
-        self._api_key = api_key
-        self._wos_client = None
+    _wos_client: Any | None = PrivateAttr(default=None)
+    _container_id: str | None = PrivateAttr(default=None)
+    _container_type: str | None = PrivateAttr(default=None)
+    _deployment_stage: str | None = PrivateAttr(default=None)
 
-        self._container_id = space_id if space_id else project_id
-        self._container_type = "space" if space_id else "project"
-        self._deployment_stage = "production" if space_id else "development"
+    _wos_cpd_creds: dict | None = PrivateAttr(default=None)
+    _fact_cpd_creds: dict | None = PrivateAttr(default=None)
+    _wml_cpd_creds: dict | None = PrivateAttr(default=None)
 
-        if cpd_creds:
+    def model_post_init(self, __context: Any) -> None:
+        """Initialize computed fields after Pydantic validation."""
+        if isinstance(self.region, str):
+            self.region = Region.from_value(self.region)
+
+        # Set container-related attributes
+        self._container_id = self.space_id if self.space_id else self.project_id
+        self._container_type = "space" if self.space_id else "project"
+        self._deployment_stage = "production" if self.space_id else "development"
+
+        # Process CPD credentials if provided
+        if self.cpd_creds:
+            cpd_dict = self.cpd_creds.to_dict() if isinstance(self.cpd_creds, CloudPakforDataCredentials) else self.cpd_creds
+
             self._wos_cpd_creds = validate_and_filter_dict(
-                cpd_creds.to_dict(),
-                ["username", "password", "api_key", "disable_ssl_verification"],
-                ["url"],
+                original_dict=cpd_dict,
+                optional_keys=[
+                    "username",
+                    "password",
+                    "api_key",
+                    "disable_ssl_verification",
+                    "service_instance_id"],
+                required_keys=["url"],
             )
             self._fact_cpd_creds = validate_and_filter_dict(
-                cpd_creds.to_dict(),
-                ["username", "password", "api_key", "bedrock_url"],
-                ["url"],
+                original_dict=cpd_dict,
+                optional_keys=["username", "password", "api_key", "bedrock_url"],
+                required_keys=["url"],
             )
             self._fact_cpd_creds["service_url"] = self._fact_cpd_creds.pop("url")
             self._wml_cpd_creds = validate_and_filter_dict(
-                cpd_creds.to_dict(),
-                [
+                original_dict=cpd_dict,
+                optional_keys=[
                     "username",
                     "password",
                     "api_key",
@@ -147,7 +158,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
                     "version",
                     "bedrock_url",
                 ],
-                ["url"],
+                required_keys=["url"],
             )
 
     def _create_detached_prompt(
@@ -176,7 +187,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
 
             else:
                 aigov_client = AIGovFactsClient(
-                    api_key=self._api_key,
+                    api_key=self.api_key,
                     container_id=self._container_id,
                     container_type=self._container_type,
                     disable_tracing=True,
@@ -216,7 +227,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
 
             else:
                 aigov_client = AIGovFactsClient(
-                    api_key=self._api_key,
+                    api_key=self.api_key,
                     container_id=self._container_id,
                     container_type=self._container_type,
                     disable_tracing=True,
@@ -244,7 +255,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
             else:
                 creds = Credentials(
                     url=self.region.watsonxai,
-                    api_key=self._api_key,
+                    api_key=self.api_key,
                 )
                 wml_client = APIClient(creds)
                 wml_client.set.default_space(self.space_id)
@@ -281,7 +292,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
             else:
                 creds = Credentials(
                     url=self.region.watsonxai,
-                    api_key=self._api_key,
+                    api_key=self.api_key,
                 )
                 wml_client = APIClient(creds)
                 wml_client.set.default_space(self.space_id)
@@ -418,7 +429,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self._api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key)
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
@@ -601,7 +612,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self._api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key)
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
@@ -711,7 +722,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self._api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key)
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
@@ -820,46 +831,56 @@ class WatsonxPromptMonitor(PromptObservability):
         ```
     """
 
-    def __init__(
-        self,
-        api_key: str | None = None,
-        space_id: str | None = None,
-        project_id: str | None = None,
-        region: Region | str = Region.US_SOUTH,
-        cpd_creds: CloudPakforDataCredentials | dict | None = None,
-        subscription_id: str | None = None,
-        service_instance_id: str | None = None,
-        **kwargs: Any,
-    ) -> None:
-        super().__init__(**kwargs)
+    api_key: SecretStr | None = None
+    space_id: str | None = None
+    project_id: str | None = None
+    region: Region | str = Region.US_SOUTH
+    cpd_creds: CloudPakforDataCredentials | dict | None = None
+    subscription_id: str | None = None
+    service_instance_id: str | None = None
 
-        self.space_id = space_id
-        self.project_id = project_id
-        self.region = Region.from_value(region)
-        self.subscription_id = subscription_id
-        self.service_instance_id = service_instance_id
-        self._api_key = api_key
-        self._wos_client = None
+    _wos_client: Any | None = PrivateAttr(default=None)
+    _container_id: str | None = PrivateAttr(default=None)
+    _container_type: str | None = PrivateAttr(default=None)
+    _deployment_stage: str | None = PrivateAttr(default=None)
 
-        self._container_id = space_id if space_id else project_id
-        self._container_type = "space" if space_id else "project"
-        self._deployment_stage = "production" if space_id else "development"
+    _wos_cpd_creds: dict | None = PrivateAttr(default=None)
+    _fact_cpd_creds: dict | None = PrivateAttr(default=None)
+    _wml_cpd_creds: dict | None = PrivateAttr(default=None)
 
-        if cpd_creds:
+    def model_post_init(self, __context: Any) -> None:
+        """Initialize computed fields after Pydantic validation."""
+        if isinstance(self.region, str):
+            self.region = Region.from_value(self.region)
+
+        # Set container-related attributes
+        self._container_id = self.space_id if self.space_id else self.project_id
+        self._container_type = "space" if self.space_id else "project"
+        self._deployment_stage = "production" if self.space_id else "development"
+
+        # Process CPD credentials if provided
+        if self.cpd_creds:
+            cpd_dict = self.cpd_creds.to_dict() if isinstance(self.cpd_creds, CloudPakforDataCredentials) else self.cpd_creds
+
             self._wos_cpd_creds = validate_and_filter_dict(
-                cpd_creds.to_dict(),
-                ["username", "password", "api_key", "disable_ssl_verification"],
-                ["url"],
+                original_dict=cpd_dict,
+                optional_keys=[
+                    "username",
+                    "password",
+                    "api_key",
+                    "disable_ssl_verification",
+                    "service_instance_id"],
+                required_keys=["url"],
             )
             self._fact_cpd_creds = validate_and_filter_dict(
-                cpd_creds.to_dict(),
-                ["username", "password", "api_key", "bedrock_url"],
-                ["url"],
+                original_dict=cpd_dict,
+                optional_keys=["username", "password", "api_key", "bedrock_url"],
+                required_keys=["url"],
             )
             self._fact_cpd_creds["service_url"] = self._fact_cpd_creds.pop("url")
             self._wml_cpd_creds = validate_and_filter_dict(
-                cpd_creds.to_dict(),
-                [
+                original_dict=cpd_dict,
+                optional_keys=[
                     "username",
                     "password",
                     "api_key",
@@ -867,7 +888,7 @@ class WatsonxPromptMonitor(PromptObservability):
                     "version",
                     "bedrock_url",
                 ],
-                ["url"],
+                required_keys=["url"],
             )
 
     def _create_prompt_template(
@@ -894,7 +915,7 @@ class WatsonxPromptMonitor(PromptObservability):
 
             else:
                 aigov_client = AIGovFactsClient(
-                    api_key=self._api_key,
+                    api_key=self.api_key,
                     container_id=self._container_id,
                     container_type=self._container_type,
                     disable_tracing=True,
@@ -934,7 +955,7 @@ class WatsonxPromptMonitor(PromptObservability):
 
             else:
                 aigov_client = AIGovFactsClient(
-                    api_key=self._api_key,
+                    api_key=self.api_key,
                     container_id=self._container_id,
                     container_type=self._container_type,
                     disable_tracing=True,
@@ -962,7 +983,7 @@ class WatsonxPromptMonitor(PromptObservability):
             else:
                 creds = Credentials(
                     url=self.region.watsonxai,
-                    api_key=self._api_key,
+                    api_key=self.api_key,
                 )
 
                 wml_client = APIClient(creds)
@@ -1000,7 +1021,7 @@ class WatsonxPromptMonitor(PromptObservability):
             else:
                 creds = Credentials(
                     url=self.region.watsonxai,
-                    api_key=self._api_key,
+                    api_key=self.api_key,
                 )
                 wml_client = APIClient(creds)
                 wml_client.set.default_space(self.space_id)
@@ -1115,7 +1136,7 @@ class WatsonxPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self._api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key)
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
@@ -1289,7 +1310,7 @@ class WatsonxPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self._api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key)
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
@@ -1398,7 +1419,7 @@ class WatsonxPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self._api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key)
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
