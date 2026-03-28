@@ -429,7 +429,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self.api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key.get_secret_value())
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
@@ -612,7 +612,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self.api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key.get_secret_value())
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
@@ -722,7 +722,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self.api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key.get_secret_value())
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
@@ -1136,7 +1136,7 @@ class WatsonxPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self.api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key.get_secret_value())
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
@@ -1310,7 +1310,7 @@ class WatsonxPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self.api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key.get_secret_value())
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
@@ -1419,7 +1419,7 @@ class WatsonxPromptMonitor(PromptObservability):
                         IAMAuthenticator,  # type: ignore
                     )
 
-                    authenticator = IAMAuthenticator(apikey=self.api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key.get_secret_value())
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
