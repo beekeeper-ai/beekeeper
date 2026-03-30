@@ -1,5 +1,4 @@
 import datetime
-import logging
 from typing import Any, Literal
 
 from beekeeper.core.bridge.pydantic import BaseModel, PrivateAttr, SecretStr
@@ -14,7 +13,6 @@ from beekeeper.observability.watsonx.supporting_classes.enums import DataSetType
 from beekeeper.observability.watsonx.supporting_classes.metric import (
     WatsonxMetricSpec,
 )
-from beekeeper.observability.watsonx.utils.data_utils import validate_and_filter_dict
 from beekeeper.observability.watsonx.utils.instrumentation import suppress_output
 
 
