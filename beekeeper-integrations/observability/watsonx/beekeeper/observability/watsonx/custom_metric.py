@@ -424,6 +424,7 @@ class WatsonxCustomMetricsManager(BaseModel):
     def store_record_metric_data(
         self,
         custom_data_set_id: str,
+        reference_data_set_id: str,
         computed_on: DataSetType | str,
         run_id: str,
         request_records: list[dict],
@@ -433,6 +434,7 @@ class WatsonxCustomMetricsManager(BaseModel):
 
         Args:
             custom_data_set_id (str): The ID of the custom metric data set.
+            reference_data_set_id (str): The dataset ID on which the metric was calculated.
             computed_on (DataSetType): The dataset on which the metric was calculated (e.g., payload or feedback).
             run_id (str): The ID of the monitor run that generated the metrics.
             request_records (list[dict]): A list of dictionaries containing the records to be stored.
@@ -441,12 +443,12 @@ class WatsonxCustomMetricsManager(BaseModel):
             ```python
             wxgov_client.store_record_metric_data(
                 custom_data_set_id="CUSTOM_DATASET_ID",
+                reference_data_set_id="COMPUTED_ON_DATASET_ID",
                 computed_on="payload",
                 run_id="RUN_ID",
                 request_records=[
                     {
                         "reference_record_id": "COMPUTED_ON_RECORD_ID",
-                        "data_set_id": "COMPUTED_ON_DATASET_ID",
                         "record_timestamp": "2025-12-09T00:00:00Z",
                         "context_quality": 0.786,
                         "pii": 0.05,
@@ -462,6 +464,7 @@ class WatsonxCustomMetricsManager(BaseModel):
                 record["record_id"] = str(uuid.uuid4())
                 record["run_id"] = run_id
                 record["computed_on"] = computed_on
+                record["data_set_id"] = reference_data_set_id
 
             fields = list(dict.fromkeys(k for d in request_records for k in d))
 

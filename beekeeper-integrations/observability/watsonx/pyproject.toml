@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "beekeeper-observability-watsonx"
-version = "2.0.0b8"
+version = "2.0.0rc1"
 description = "beekeeper observability watsonx integration"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "Apache-2.0" }
