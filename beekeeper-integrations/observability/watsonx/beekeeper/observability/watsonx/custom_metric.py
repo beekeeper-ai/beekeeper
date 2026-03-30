@@ -2,6 +2,7 @@ import datetime
 import logging
 from typing import Any, Literal
 
+from beekeeper.core.bridge.pydantic import BaseModel, PrivateAttr, SecretStr
 from beekeeper.observability.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
     IntegratedSystemCredentials,
@@ -14,7 +15,7 @@ from beekeeper.observability.watsonx.utils.data_utils import validate_and_filter
 from beekeeper.observability.watsonx.utils.instrumentation import suppress_output
 
 
-class WatsonxCustomMetricsManager:
+class WatsonxCustomMetricsManager(BaseModel):
     """
     Provides functionality to set up a custom metric to measure your model's performance with IBM watsonx.governance.
 
@@ -51,24 +52,26 @@ class WatsonxCustomMetricsManager:
         ```
     """
 
-    def __init__(
-        self,
-        api_key: str | None = None,
-        region: Region | str = Region.US_SOUTH,
-        cpd_creds: CloudPakforDataCredentials | dict | None = None,
-    ) -> None:
-        from ibm_cloud_sdk_core.authenticators import IAMAuthenticator  # type: ignore
-        from ibm_watson_openscale import APIClient as WosAPIClient  # type: ignore
+    api_key: SecretStr | None = None
+    region: Region | str = Region.US_SOUTH
+    cpd_creds: CloudPakforDataCredentials | dict | None = None
 
-        self.region = Region.from_value(region)
-        self._api_key = api_key
-        self._wos_client = None
+    _wos_client: Any | None = PrivateAttr(default=None)
+    _wos_cpd_creds: dict | None = PrivateAttr(default=None)
 
-        if cpd_creds:
+    def model_post_init(self, __context: Any) -> None:
+        """Initialize computed fields after Pydantic validation."""
+        if isinstance(self.region, str):
+            self.region = Region.from_value(self.region)
+
+        # Process CPD credentials if provided
+        if self.cpd_creds:
+            cpd_dict = self.cpd_creds.to_dict() if isinstance(self.cpd_creds, CloudPakforDataCredentials) else self.cpd_creds
+
             self._wos_cpd_creds = validate_and_filter_dict(
-                cpd_creds.to_dict(),
-                ["username", "password", "api_key", "disable_ssl_verification"],
-                ["url"],
+                original_dict=cpd_dict,
+                optional_keys=["username", "password", "api_key", "disable_ssl_verification"],
+                required_keys=["url"],
             )
 
         if not self._wos_client:
@@ -76,6 +79,9 @@ class WatsonxCustomMetricsManager:
                 if hasattr(self, "_wos_cpd_creds") and self._wos_cpd_creds:
                     from ibm_cloud_sdk_core.authenticators import (
                         CloudPakForDataAuthenticator,  # type: ignore
+                    )
+                    from ibm_watson_openscale import (
+                        APIClient as WosAPIClient,  # type: ignore
                     )
 
                     authenticator = CloudPakForDataAuthenticator(**self._wos_cpd_creds)
@@ -89,8 +95,11 @@ class WatsonxCustomMetricsManager:
                     from ibm_cloud_sdk_core.authenticators import (
                         IAMAuthenticator,  # type: ignore
                     )
+                    from ibm_watson_openscale import (
+                        APIClient as WosAPIClient,  # type: ignore
+                    )
 
-                    authenticator = IAMAuthenticator(apikey=self._api_key)
+                    authenticator = IAMAuthenticator(apikey=self.api_key.get_secret_value())
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
