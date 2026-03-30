@@ -421,7 +421,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self._wos_cpd_creds["url"],
-                        service_instance_id=self._service_instance_id,
+                        service_instance_id=self.service_instance_id,
                     )
 
                 else:
@@ -433,7 +433,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
                     self._wos_client = WosAPIClient(
                         authenticator=authenticator,
                         service_url=self.region.openscale,
-                        service_instance_id=self._service_instance_id,
+                        service_instance_id=self.service_instance_id,
                     )
 
             except Exception as e:
