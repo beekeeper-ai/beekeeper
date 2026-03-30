@@ -187,7 +187,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
 
             else:
                 aigov_client = AIGovFactsClient(
-                    api_key=self.api_key,
+                    api_key=self.api_key.get_secret_value(),
                     container_id=self._container_id,
                     container_type=self._container_type,
                     disable_tracing=True,
@@ -227,7 +227,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
 
             else:
                 aigov_client = AIGovFactsClient(
-                    api_key=self.api_key,
+                    api_key=self.api_key.get_secret_value(),
                     container_id=self._container_id,
                     container_type=self._container_type,
                     disable_tracing=True,
@@ -255,7 +255,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
             else:
                 creds = Credentials(
                     url=self.region.watsonxai,
-                    api_key=self.api_key,
+                    api_key=self.api_key.get_secret_value(),
                 )
                 wml_client = APIClient(creds)
                 wml_client.set.default_space(self.space_id)
@@ -292,7 +292,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
             else:
                 creds = Credentials(
                     url=self.region.watsonxai,
-                    api_key=self.api_key,
+                    api_key=self.api_key.get_secret_value(),
                 )
                 wml_client = APIClient(creds)
                 wml_client.set.default_space(self.space_id)
@@ -915,7 +915,7 @@ class WatsonxPromptMonitor(PromptObservability):
 
             else:
                 aigov_client = AIGovFactsClient(
-                    api_key=self.api_key,
+                    api_key=self.api_key.get_secret_value(),
                     container_id=self._container_id,
                     container_type=self._container_type,
                     disable_tracing=True,
@@ -955,7 +955,7 @@ class WatsonxPromptMonitor(PromptObservability):
 
             else:
                 aigov_client = AIGovFactsClient(
-                    api_key=self.api_key,
+                    api_key=self.api_key.get_secret_value(),
                     container_id=self._container_id,
                     container_type=self._container_type,
                     disable_tracing=True,
@@ -983,7 +983,7 @@ class WatsonxPromptMonitor(PromptObservability):
             else:
                 creds = Credentials(
                     url=self.region.watsonxai,
-                    api_key=self.api_key,
+                    api_key=self.api_key.get_secret_value(),
                 )
 
                 wml_client = APIClient(creds)
@@ -1021,7 +1021,7 @@ class WatsonxPromptMonitor(PromptObservability):
             else:
                 creds = Credentials(
                     url=self.region.watsonxai,
-                    api_key=self.api_key,
+                    api_key=self.api_key.get_secret_value(),
                 )
                 wml_client = APIClient(creds)
                 wml_client.set.default_space(self.space_id)
