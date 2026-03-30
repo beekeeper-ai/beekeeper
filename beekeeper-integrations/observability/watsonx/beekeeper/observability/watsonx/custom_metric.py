@@ -3,6 +3,9 @@ import logging
 from typing import Any, Literal
 
 from beekeeper.core.bridge.pydantic import BaseModel, PrivateAttr, SecretStr
+from beekeeper.observability.watsonx.supporting_classes.clients import (
+    WosClientFactory,
+)
 from beekeeper.observability.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
     IntegratedSystemCredentials,
@@ -24,6 +27,7 @@ class WatsonxCustomMetricsManager(BaseModel):
         region (Region, optional): The region where watsonx.governance is hosted when using IBM Cloud.
             Defaults to `us-south`.
         cpd_creds (CloudPakforDataCredentials, optional): IBM Cloud Pak for Data environment credentials.
+        service_instance_id (str, optional): The service instance ID.
 
     Example:
         ```python
@@ -55,61 +59,21 @@ class WatsonxCustomMetricsManager(BaseModel):
     api_key: SecretStr | None = None
     region: Region | str = Region.US_SOUTH
     cpd_creds: CloudPakforDataCredentials | dict | None = None
+    service_instance_id: str | None = None
 
     _wos_client: Any | None = PrivateAttr(default=None)
-    _wos_cpd_creds: dict | None = PrivateAttr(default=None)
 
-    def model_post_init(self, __context: Any) -> None:
+    def model_post_init(self, __context: Any) -> None:  # noqa: PYI063
         """Initialize computed fields after Pydantic validation."""
-        if isinstance(self.region, str):
-            self.region = Region.from_value(self.region)
-
-        # Process CPD credentials if provided
-        if self.cpd_creds:
-            cpd_dict = self.cpd_creds.to_dict() if isinstance(self.cpd_creds, CloudPakforDataCredentials) else self.cpd_creds
-
-            self._wos_cpd_creds = validate_and_filter_dict(
-                original_dict=cpd_dict,
-                optional_keys=["username", "password", "api_key", "disable_ssl_verification"],
-                required_keys=["url"],
-            )
+        self.region = Region.from_value(self.region)
 
         if not self._wos_client:
-            try:
-                if hasattr(self, "_wos_cpd_creds") and self._wos_cpd_creds:
-                    from ibm_cloud_sdk_core.authenticators import (
-                        CloudPakForDataAuthenticator,  # type: ignore
-                    )
-                    from ibm_watson_openscale import (
-                        APIClient as WosAPIClient,  # type: ignore
-                    )
-
-                    authenticator = CloudPakForDataAuthenticator(**self._wos_cpd_creds)
-
-                    self._wos_client = WosAPIClient(
-                        authenticator=authenticator,
-                        service_url=self._wos_cpd_creds["url"],
-                    )
-
-                else:
-                    from ibm_cloud_sdk_core.authenticators import (
-                        IAMAuthenticator,  # type: ignore
-                    )
-                    from ibm_watson_openscale import (
-                        APIClient as WosAPIClient,  # type: ignore
-                    )
-
-                    authenticator = IAMAuthenticator(apikey=self.api_key.get_secret_value())
-                    self._wos_client = WosAPIClient(
-                        authenticator=authenticator,
-                        service_url=self.region.openscale,
-                    )
-
-            except Exception as e:
-                logging.error(
-                    f"Error connecting to IBM watsonx.governance (openscale): {e}",
-                )
-                raise
+            self._wos_client = WosClientFactory.create_client(
+                api_key=self.api_key,
+                region=self.region,
+                cpd_creds=self.cpd_creds,
+                service_instance_id=self.service_instance_id,
+            )
 
     def _add_integrated_system(
         self,

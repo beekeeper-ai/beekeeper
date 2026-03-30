@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 import uuid
 from typing import Any
@@ -9,6 +8,11 @@ from beekeeper.core.bridge.pydantic import PrivateAttr, SecretStr
 from beekeeper.core.observability import PromptObservability
 from beekeeper.core.observability.types import PayloadRecord
 from beekeeper.core.prompts import PromptTemplate
+from beekeeper.observability.watsonx.supporting_classes.clients import (
+    AIGovFactsClientFactory,
+    WMLClientFactory,
+    WosClientFactory,
+)
 from beekeeper.observability.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
 )
@@ -17,8 +21,6 @@ from beekeeper.observability.watsonx.utils.data_utils import validate_and_filter
 from beekeeper.observability.watsonx.utils.instrumentation import suppress_output
 
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
-logging.getLogger("ibm_watsonx_ai.client").setLevel(logging.ERROR)
-logging.getLogger("ibm_watsonx_ai.wml_resource").setLevel(logging.ERROR)
 
 
 def _convert_payload_format(
@@ -114,51 +116,14 @@ class WatsonxExternalPromptMonitor(PromptObservability):
     _container_type: str | None = PrivateAttr(default=None)
     _deployment_stage: str | None = PrivateAttr(default=None)
 
-    _wos_cpd_creds: dict | None = PrivateAttr(default=None)
-    _fact_cpd_creds: dict | None = PrivateAttr(default=None)
-    _wml_cpd_creds: dict | None = PrivateAttr(default=None)
-
-    def model_post_init(self, __context: Any) -> None:
+    def model_post_init(self, __context: Any) -> None:  # noqa: PYI063
         """Initialize computed fields after Pydantic validation."""
-        if isinstance(self.region, str):
-            self.region = Region.from_value(self.region)
+        self.region = Region.from_value(self.region)
 
         # Set container-related attributes
         self._container_id = self.space_id if self.space_id else self.project_id
         self._container_type = "space" if self.space_id else "project"
         self._deployment_stage = "production" if self.space_id else "development"
-
-        # Process CPD credentials if provided
-        if self.cpd_creds:
-            cpd_dict = self.cpd_creds.to_dict() if isinstance(self.cpd_creds, CloudPakforDataCredentials) else self.cpd_creds
-
-            self._wos_cpd_creds = validate_and_filter_dict(
-                original_dict=cpd_dict,
-                optional_keys=[
-                    "username",
-                    "password",
-                    "api_key",
-                    "disable_ssl_verification"],
-                required_keys=["url"],
-            )
-            self._fact_cpd_creds = validate_and_filter_dict(
-                original_dict=cpd_dict,
-                optional_keys=["username", "password", "api_key", "bedrock_url"],
-                required_keys=["url"],
-            )
-            self._fact_cpd_creds["service_url"] = self._fact_cpd_creds.pop("url")
-            self._wml_cpd_creds = validate_and_filter_dict(
-                original_dict=cpd_dict,
-                optional_keys=[
-                    "username",
-                    "password",
-                    "api_key",
-                    "instance_id",
-                    "version",
-                    "bedrock_url",
-                ],
-                required_keys=["url"],
-            )
 
     def _create_detached_prompt(
         self,
@@ -167,37 +132,17 @@ class WatsonxExternalPromptMonitor(PromptObservability):
         detached_asset_details: dict,
     ) -> str:
         from ibm_aigov_facts_client import (  # type: ignore
-            AIGovFactsClient,
-            CloudPakforDataConfig,
             DetachedPromptTemplate,
             PromptTemplate,
         )
 
-        try:
-            if hasattr(self, "_fact_cpd_creds") and self._fact_cpd_creds:
-                cpd_creds = CloudPakforDataConfig(**self._fact_cpd_creds)
-
-                aigov_client = AIGovFactsClient(
-                    container_id=self._container_id,
-                    container_type=self._container_type,
-                    cloud_pak_for_data_configs=cpd_creds,
-                    disable_tracing=True,
-                )
-
-            else:
-                aigov_client = AIGovFactsClient(
-                    api_key=self.api_key.get_secret_value(),
-                    container_id=self._container_id,
-                    container_type=self._container_type,
-                    disable_tracing=True,
-                    region=self.region.factsheet,
-                )
-
-        except Exception as e:
-            logging.error(
-                f"Error connecting to IBM watsonx.governance (factsheets): {e}",
-            )
-            raise
+        aigov_client = AIGovFactsClientFactory.create_client(
+            api_key=self.api_key,
+            container_id=self._container_id,
+            container_type=self._container_type,
+            region=self.region,
+            cpd_creds=self.cpd_creds,
+        )
 
         created_detached_pta = aigov_client.assets.create_detached_prompt(
             **detached_asset_details,
@@ -208,60 +153,23 @@ class WatsonxExternalPromptMonitor(PromptObservability):
         return created_detached_pta.to_dict()["asset_id"]
 
     def _delete_detached_prompt(self, detached_pta_id: str) -> None:
-        from ibm_aigov_facts_client import (  # type: ignore
-            AIGovFactsClient,
-            CloudPakforDataConfig,
+        aigov_client = AIGovFactsClientFactory.create_client(
+            api_key=self.api_key,
+            container_id=self._container_id,
+            container_type=self._container_type,
+            region=self.region,
+            cpd_creds=self.cpd_creds,
         )
-
-        try:
-            if hasattr(self, "_fact_cpd_creds") and self._fact_cpd_creds:
-                cpd_creds = CloudPakforDataConfig(**self._fact_cpd_creds)
-
-                aigov_client = AIGovFactsClient(
-                    container_id=self._container_id,
-                    container_type=self._container_type,
-                    cloud_pak_for_data_configs=cpd_creds,
-                    disable_tracing=True,
-                )
-
-            else:
-                aigov_client = AIGovFactsClient(
-                    api_key=self.api_key.get_secret_value(),
-                    container_id=self._container_id,
-                    container_type=self._container_type,
-                    disable_tracing=True,
-                    region=self.region.factsheet,
-                )
-
-        except Exception as e:
-            logging.error(
-                f"Error connecting to IBM watsonx.governance (factsheets): {e}",
-            )
-            raise
 
         suppress_output(aigov_client.assets.delete_prompt_asset, detached_pta_id)
 
     def _create_deployment_pta(self, asset_id: str, name: str, model_id: str) -> str:
-        from ibm_watsonx_ai import APIClient, Credentials  # type: ignore
-
-        try:
-            if hasattr(self, "_wml_cpd_creds") and self._wml_cpd_creds:
-                creds = Credentials(**self._wml_cpd_creds)
-
-                wml_client = APIClient(creds)
-                wml_client.set.default_space(self.space_id)
-
-            else:
-                creds = Credentials(
-                    url=self.region.watsonxai,
-                    api_key=self.api_key.get_secret_value(),
-                )
-                wml_client = APIClient(creds)
-                wml_client.set.default_space(self.space_id)
-
-        except Exception as e:
-            logging.error(f"Error connecting to IBM watsonx.ai Runtime: {e}")
-            raise
+        wml_client = WMLClientFactory.create_client(
+            api_key=self.api_key,
+            region=self.region,
+            cpd_creds=self.cpd_creds,
+            space_id=self.space_id,
+        )
 
         meta_props = {
             wml_client.deployments.ConfigurationMetaNames.PROMPT_TEMPLATE: {
@@ -278,27 +186,13 @@ class WatsonxExternalPromptMonitor(PromptObservability):
 
         return wml_client.deployments.get_uid(created_deployment)
 
-    def _delete_deployment_pta(self, deployment_id: str):
-        from ibm_watsonx_ai import APIClient, Credentials  # type: ignore
-
-        try:
-            if hasattr(self, "_wml_cpd_creds") and self._wml_cpd_creds:
-                creds = Credentials(**self._wml_cpd_creds)
-
-                wml_client = APIClient(creds)
-                wml_client.set.default_space(self.space_id)
-
-            else:
-                creds = Credentials(
-                    url=self.region.watsonxai,
-                    api_key=self.api_key.get_secret_value(),
-                )
-                wml_client = APIClient(creds)
-                wml_client.set.default_space(self.space_id)
-
-        except Exception as e:
-            logging.error(f"Error connecting to IBM watsonx.ai Runtime: {e}")
-            raise
+    def _delete_deployment_pta(self, deployment_id: str) -> None:
+        wml_client = WMLClientFactory.create_client(
+            api_key=self.api_key,
+            region=self.region,
+            cpd_creds=self.cpd_creds,
+            space_id=self.space_id,
+        )
 
         suppress_output(wml_client.deployments.delete, deployment_id)
 
@@ -407,39 +301,13 @@ class WatsonxExternalPromptMonitor(PromptObservability):
             prompt_metadata["prompt_variables"], ""
         )
 
-        from ibm_watson_openscale import APIClient as WosAPIClient  # type: ignore
-
         if not self._wos_client:
-            try:
-                if hasattr(self, "_wos_cpd_creds") and self._wos_cpd_creds:
-                    from ibm_cloud_sdk_core.authenticators import (
-                        CloudPakForDataAuthenticator,  # type: ignore
-                    )
-
-                    authenticator = CloudPakForDataAuthenticator(**self._wos_cpd_creds)
-                    self._wos_client = WosAPIClient(
-                        authenticator=authenticator,
-                        service_url=self._wos_cpd_creds["url"],
-                        service_instance_id=self.service_instance_id,
-                    )
-
-                else:
-                    from ibm_cloud_sdk_core.authenticators import (
-                        IAMAuthenticator,  # type: ignore
-                    )
-
-                    authenticator = IAMAuthenticator(apikey=self.api_key.get_secret_value())
-                    self._wos_client = WosAPIClient(
-                        authenticator=authenticator,
-                        service_url=self.region.openscale,
-                        service_instance_id=self.service_instance_id,
-                    )
-
-            except Exception as e:
-                logging.error(
-                    f"Error connecting to IBM watsonx.governance (openscale): {e}",
-                )
-                raise
+            self._wos_client = WosClientFactory.create_client(
+                api_key=self.api_key,
+                region=self.region,
+                cpd_creds=self.cpd_creds,
+                service_instance_id=self.service_instance_id,
+            )
 
         detached_details = validate_and_filter_dict(
             prompt_metadata,
@@ -576,8 +444,6 @@ class WatsonxExternalPromptMonitor(PromptObservability):
             )
             ```
         """
-        from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-        from ibm_watson_openscale import APIClient as WosAPIClient
         from ibm_watson_openscale.supporting_classes.enums import (
             DataSetTypes,
             TargetTypes,
@@ -593,36 +459,12 @@ class WatsonxExternalPromptMonitor(PromptObservability):
             )
 
         if not self._wos_client:
-            try:
-                if hasattr(self, "_wos_cpd_creds") and self._wos_cpd_creds:
-                    from ibm_cloud_sdk_core.authenticators import (
-                        CloudPakForDataAuthenticator,  # type: ignore
-                    )
-
-                    authenticator = CloudPakForDataAuthenticator(**self._wos_cpd_creds)
-                    self._wos_client = WosAPIClient(
-                        authenticator=authenticator,
-                        service_url=self._wos_cpd_creds["url"],
-                        service_instance_id=self.service_instance_id,
-                    )
-
-                else:
-                    from ibm_cloud_sdk_core.authenticators import (
-                        IAMAuthenticator,  # type: ignore
-                    )
-
-                    authenticator = IAMAuthenticator(apikey=self.api_key.get_secret_value())
-                    self._wos_client = WosAPIClient(
-                        authenticator=authenticator,
-                        service_url=self.region.openscale,
-                        service_instance_id=self.service_instance_id,
-                    )
-
-            except Exception as e:
-                logging.error(
-                    f"Error connecting to IBM watsonx.governance (openscale): {e}",
-                )
-                raise
+            self._wos_client = WosClientFactory.create_client(
+                api_key=self.api_key,
+                region=self.region,
+                cpd_creds=self.cpd_creds,
+                service_instance_id=self.service_instance_id,
+            )
 
         subscription_details = self._wos_client.subscriptions.get(
             _subscription_id,
@@ -686,8 +528,6 @@ class WatsonxExternalPromptMonitor(PromptObservability):
             )
             ```
         """
-        from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-        from ibm_watson_openscale import APIClient as WosAPIClient
         from ibm_watson_openscale.supporting_classes.enums import (
             DataSetTypes,
             TargetTypes,
@@ -703,36 +543,12 @@ class WatsonxExternalPromptMonitor(PromptObservability):
             )
 
         if not self._wos_client:
-            try:
-                if hasattr(self, "_wos_cpd_creds") and self._wos_cpd_creds:
-                    from ibm_cloud_sdk_core.authenticators import (
-                        CloudPakForDataAuthenticator,  # type: ignore
-                    )
-
-                    authenticator = CloudPakForDataAuthenticator(**self._wos_cpd_creds)
-                    self._wos_client = WosAPIClient(
-                        authenticator=authenticator,
-                        service_url=self._wos_cpd_creds["url"],
-                        service_instance_id=self.service_instance_id,
-                    )
-
-                else:
-                    from ibm_cloud_sdk_core.authenticators import (
-                        IAMAuthenticator,  # type: ignore
-                    )
-
-                    authenticator = IAMAuthenticator(apikey=self.api_key.get_secret_value())
-                    self._wos_client = WosAPIClient(
-                        authenticator=authenticator,
-                        service_url=self.region.openscale,
-                        service_instance_id=self.service_instance_id,
-                    )
-
-            except Exception as e:
-                logging.error(
-                    f"Error connecting to IBM watsonx.governance (openscale): {e}",
-                )
-                raise
+            self._wos_client = WosClientFactory.create_client(
+                api_key=self.api_key,
+                region=self.region,
+                cpd_creds=self.cpd_creds,
+                service_instance_id=self.service_instance_id,
+            )
 
         subscription_details = self._wos_client.subscriptions.get(
             _subscription_id,

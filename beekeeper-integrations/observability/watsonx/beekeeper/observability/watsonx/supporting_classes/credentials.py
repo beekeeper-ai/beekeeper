@@ -67,7 +67,7 @@ class IntegratedSystemCredentials(BaseModel):
     token_headers: dict | None = {}  # bearer
     token_payload: str | dict | None = None  # bearer
 
-    def model_post_init(self, __context: Any) -> None:
+    def model_post_init(self, __context: Any) -> None:  # noqa: PYI063
         if self.auth_type == "basic":
             if not self.username or not self.password:
                 raise ValueError(
