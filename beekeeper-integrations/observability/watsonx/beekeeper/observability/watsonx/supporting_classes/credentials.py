@@ -28,28 +28,6 @@ class CloudPakforDataCredentials(BaseModel):
     version: str | None = None
     disable_ssl_verification: bool = True
 
-    def __init__(
-        self,
-        url: str,
-        api_key: str | None = None,
-        username: str | None = None,
-        password: str | None = None,
-        bedrock_url: str | None = None,
-        instance_id: Literal["icp", "openshift"] | None = None,
-        version: str | None = None,
-        disable_ssl_verification: bool = True,
-    ) -> None:
-        super().__init__(
-            url=url,
-            api_key=api_key,
-            username=username,
-            password=password,
-            bedrock_url=bedrock_url,
-            instance_id=instance_id,
-            version=version,
-            disable_ssl_verification=disable_ssl_verification,
-        )
-
     def to_dict(self) -> dict[str, Any]:
         cpd_creds = dict([(k, v) for k, v in self.__dict__.items()])  # noqa: C404
 
@@ -89,36 +67,17 @@ class IntegratedSystemCredentials(BaseModel):
     token_headers: dict | None = {}  # bearer
     token_payload: str | dict | None = None  # bearer
 
-    def __init__(
-        self,
-        auth_type: Literal["basic", "bearer"],
-        username: str | None = None,
-        password: str | None = None,
-        token_url: str | None = None,
-        token_method: str = "POST",
-        token_headers: dict | None = None,
-        token_payload: str | dict | None = None,
-    ) -> None:
-        if auth_type == "basic":
-            if not username or not password:
+    def model_post_init(self, __context: Any) -> None:
+        if self.auth_type == "basic":
+            if not self.username or not self.password:
                 raise ValueError(
                     "`username` and `password` are required for auth_type = 'basic'.",
                 )
-        elif auth_type == "bearer":
-            if not token_url:
+        elif self.auth_type == "bearer":
+            if not self.token_url:
                 raise ValueError(
                     "`token_url` are required for auth_type = 'bearer'.",
                 )
-
-        super().__init__(
-            auth_type=auth_type,
-            username=username,
-            password=password,
-            token_url=token_url,
-            token_method=token_method,
-            token_headers=token_headers,
-            token_payload=token_payload,
-        )
 
     def to_dict(self) -> dict:
         integrated_system_creds = {"auth_type": self.auth_type}
