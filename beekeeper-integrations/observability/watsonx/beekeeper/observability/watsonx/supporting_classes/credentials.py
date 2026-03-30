@@ -60,9 +60,9 @@ class IntegratedSystemCredentials(BaseModel):
     """
 
     auth_type: Literal["basic", "bearer"]
-    username: str | None  # basic
-    password: str | None  # basic
-    token_url: str | None  # bearer
+    username: str | None = None # basic
+    password: str | None = None # basic
+    token_url: str | None = None # bearer
     token_method: str | None = "POST"  # bearer
     token_headers: dict | None = {}  # bearer
     token_payload: str | dict | None = None  # bearer
