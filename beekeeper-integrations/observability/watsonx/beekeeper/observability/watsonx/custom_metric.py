@@ -1,4 +1,5 @@
 import datetime
+import uuid
 from typing import Any, Literal
 
 from beekeeper.core.bridge.pydantic import BaseModel, PrivateAttr, SecretStr
@@ -439,11 +440,13 @@ class WatsonxCustomMetricsManager(BaseModel):
         Example:
             ```python
             wxgov_client.store_record_metric_data(
-                reference_record_id="0196ad39-1b75-7e77-bddb-cc5393d575c2",
+                custom_data_set_id="CUSTOM_DATASET_ID",
+                computed_on="payload",
                 run_id="RUN_ID",
                 request_records=[
                     {
-                        "reference_record_id": "304a9270-44a1-4c4d-bfd4-f756541011f8",
+                        "reference_record_id": "COMPUTED_ON_RECORD_ID",
+                        "data_set_id": "COMPUTED_ON_DATASET_ID",
                         "record_timestamp": "2025-12-09T00:00:00Z",
                         "context_quality": 0.786,
                         "pii": 0.05,
@@ -454,11 +457,24 @@ class WatsonxCustomMetricsManager(BaseModel):
         """
         computed_on = DataSetType.from_value(computed_on).value
 
-        for record in request_records:
-            record["run_id"] = run_id
-            record["computed_on"] = computed_on
+        if request_records:
+            for record in request_records:
+                record["record_id"] = str(uuid.uuid4())
+                record["run_id"] = run_id
+                record["computed_on"] = computed_on
 
-        return self._wos_client.data_sets.store_records(
-            data_set_id=custom_data_set_id,
-            request_body=request_records,
-        ).result
+            fields = list(dict.fromkeys(k for d in request_records for k in d))
+
+            return self._wos_client.data_sets.store_records(
+                data_set_id=custom_data_set_id,
+                request_body=[
+                    {
+                        "fields": fields,
+                        "values": [
+                            [row.get(f) for f in fields] for row in request_records
+                        ],
+                    }
+                ],
+            ).result
+
+        return None
