@@ -1,5 +1,3 @@
-"""Client factory classes for IBM watsonx.governance API clients."""
-
 import logging
 from typing import Any
 
