@@ -112,7 +112,22 @@ class WatsonxCustomMetricsManager(BaseModel):
             _monitor_runtime = MonitorRuntime(type="custom_metrics_provider")
             _monitor_schedule = MonitorInstanceSchedule(
                 repeat_interval=1,
+                repeat_type="hour",
                 repeat_unit="hour",
+                status="enabled",
+                start_time=ScheduleStartTime(
+                    type="relative",
+                    delay_unit="minute",
+                    delay=30,
+                ),
+            )
+        else: # Known issue with watsonx schedule. Long repeat interval as workaround.
+            _monitor_runtime = MonitorRuntime(type="custom_metrics_provider")
+            _monitor_schedule = MonitorInstanceSchedule(
+                repeat_interval=10,
+                repeat_type="year",
+                repeat_unit="year",
+                status="enabled",
                 start_time=ScheduleStartTime(
                     type="relative",
                     delay_unit="minute",
