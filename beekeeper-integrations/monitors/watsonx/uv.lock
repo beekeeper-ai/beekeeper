@@ -56,10 +56,11 @@ wheels = [
 
 [[package]]
 name = "beekeeper-monitors-watsonx"
-version = "1.1.5"
+version = "1.1.7"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
+    { name = "beekeeper-observability-watsonx" },
     { name = "certifi" },
     { name = "ibm-aigov-facts-client" },
     { name = "ibm-watson-openscale" },
@@ -75,6 +76,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "beekeeper-core", specifier = ">=1.0.12.post2,<2.0.0" },
+    { name = "beekeeper-observability-watsonx", specifier = ">=1.1.7,<2.0.0" },
     { name = "certifi", specifier = ">=2025.11.12,<2026.0.0" },
     { name = "ibm-aigov-facts-client", specifier = ">=1.0.105,<1.0.200" },
     { name = "ibm-watson-openscale", specifier = ">=3.1.3,<3.2.0" },
@@ -83,6 +85,23 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.14.9" },
 ]
 provides-extras = ["dev"]
+
+[[package]]
+name = "beekeeper-observability-watsonx"
+version = "1.1.7"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "beekeeper-core" },
+    { name = "certifi" },
+    { name = "ibm-aigov-facts-client" },
+    { name = "ibm-watson-openscale" },
+    { name = "ibm-watsonx-ai" },
+    { name = "ipython" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/2b/ac/b2acc9c1ded0436e99bd74a67e821ffbddffe7caa8e9dfa578a9057852fa/beekeeper_observability_watsonx-1.1.7.tar.gz", hash = "sha256:4e33bf780f7f545f62f9e791eea036925c63af25724b0e7af3c76935b95ae68e", size = 15318, upload-time = "2026-04-01T19:14:42.124Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/89/e8/8d3b23836b410151840dd732f084cb0dd975d1a579a7610368a45df23d62/beekeeper_observability_watsonx-1.1.7-py3-none-any.whl", hash = "sha256:4fa3f2c159d10187363861ff49c059e8b6545156015a05a02a53a84fe8ee20ab", size = 19404, upload-time = "2026-04-01T19:14:43.278Z" },
+]
 
 [[package]]
 name = "boto3"

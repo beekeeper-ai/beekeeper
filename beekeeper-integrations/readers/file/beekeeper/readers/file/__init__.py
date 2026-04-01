@@ -1,3 +1,13 @@
+import warnings
+
+warnings.warn(
+    "The 'beekeeper.readers.file' package has been moved to 'beekeeper.loaders.file'. "
+    "Please update your imports to use 'beekeeper.loaders.file' instead. "
+    "This package will be removed in a future version.",
+    DeprecationWarning,
+    stacklevel=2
+)
+
 from beekeeper.readers.file.docx import DocxReader
 from beekeeper.readers.file.html import HTMLReader
 from beekeeper.readers.file.json import JSONReader
