@@ -44,11 +44,11 @@ plugins:
             - ../../beekeeper-integrations/guardrails/watsonx
             - ../../beekeeper-integrations/llms/litellm
             - ../../beekeeper-integrations/llms/watsonx
-            - ../../beekeeper-integrations/monitors/watsonx
-            - ../../beekeeper-integrations/readers/docling
-            - ../../beekeeper-integrations/readers/file
-            - ../../beekeeper-integrations/readers/ibm_cos
-            - ../../beekeeper-integrations/readers/watson_discovery
+            - ../../beekeeper-integrations/observability/watsonx
+            - ../../beekeeper-integrations/loaders/docling
+            - ../../beekeeper-integrations/loaders/file
+            - ../../beekeeper-integrations/loaders/ibm_cos
+            - ../../beekeeper-integrations/loaders/watson_discovery
             - ../../beekeeper-integrations/retrievers/watson_discovery
             - ../../beekeeper-integrations/vector_stores/chroma
             - ../../beekeeper-integrations/vector_stores/elasticsearch

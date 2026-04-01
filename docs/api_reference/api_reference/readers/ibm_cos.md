@@ -2,4 +2,4 @@
 title: IBM COS
 ---
 
-::: beekeeper.readers.ibm_cos
+::: beekeeper.loaders.ibm_cos
