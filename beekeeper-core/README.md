@@ -1,6 +1,6 @@
-# Beekeeper Core
+# Beekeeper core
 
-This is the primary Python package for the Beekeeper. It provides essential classes and abstractions that serve as the backbone for applications built with LLMs, particularly Retrieval-Augmented Generation (RAG). These foundational components include interfaces for LLMs, vector databases, embeddings, storage systems, callable functions, and more.
+Core Python package providing essential abstractions and interfaces for building LLM applications, with a focus on Retrieval-Augmented Generation (RAG).
 
 ## Installation 
 

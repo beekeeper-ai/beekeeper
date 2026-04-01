@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "beekeeper-loaders-file"
-version = "2.0.0b1"
+version = "2.0.0"
 description = "beekeeper loaders file integration"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "Apache-2.0" }
@@ -15,7 +15,7 @@ dependencies = [
     "pypdf>=6.7.1,<7.0.0",
     "jq>=1.11.0,<2.0.0",
     "docx2txt>=0.9,<1.0.0",
-    "beekeeper-core>=2.0.0b1,<3.0.0",
+    "beekeeper-core>=2.0.0,<3.0.0",
 ]
 
 [tool.hatch.build.targets.sdist]

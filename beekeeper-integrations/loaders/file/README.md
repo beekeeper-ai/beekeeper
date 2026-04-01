@@ -1,4 +1,4 @@
-# Beekeeper loaders integration - File
+# Beekeeper integration - File Loader
 
 ## Installation 
 

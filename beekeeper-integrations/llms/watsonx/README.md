@@ -1,4 +1,4 @@
-# Beekeeper llms integration - watsonx.ai
+# Beekeeper integration - watsonx.ai LLMs
 
 ## Installation 
 

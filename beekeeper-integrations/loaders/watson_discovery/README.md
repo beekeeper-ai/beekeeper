@@ -1,4 +1,4 @@
-# Beekeeper loaders integration - Watson Discovery
+# Beekeeper integration - Watson Discovery Loader
 
 ## Installation 
 

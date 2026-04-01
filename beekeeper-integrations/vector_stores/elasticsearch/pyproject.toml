@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "beekeeper-vector-stores-elasticsearch"
-version = "2.0.0b1"
+version = "2.0.0"
 description = "beekeeper vector_stores elasticsearch integration"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "Apache-2.0" }
@@ -12,7 +12,7 @@ readme = "README.md"
 requires-python = ">=3.11,<3.14"
 dependencies = [
     "elasticsearch>=8.19.2,<9.0.0",
-    "beekeeper-core>=2.0.0b1,<3.0.0",
+    "beekeeper-core>=2.0.0,<3.0.0",
 ]
 
 [tool.hatch.build.targets.sdist]
