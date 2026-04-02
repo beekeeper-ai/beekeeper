@@ -57,16 +57,16 @@ nav:
   - API Reference: index.md
   # - Getting Started:
   #   - Installation: getting-started/installation.md
-  - Embedding: embedding/
+  - Embeddings: embeddings/
   - Evaluation: evaluation/
-  - Guardrail: guardrail/
-  - LLM: llm/
+  - Guardrails: guardrails/
+  - LLMs: llms/
   - Observability: observability/
-  - Prompt: prompt/
-  - Loader: loader/
-  - Retriever: retriever/
-  - Text Chunker: text_chunker/
-  - Vector Store: vector_store/
+  - Prompts: prompts/
+  - Loaders: loaders/
+  - Retriever: retrievers/
+  - Text Chunkers: text_chunkers/
+  - Vector Stores: vector_stores/
   - Workflow: workflow/
 
 theme:
