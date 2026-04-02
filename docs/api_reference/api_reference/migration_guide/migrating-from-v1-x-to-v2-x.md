@@ -1,4 +1,4 @@
-# Migration Guide
+# Migrating from v1.x to v2.x
 
 This guide describes the breaking changes and required updates to migrate from 1.x to 2.x.
 
