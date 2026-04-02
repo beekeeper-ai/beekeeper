@@ -6,7 +6,7 @@ This guide describes the breaking changes and required updates to migrate from 1
 
 ### 1. Removed Methods
 
-#### `BaseDocument`
+**`BaseDocument`**
 
 The following methods have been removed in favor of direct property access:
 
@@ -17,7 +17,7 @@ The following methods have been removed in favor of direct property access:
 
 ---
 
-#### `DocumentWithScore`
+**`DocumentWithScore`**
 
 The following methods have been removed:
 
@@ -31,7 +31,7 @@ The following methods have been removed:
 
 ### 2. Embeddings API Change
 
-#### `embed_text`
+**`embed_text`**
 
 * Now **always returns a list** of embeddings.
 
@@ -54,13 +54,13 @@ embedding = embeddings[0]
 
 ### 3. watsonx Observability Changes
 
-#### Removed
+**Removed**
 
 * ❌ `WatsonxLocalMetric`
 
 ---
 
-#### Renamed
+**Renamed**
 
 | ❌ Old Name      | ✅ New Name          |
 | --------------- | ------------------- |
@@ -78,7 +78,7 @@ Module paths have been updated to reflect the new naming conventions.
 | `beekeeper.monitors` | `beekeeper.observability` |
 
 
-## 🔍 Quick Find & Replace Suggestions
+### 🔍 Quick Find & Replace Suggestions
 
 You can use these patterns to accelerate migration:
 
