@@ -1,1 +1,1 @@
-::: beekeeper.core.workflow.IngestionFlow
+::: beekeeper.core.workflow.IngestionWorkflow
