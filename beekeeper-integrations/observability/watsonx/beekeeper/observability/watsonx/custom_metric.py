@@ -30,9 +30,9 @@ class WatsonxCustomMetricsManager(BaseModel):
 
     Example:
         ```python
-        from beekeeper.monitors.watsonx.supporting_classes.enums import Region
+        from beekeeper.observability.watsonx.supporting_classes.enums import Region
 
-        from beekeeper.monitors.watsonx import (
+        from beekeeper.observability.watsonx import (
             WatsonxCustomMetricsManager,
             CloudPakforDataCredentials,
         )
@@ -245,7 +245,7 @@ class WatsonxCustomMetricsManager(BaseModel):
 
         Example:
             ```python
-            from beekeeper.monitors.watsonx import (
+            from beekeeper.observability.watsonx import (
                 WatsonxMetricSpec,
                 IntegratedSystemCredentials,
                 WatsonxMetricThreshold,

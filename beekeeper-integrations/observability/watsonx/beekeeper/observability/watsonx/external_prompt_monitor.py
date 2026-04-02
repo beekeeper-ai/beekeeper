@@ -76,9 +76,9 @@ class WatsonxExternalPromptMonitor(PromptObservability):
 
     Example:
         ```python
-        from beekeeper.monitors.watsonx.supporting_classes.enums import Region
+        from beekeeper.observability.watsonx.supporting_classes.enums import Region
 
-        from beekeeper.monitors.watsonx import (
+        from beekeeper.observability.watsonx import (
             WatsonxExternalPromptMonitor,
             CloudPakforDataCredentials,
         )
@@ -238,7 +238,7 @@ class WatsonxExternalPromptMonitor(PromptObservability):
 
         Example:
             ```python
-            from beekeeper.monitors.watsonx.supporting_classes.enums import TaskType
+            from beekeeper.observability.watsonx.supporting_classes.enums import TaskType
 
             wxgov_client.create_prompt_monitor(
                 name="Detached prompt (model AWS Anthropic)",

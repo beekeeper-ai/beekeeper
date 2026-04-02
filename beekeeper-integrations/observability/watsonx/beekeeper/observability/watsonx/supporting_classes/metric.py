@@ -13,7 +13,7 @@ class WatsonxMetricThreshold(BaseModel):
 
     Example:
         ```python
-        from beekeeper.monitors.watsonx import WatsonxMetricThreshold
+        from beekeeper.observability.watsonx import WatsonxMetricThreshold
 
         WatsonxMetricThreshold(threshold_type="lower_limit", default_value=0.8)
         ```
@@ -38,7 +38,7 @@ class WatsonxMetricSpec(BaseModel):
 
     Example:
         ```python
-        from beekeeper.monitors.watsonx import (
+        from beekeeper.observability.watsonx import (
             WatsonxMetricSpec,
             WatsonxMetricThreshold,
         )
