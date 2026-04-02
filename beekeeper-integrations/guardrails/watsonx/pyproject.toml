@@ -4,15 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "beekeeper-guardrails-watsonx"
-version = "1.1.1"
-description = "beekeeper guardrails watsonx extension"
+version = "2.0.0"
+description = "beekeeper guardrails watsonx integration"
 authors = [{ name = "Leonardo Furnielis", email = "leonardofurnielis@outlook.com" }]
 license = { text = "Apache-2.0" }
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 dependencies = [
-    "ibm-cloud-sdk-core>=3.16.5,<3.19.2",
-    "beekeeper-core>=1.0.8,<2.0.0",
+    "ibm-cloud-sdk-core>=3.24.4,<3.25.0",
+    "beekeeper-core>=2.0.0,<3.0.0",
 ]
 
 [tool.hatch.build.targets.sdist]
@@ -23,5 +23,5 @@ include = ["beekeeper/"]
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.14.9",
+    "ruff>=0.15.8",
 ]

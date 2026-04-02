@@ -1,4 +1,4 @@
-# Beekeeper loaders extension - File
+# Beekeeper integration - File Loader
 
 ## Installation 
 

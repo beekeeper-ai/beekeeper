@@ -1,33 +1,43 @@
 import uuid
 from abc import ABC, abstractmethod
 from hashlib import sha256
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 import numpy as np
-from pydantic.v1 import BaseModel, Field, validator
+from beekeeper.core.bridge.pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    computed_field,
+    field_validator,
+)
 
 
-class BaseDocument(ABC, BaseModel):
+class BaseDocument(BaseModel, ABC):
     """Abstract base class defining the interface for retrievable documents."""
+
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        validate_assignment=True,
+    )
 
     id_: str = Field(
         default_factory=lambda: str(uuid.uuid4()),
-        description="Unique ID of the document.",
+        description="Unique Id of the document.",
     )
-    metadata: Dict[str, Any] = Field(
+    metadata: dict[str, Any] = Field(
         default_factory=dict,
         description="A flat dictionary of metadata fields.",
     )
-    embedding: Optional[Union[List[float], np.ndarray]] = Field(
-        default_factory=None,
+    embedding: list[float] | np.ndarray | None = Field(
+        default=None,
         description="Embedding of the document.",
     )
 
-    class Config:
-        arbitrary_types_allowed = True
-
-    @validator("metadata", pre=True)
-    def _validate_metadata(cls, v) -> Dict:
+    @field_validator("metadata", mode="before")
+    @classmethod
+    def _validate_metadata(cls, v) -> dict:
+        """Ensure metadata is always a dict."""
         if v is None:
             return {}
         return v
@@ -35,19 +45,17 @@ class BaseDocument(ABC, BaseModel):
     @abstractmethod
     def get_content(self) -> str:
         """Get document content."""
-
-    def get_metadata(self) -> dict:
-        """Get metadata."""
-        return self.metadata
-
-    def get_embedding(self) -> List[float]:
-        """Get metadata."""
-        return self.embedding
+        raise NotImplementedError(
+            f"{self.__class__.__name__} must implement the get_content() method"
+        )
 
     @property
     @abstractmethod
     def hash(self) -> str:
-        """Get hash."""
+        """Get document hash."""
+        raise NotImplementedError(
+            f"{self.__class__.__name__} must implement the get_content() method"
+        )
 
 
 class Document(BaseDocument):
@@ -63,41 +71,47 @@ class Document(BaseDocument):
         """Get the text content."""
         return self.text
 
+    @computed_field
     @property
     def hash(self) -> str:
-        """Get document hash."""
+        """Get document hash based on text content."""
         return str(sha256(str(self.text).encode("utf-8", "surrogatepass")).hexdigest())
 
 
 class DocumentWithScore(BaseModel):
+    """Document with associated relevance score."""
+
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        validate_assignment=True,
+    )
+
     document: BaseDocument
-    score: Optional[float] = None
+    score: float | None = Field(
+        default=None,
+        description="Relevance score for the document.",
+    )
 
     @classmethod
     def class_name(cls) -> str:
         return "DocumentWithScore"
 
-    def get_score(self) -> float:
-        """Get score."""
-        if self.score is None:
-            return 0.0
-        else:
-            return self.score
+    @property
+    def normalized_score(self) -> float:
+        """Get normalized score (0.0 if None)."""
+        return self.score if self.score is not None else 0.0
 
-    # #### pass through methods to BaseDocument ####
+    # #### pass through properties to BaseDocument ####
     @property
     def id_(self) -> str:
+        """Get document Id."""
         return self.document.id_
 
     @property
-    def text(self) -> str:
-        if isinstance(self.document, Document):
-            return self.document.text
-        else:
-            raise ValueError("Must be a Document to get text.")
+    def metadata(self) -> dict:
+        """Get document metadata."""
+        return self.document.metadata
 
     def get_content(self) -> str:
+        """Get document content."""
         return self.document.get_content()
-
-    def get_metadata(self) -> str:
-        return self.document.get_metadata()

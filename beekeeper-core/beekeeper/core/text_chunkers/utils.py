@@ -1,7 +1,7 @@
-from typing import Callable, List, Tuple
+from typing import Callable
 
 
-def tokenizer(text: str) -> List:
+def tokenizer(text: str) -> list:
     try:
         import tiktoken
     except ImportError:
@@ -13,24 +13,24 @@ def tokenizer(text: str) -> List:
     return enc.encode(text)
 
 
-def split_by_sep(sep) -> Callable[[str], List[str]]:
+def split_by_sep(sep) -> Callable[[str], list[str]]:
     """Split text by separator."""
     return lambda text: text.split(sep)
 
 
-def split_by_regex(regex: str) -> Callable[[str], List[str]]:
+def split_by_regex(regex: str) -> Callable[[str], list[str]]:
     """Split text by regex."""
     import re
 
     return lambda text: re.findall(regex, text)
 
 
-def split_by_char() -> Callable[[str], List[str]]:
+def split_by_char() -> Callable[[str], list[str]]:
     """Split text by character."""
     return lambda text: list(text)
 
 
-def split_by_sentence_tokenizer() -> Callable[[str], List[str]]:
+def split_by_sentence_tokenizer() -> Callable[[str], list[str]]:
     try:
         import nltk
     except ImportError:
@@ -42,7 +42,7 @@ def split_by_sentence_tokenizer() -> Callable[[str], List[str]]:
     return lambda text: _split_by_sentence_tokenizer(text, sentence_tokenizer)
 
 
-def _split_by_sentence_tokenizer(text: str, sentence_tokenizer) -> List[str]:
+def _split_by_sentence_tokenizer(text: str, sentence_tokenizer) -> list[str]:
     """
     Get the spans and then return the sentences.
 
@@ -63,9 +63,9 @@ def _split_by_sentence_tokenizer(text: str, sentence_tokenizer) -> List[str]:
 
 def split_by_fns(  # noqa: RET503
     text: str,
-    split_fns: List[Callable],
-    sub_split_fns: List[Callable] = None,
-) -> Tuple[List[str], bool]:
+    split_fns: list[Callable],
+    sub_split_fns: list[Callable] = None,
+) -> tuple[list[str], bool]:
     """Split text by defined list of split functions."""
     if not split_fns:
         raise ValueError("Must provide a `split_fns` parameter")
@@ -82,12 +82,12 @@ def split_by_fns(  # noqa: RET503
                 return splits, False
 
 
-def merge_splits(splits: List[dict], chunk_size: int, chunk_overlap: int) -> List[str]:
+def merge_splits(splits: list[dict], chunk_size: int, chunk_overlap: int) -> list[str]:
     """Merge splits into chunks."""
-    chunks: List[str] = []
-    cur_chunk: List[Tuple[str, int]] = []
+    chunks: list[str] = []
+    cur_chunk: list[tuple[str, int]] = []
     cur_chunk_len = 0
-    last_chunk: List[Tuple[str, int]] = []
+    last_chunk: list[tuple[str, int]] = []
     new_chunk = True
 
     def close_chunk() -> None:
@@ -111,7 +111,7 @@ def merge_splits(splits: List[dict], chunk_size: int, chunk_overlap: int) -> Lis
                 cur_chunk.insert(0, (text, length))
                 last_index -= 1
 
-    def postprocess_chunks(_chunks: List[str]) -> List[str]:
+    def postprocess_chunks(_chunks: list[str]) -> list[str]:
         """Post-process chunks."""
         post_chunks = []
         for _chunk in _chunks:

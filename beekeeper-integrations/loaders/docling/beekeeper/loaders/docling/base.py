@@ -1,17 +1,17 @@
 import logging
 import os
 from pathlib import Path
-from typing import List, Literal
+from typing import Any, Literal
 
 from beekeeper.core.document import Document
-from beekeeper.core.loaders import BaseReader
+from beekeeper.core.loaders import BaseLoader
 
 logging.getLogger("docling-core").setLevel(logging.ERROR)
 
 
-class DoclingReader(BaseReader):
+class DoclingLoader(BaseLoader):
     """
-    A document reader that uses the `docling` library to extract and structure content from various file types
+    A document loader that uses the `docling` library to extract and structure content from various file types
     including PDF, DOCX, and HTML.
 
     For more information, see [Docling](https://docling-project.github.io/docling/)
@@ -26,7 +26,7 @@ class DoclingReader(BaseReader):
     detached_tables: bool = False
     export_table_format: Literal["markdown", "html"] = "markdown"
 
-    def load_data(self, input_file: str) -> List[Document]:
+    def load_data(self, input_file: str, **kwargs: Any) -> list[Document]:
         """
         Loads data from the given input file.
 
@@ -34,7 +34,7 @@ class DoclingReader(BaseReader):
             input_file (str): File path to load.
 
         Returns:
-            List[Document]: A list of `Document` objects loaded from the file.
+            list[Document]: A list of `Document` objects loaded from the file.
         """
         from docling.document_converter import DocumentConverter  # noqa: F401
 

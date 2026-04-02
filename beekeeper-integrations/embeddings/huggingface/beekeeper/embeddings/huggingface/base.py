@@ -1,10 +1,10 @@
-from typing import Any, List, Literal, Union
+from typing import Any, Literal
 
+from beekeeper.core.bridge.pydantic import Field, PrivateAttr
 from beekeeper.core.embeddings import BaseEmbedding, Embedding
-from pydantic.v1 import BaseModel, PrivateAttr
 
 
-class HuggingFaceEmbedding(BaseModel, BaseEmbedding):
+class HuggingFaceEmbedding(BaseEmbedding):
     """
     HuggingFace `sentence_transformers` embedding models.
 
@@ -20,24 +20,29 @@ class HuggingFaceEmbedding(BaseModel, BaseEmbedding):
         ```
     """
 
-    model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
+    model_name: str = Field(
+        default="sentence-transformers/all-MiniLM-L6-v2",
+        description="Name of the embedding model",
+    )
     device: Literal["cpu", "cuda"] = "cpu"
 
     _client: Any = PrivateAttr()
 
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__(**kwargs)
+    def model_post_init(self, __context):  # noqa: PYI063
         from sentence_transformers import SentenceTransformer
 
         self._client = SentenceTransformer(self.model_name, device=self.device)
 
-    def embed_text(
-        self, input: Union[str, List[str]]
-    ) -> Union[Embedding, List[Embedding]]:
+    def embed_text(self, input: str | list[str]) -> list[Embedding]:
         """
         Embed one or more text strings.
 
         Args:
-            input (List[str]): Input for which to compute embeddings.
+            input (list[str]): Input for which to compute embeddings.
         """
-        return self._client.encode_document(input).tolist()
+        embeddings = self._client.encode_document(input).tolist()
+
+        if embeddings and all(isinstance(item, list) for item in embeddings):
+            return embeddings
+        else:
+            return [embeddings]

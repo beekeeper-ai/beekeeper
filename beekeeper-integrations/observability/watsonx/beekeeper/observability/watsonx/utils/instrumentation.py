@@ -1,6 +1,7 @@
 import contextlib
 import io
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 
 def suppress_output(fn: Callable, *args: Any, **kwargs: Any) -> Any:

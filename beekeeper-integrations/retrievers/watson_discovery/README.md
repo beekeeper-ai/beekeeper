@@ -1,4 +1,4 @@
-# Beekeeper retrievers extension - Watson Discovery
+# Beekeeper integration - Watson Discovery Retriever
 
 ## Installation 
 

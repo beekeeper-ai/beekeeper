@@ -1,36 +1,46 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 
+from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict, Field, model_validator
 from beekeeper.core.observability.types import PayloadRecord
 from beekeeper.core.prompts import PromptTemplate
 
 
-class BaseMonitor(ABC):
-    """Abstract base class defining the interface for monitors."""
+class BaseObservability(BaseModel, ABC):
+    """Abstract base class defining the interface for observability."""
 
     @classmethod
     def class_name(cls) -> str:
-        return "BaseMonitor"
+        return "BaseObservability"
 
 
-class PromptMonitor(BaseMonitor):
-    """Abstract base class defining the interface for prompt observability."""
+class PromptObservability(BaseObservability):
+    """
+    Abstract base class for prompt observability with Pydantic validation.
 
-    def __init__(self, prompt_template: Optional[PromptTemplate] = None) -> None:
-        self.prompt_template = PromptTemplate.from_value(prompt_template)
+    Attributes:
+        prompt_template: Template for formatting prompts
+    """
+
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+    )
+
+    prompt_template: PromptTemplate | None = Field(
+        default=None, description="Template for formatting prompts"
+    )
+
+    @model_validator(mode="before")
+    @classmethod
+    def _validate_prompt_template(cls, data):
+        """Convert prompt_template value using PromptTemplate.from_value."""
+        if isinstance(data, dict) and "prompt_template" in data:
+            data["prompt_template"] = PromptTemplate.from_value(data["prompt_template"])
+        return data
 
     @classmethod
     def class_name(cls) -> str:
-        return "PromptMonitor"
+        return "PromptObservability"
 
     @abstractmethod
     def __call__(self, payload: PayloadRecord) -> None:
-        """PromptMonitor."""
-
-
-class TelemetryMonitor(BaseMonitor):
-    """Abstract base class defining the interface for telemetry observability."""
-
-    @classmethod
-    def class_name(cls) -> str:
-        return "TelemetryMonitor"
+        """Process observability payload."""

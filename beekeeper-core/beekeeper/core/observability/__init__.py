@@ -1,3 +1,3 @@
-from beekeeper.core.observability.base import BaseMonitor, PromptMonitor
+from beekeeper.core.observability.base import BaseObservability, PromptObservability
 
-__all__ = ["BaseMonitor", "PromptMonitor"]
+__all__ = ["BaseObservability", "PromptObservability"]

@@ -1,6 +1,6 @@
-# Beekeeper embeddings extension - watsonx
+# Beekeeper integration - watsonx.ai Embeddings
 
-## Installation 
+## Installation
 
 ```bash
 pip install beekeeper-embeddings-watsonx

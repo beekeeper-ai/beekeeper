@@ -1,5 +1,6 @@
-from typing import List
+from typing import Any
 
+from beekeeper.core.bridge.pydantic import field_validator
 from beekeeper.core.document import Document
 from beekeeper.core.text_chunkers.base import BaseTextChunker
 from beekeeper.core.text_chunkers.utils import (
@@ -23,32 +24,32 @@ class TokenTextChunker(BaseTextChunker):
 
     Example:
         ```python
-        from beekeeper.core.text_chunkers import TokenTextChunker
+        from beekeeper.core.text_chunker import TokenTextChunker
 
         text_chunker = TokenTextChunker()
         ```
     """
 
-    def __init__(
-        self,
-        chunk_size: int = 512,
-        chunk_overlap: int = 256,
-        separator="\n\n",
-    ) -> None:
-        if chunk_overlap > chunk_size:
+    chunk_size: int = 512
+    chunk_overlap: int = 256
+    separator: str = "\n\n"
+
+    @field_validator("chunk_overlap")
+    @classmethod
+    def _validate_chunk_overlap(cls, v: int, info: Any) -> int:
+        chunk_size = info.data.get("chunk_size", 512)
+        if v > chunk_size:
             raise ValueError(
-                f"Got a larger `chunk_overlap` ({chunk_overlap}) than `chunk_size` "
-                f"({chunk_size}). `chunk_overlap` should be smaller.",
+                f"Got a larger `chunk_overlap` ({v}) than `chunk_size` "
+                f"({chunk_size}). `chunk_overlap` should be smaller."
             )
+        return v
 
-        self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
-
-        self._split_fns = [split_by_sep(separator)]
-
+    def model_post_init(self, __context):  # noqa: PYI063
+        self._split_fns = [split_by_sep(self.separator)]
         self._sub_split_fns = [split_by_char()]
 
-    def chunk_text(self, text: str) -> List[str]:
+    def chunk_text(self, text: str) -> list[str]:
         """
         Split a single string of text into smaller chunks.
 
@@ -56,7 +57,7 @@ class TokenTextChunker(BaseTextChunker):
             text (str): Input text to split.
 
         Returns:
-            List[str]: List of text chunks.
+            list[str]: List of text chunks.
 
         Example:
             ```python
@@ -69,21 +70,21 @@ class TokenTextChunker(BaseTextChunker):
 
         return merge_splits(splits, self.chunk_size, self.chunk_overlap)
 
-    def chunk_documents(self, documents: List[Document]) -> List[Document]:
+    def chunk_documents(self, documents: list[Document]) -> list[Document]:
         """
         Split a list of documents into smaller document chunks.
 
         Args:
-            documents (List[Document]): List of `Document` objects to split.
+            documents (list[Document]): List of `Document` objects to split.
 
         Returns:
-            List[Document]: List of chunked documents objects.
+            list[Document]: List of chunked documents objects.
         """
         chunks = []
 
         for document in documents:
             texts = self.chunk_text(document.get_content())
-            metadata = {**document.get_metadata()}
+            metadata = {**document.metadata}
 
             for text in texts:
                 if len(texts) > 1:
@@ -99,7 +100,7 @@ class TokenTextChunker(BaseTextChunker):
 
         return chunks
 
-    def _split(self, text: str) -> List[dict]:
+    def _split(self, text: str) -> list[dict]:
         text_len = len(tokenizer(text))
         if text_len <= self.chunk_size:
             return [{"text": text, "is_sentence": True, "token_size": text_len}]

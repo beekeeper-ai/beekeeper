@@ -1,8 +1,8 @@
 from typing import Any
 
-from beekeeper.core.llms import BaseLLM, ChatMessage, ChatResponse, GenerateResponse
+from beekeeper.core.bridge.pydantic import Field
+from beekeeper.core.llms import BaseLLM, ChatMessage, ChatResponse, CompletionResponse
 from beekeeper.core.llms.decorators import llm_chat_callback, llm_completion_callback
-from pydantic import Field
 
 import litellm
 
@@ -38,7 +38,7 @@ class LiteLLM(BaseLLM):
     api_key: str
     additional_kwargs: dict[str, Any] = Field(default_factory=dict)
 
-    def _get_all_kwargs(self, **kwargs: Any) -> dict[str, any]:
+    def _get_all_kwargs(self, **kwargs: Any) -> dict[str, Any]:
         return {
             "temperature": self.temperature,
             "max_tokens": self.max_tokens,
@@ -49,7 +49,7 @@ class LiteLLM(BaseLLM):
         }
 
     @llm_completion_callback()
-    def completion(self, prompt: str, **kwargs: Any) -> GenerateResponse:
+    def completion(self, prompt: str, **kwargs: Any) -> CompletionResponse:
         """
         Creates a completion for the provided prompt and parameters. Using OpenAI's standard endpoint (/completions).
 
@@ -63,7 +63,7 @@ class LiteLLM(BaseLLM):
             exclude_none=True
         )
 
-        return GenerateResponse(
+        return CompletionResponse(
             text=response["choices"][0]["text"],
             input_token_count=response.get("usage", {}).get("prompt_tokens"),
             generated_token_count=response.get("usage", {}).get("completion_tokens"),

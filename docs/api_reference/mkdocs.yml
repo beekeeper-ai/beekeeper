@@ -13,7 +13,7 @@ markdown_extensions:
   - md_in_html
 
 extra:
-  version: "1.0.18"
+  version: "2.0.0"
 extra_css:
   - _static/css/style.css
 
@@ -57,17 +57,17 @@ nav:
   - API Reference: index.md
   # - Getting Started:
   #   - Installation: getting-started/installation.md
-  - Embeddings: embeddings/
+  - Embedding: embedding/
   - Evaluation: evaluation/
-  - Flows: flows/
-  - Guardrails: guardrails/
-  - LLMs: llms/
-  - Observability: monitors/
-  - Prompts: prompts/
-  - Readers: readers/
-  - Retrievers: retrievers/
-  - Text Chunkers: text_chunkers/
-  - Vector Stores: vector_stores/
+  - Guardrail: guardrail/
+  - LLM: llm/
+  - Observability: observability/
+  - Prompt: prompt/
+  - Loader: loader/
+  - Retriever: retriever/
+  - Text Chunker: text_chunker/
+  - Vector Store: vector_store/
+  - Workflow: workflow/
 
 theme:
   name: material

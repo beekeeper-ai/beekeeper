@@ -1,6 +1,8 @@
-# Beekeeper embeddings extension - huggingface
+# Beekeeper integration - HuggingFace Embeddings
 
-## Installation 
+HuggingFace sentence-transformers integration for Beekeeper.
+
+## Installation
 
 ```bash
 pip install beekeeper-embeddings-huggingface

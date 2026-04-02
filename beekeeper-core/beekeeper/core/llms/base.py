@@ -1,17 +1,23 @@
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
+from beekeeper.core.bridge.pydantic import BaseModel, Field
 from beekeeper.core.llms.types import ChatMessage, ChatResponse, CompletionResponse
-from beekeeper.core.monitors import BaseMonitor
-from pydantic import BaseModel
+from beekeeper.core.observability import BaseObservability
 
 
 class BaseLLM(BaseModel, ABC):
     """Abstract base class defining the interface for LLMs."""
 
     model_config = {"arbitrary_types_allowed": True}
-    model: str
-    callback_manager: Optional[BaseMonitor] = None
+
+    model: str = Field(
+        ..., min_length=1, description="Name or identifier of the LLM model to use"
+    )
+    callback_manager: BaseObservability | None = Field(
+        default=None,
+        description="Optional observability callback manager for tracking LLM interactions",
+    )
 
     @classmethod
     def class_name(cls) -> str:

@@ -1,6 +1,6 @@
-# Beekeeper guardrails extension - watsonx
+# Beekeeper integration - watsonx.governance Guardrails
 
-## Installation 
+## Installation
 
 ```bash
 pip install beekeeper-guardrails-watsonx

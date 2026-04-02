@@ -1,29 +1,27 @@
-from beekeeper.observability.watsonx.base import (
-    WatsonxExternalPromptMonitor,
-    WatsonxPromptMonitor,
-)
 from beekeeper.observability.watsonx.custom_metric import (
-    WatsonxCustomMetric,
     WatsonxCustomMetricsManager,
+)
+from beekeeper.observability.watsonx.external_prompt_monitor import (
+    WatsonxExternalPromptMonitor,
+)
+from beekeeper.observability.watsonx.prompt_monitor import (
+    WatsonxPromptMonitor,
 )
 from beekeeper.observability.watsonx.supporting_classes.credentials import (
     CloudPakforDataCredentials,
     IntegratedSystemCredentials,
 )
 from beekeeper.observability.watsonx.supporting_classes.metric import (
-    WatsonxLocalMetric,
-    WatsonxMetric,
+    WatsonxMetricSpec,
     WatsonxMetricThreshold,
 )
 
 __all__ = [
     "CloudPakforDataCredentials",
     "IntegratedSystemCredentials",
-    "WatsonxCustomMetric",
     "WatsonxExternalPromptMonitor",
-    "WatsonxLocalMetric",
     "WatsonxCustomMetricsManager",
-    "WatsonxMetric",
+    "WatsonxMetricSpec",
     "WatsonxMetricThreshold",
     "WatsonxPromptMonitor",
 ]

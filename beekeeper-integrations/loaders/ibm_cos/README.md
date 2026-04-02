@@ -1,4 +1,4 @@
-# Beekeeper loaders extension - IBM Cloud Object Storage
+# Beekeeper integration - IBM Cloud Object Storage Loader
 
 ## Installation 
 

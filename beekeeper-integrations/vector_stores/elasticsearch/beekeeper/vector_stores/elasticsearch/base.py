@@ -1,7 +1,8 @@
 import uuid
 from logging import getLogger
-from typing import List, Literal
+from typing import Any, Literal
 
+from beekeeper.core.bridge.pydantic import Field, PrivateAttr
 from beekeeper.core.document import Document, DocumentWithScore
 from beekeeper.core.embeddings import BaseEmbedding
 from beekeeper.core.vector_stores import BaseVectorStore
@@ -40,36 +41,44 @@ class ElasticsearchVectorStore(BaseVectorStore):
         ```
     """
 
-    def __init__(
-        self,
-        index_name: str,
-        url: str,
-        embed_model: BaseEmbedding,
-        user: str = "",
-        password: str = "",
-        batch_size: int = 200,
-        ssl: bool = False,
-        distance_strategy: Literal["cosine", "dot_product", "l2_norm"] = "cosine",
-        text_field: str = "text",
-        vector_field: str = "embedding",
-    ) -> None:
+    index_name: str = Field(..., description="Name of the Elasticsearch index")
+    url: str = Field(..., description="Elasticsearch instance URL")
+    embed_model: BaseEmbedding = Field(
+        ..., description="Embedding model used to compute vectors"
+    )
+    user: str = Field(default="", description="Elasticsearch username")
+    password: str = Field(default="", description="Elasticsearch password")
+    batch_size: int = Field(
+        default=200, description="Batch size for bulk operations", ge=1
+    )
+    ssl: bool = Field(default=False, description="Whether to use SSL")
+    distance_strategy: Literal["cosine", "dot_product", "l2_norm"] = Field(
+        default="cosine",
+        description="Distance strategy for similarity search (cosine, dot_product, or l2_norm)",
+    )
+    text_field: str = Field(
+        default="text", description="Name of the field containing text"
+    )
+    vector_field: str = Field(
+        default="embedding",
+        description="Name of the field containing vector embeddings",
+    )
+
+    _client: Any = PrivateAttr()
+    _es_bulk: Any = PrivateAttr()
+
+    def model_post_init(self, __context):  # noqa: PYI063
+        """Initialize Elasticsearch client after Pydantic validation."""
         from elasticsearch import Elasticsearch
         from elasticsearch.helpers import bulk
 
         self._es_bulk = bulk
 
-        #  TO-DO: Add connections types e.g: cloud
-        self._embed_model = embed_model
-        self.index_name = index_name
-        self.batch_size = batch_size
-        self.distance_strategy = distance_strategy
-        self.vector_field = vector_field
-        self.text_field = text_field
-
+        # TO-DO: Add connections types e.g: cloud
         self._client = Elasticsearch(
-            hosts=[url],
-            basic_auth=(user, password),
-            verify_certs=ssl,
+            hosts=[self.url],
+            basic_auth=(self.user, self.password),
+            verify_certs=self.ssl,
             ssl_show_warn=False,
         )
 
@@ -86,7 +95,9 @@ class ElasticsearchVectorStore(BaseVectorStore):
 
         else:
             # Get embedding dims dynamically
-            dims_length = len(self._embed_model.embed_text("beekeeper-embeddings"))
+            dims_length = len(
+                self.embed_model.embed_text("beekeeper-vector-stores-elasticsearch")
+            )
 
             index_mappings = {
                 "dynamic_templates": [
@@ -121,14 +132,14 @@ class ElasticsearchVectorStore(BaseVectorStore):
 
     def add_documents(
         self,
-        documents: List[Document],
+        documents: list[Document],
         create_index_if_not_exists: bool = True,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Add documents to the Elasticsearch index.
 
         Args:
-            documents (List[Document]): List of documents to add to the index.
+            documents (list[Document]): List of documents to add to the index.
             create_index_if_not_exists (bool, optional): Whether to create the index
                 if it doesn't exist. Defaults to `True`.
         """
@@ -138,7 +149,7 @@ class ElasticsearchVectorStore(BaseVectorStore):
         vector_store_data = []
         for doc in documents:
             _id = doc.id_ if doc.id_ else str(uuid.uuid4())
-            _metadata = {**doc.get_metadata(), "hash": doc.hash}
+            _metadata = {**doc.metadata, "hash": doc.hash}
             _metadata_mapping = self._dynamic_metadata_mapping(_metadata)
             vector_store_data.append(
                 {
@@ -147,7 +158,7 @@ class ElasticsearchVectorStore(BaseVectorStore):
                     self.text_field: doc.get_content(),
                     self.vector_field: doc.embedding
                     if doc.embedding
-                    else self._embed_model.embed_text(doc.get_content()),
+                    else self.embed_model.embed_text(doc.get_content()),
                     "metadata": _metadata,
                     **_metadata_mapping,
                 },
@@ -163,7 +174,7 @@ class ElasticsearchVectorStore(BaseVectorStore):
 
         return [doc.id_ for doc in documents]
 
-    def query_documents(self, query: str, top_k: int = 4) -> List[DocumentWithScore]:
+    def query_documents(self, query: str, top_k: int = 4) -> list[DocumentWithScore]:
         """
         Performs a similarity search for the top-k most similar documents.
 
@@ -172,9 +183,9 @@ class ElasticsearchVectorStore(BaseVectorStore):
             top_k (int, optional): Number of top results to return. Defaults to `4`.
 
         Returns:
-            List[DocumentWithScore]: List of the most similar documents.
+            list[DocumentWithScore]: List of the most similar documents.
         """
-        query_embedding = self._embed_model.embed_text(query)
+        query_embedding = self.embed_model.embed_text(query)
         #  TO-DO: Add elasticsearch `filter` option
         es_query = {
             "knn": {
@@ -215,21 +226,23 @@ class ElasticsearchVectorStore(BaseVectorStore):
             for hit in hits
         ]
 
-    def delete_documents(self, ids: List[str]) -> None:
+    def delete_documents(self, ids: list[str]) -> None:
         """
         Delete documents from the Elasticsearch index.
 
         Args:
-            ids (List[str]): List of documents IDs to delete.
+            ids (list[str]): List of documents IDs to delete.
         """
         for id in ids:
             self._client.delete(index=self.index_name, id=id)
 
-    def get_all_documents(self, include_fields: List[str] = []) -> List[Document]:
+    def get_all_documents(
+        self, include_fields: list[str] | None = None
+    ) -> list[Document]:
         """Get all documents from vector store."""
         es_query = {"query": {"match_all": {}}}
 
-        if len(include_fields):
+        if include_fields and len(include_fields):
             es_query["_source"] = include_fields
 
         from elasticsearch import NotFoundError

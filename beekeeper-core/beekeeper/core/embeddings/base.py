@@ -1,99 +1,68 @@
 from abc import ABC, abstractmethod
-from enum import Enum
-from typing import List, Union
 
 import numpy as np
+from beekeeper.core.bridge.pydantic import BaseModel, ConfigDict, Field
 from beekeeper.core.document import Document
+from beekeeper.core.embeddings.enums import SimilarityMode
 from beekeeper.core.schema import TransformerComponent
-from beekeeper.core.utils.pairwise import cosine_similarity
-from deprecated import deprecated
 
-Embedding = List[float]
-
-
-class SimilarityMode(str, Enum):
-    """Modes for similarity."""
-
-    COSINE = "cosine"
-    DOT_PRODUCT = "dot_product"
-    EUCLIDEAN = "euclidean"
+Embedding = list[float]
 
 
 def similarity(
     embedding1: Embedding,
     embedding2: Embedding,
     mode: SimilarityMode = SimilarityMode.COSINE,
-):
-    """Get embedding similarity."""
+) -> float:
+    """
+    Calculate similarity between two embeddings.
+
+    Args:
+        embedding1: First embedding vector
+        embedding2: Second embedding vector
+        mode: Similarity calculation mode (cosine, dot_product, or euclidean)
+    """
+    # Validate embeddings are not empty
+    if len(embedding1) == 0 or len(embedding2) == 0:
+        raise ValueError("Embeddings cannot be empty")
+
+    # Validate embeddings have same dimension
+    if len(embedding1) != len(embedding2):
+        raise ValueError(
+            f"Embeddings must have same dimension. "
+            f"Got {len(embedding1)} and {len(embedding2)}"
+        )
+
     if mode == SimilarityMode.EUCLIDEAN:
         return -float(np.linalg.norm(np.array(embedding1) - np.array(embedding2)))
 
     elif mode == SimilarityMode.DOT_PRODUCT:
-        return np.dot(embedding1, embedding2)
+        return float(np.dot(embedding1, embedding2))
 
     else:
-        return cosine_similarity(embedding1, embedding2)
+        # Cosine similarity calculation
+        X = np.array(embedding1)
+        Y = np.array(embedding2)
+        product = np.dot(X, Y)
+        norm = np.linalg.norm(X) * np.linalg.norm(Y)
+        return float(product / norm)
 
 
-class BaseEmbedding(TransformerComponent, ABC):
-    """Abstract base class defining the interface for embedding models."""
+class BaseEmbedding(BaseModel, TransformerComponent, ABC):
+    """
+    Abstract base class defining the interface for embedding models.
+    """
+
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        validate_assignment=True,
+    )
+
+    model_name: str = Field(..., description="Name of the embedding model")
 
     @classmethod
     def class_name(cls) -> str:
         return "BaseEmbedding"
-
-    @abstractmethod
-    def embed_text(
-        self, input: Union[str, List[str]]
-    ) -> Union[Embedding, List[Embedding]]:
-        """Embed one or more text strings."""
-
-    def embed_documents(self, documents: List[Document]) -> List[Document]:
-        """
-        Embed a list of documents and assign the computed embeddings to the 'embedding' attribute.
-
-        Args:
-            documents (List[Document]): List of documents to compute embeddings.
-        """
-        texts = [document.get_content() for document in documents]
-        embeddings = self.embed_text(texts)
-
-        for document, embedding in zip(documents, embeddings):
-            document.embedding = embedding
-
-        return documents
-
-    @deprecated(
-        reason="'embed_texts()' is deprecated and will be removed in a future version. Use 'embed_text()' instead.",
-        version="1.0.3",
-        action="always",
-    )
-    def embed_texts(self, texts: List[str]) -> List[Embedding]:
-        return self.embed_text(texts)
-
-    @deprecated(
-        reason="'get_text_embedding()' is deprecated and will be removed in a future version. Use 'embed_text()' instead.",
-        version="1.0.2",
-        action="always",
-    )
-    def get_text_embedding(self, query: str) -> Embedding:
-        return self.embed_text(query)
-
-    @deprecated(
-        reason="'get_texts_embedding()' is deprecated and will be removed in a future version. Use 'embed_texts()' instead.",
-        version="1.0.2",
-        action="always",
-    )
-    def get_texts_embedding(self, texts: List[str]) -> List[Embedding]:
-        return self.embed_texts(texts)
-
-    @deprecated(
-        reason="'get_documents_embedding()' is deprecated and will be removed in a future version. Use 'embed_documents()' instead.",
-        version="1.0.2",
-        action="always",
-    )
-    def get_documents_embedding(self, documents: List[Document]) -> List[Document]:
-        return self.embed_documents(documents)
 
     @staticmethod
     def similarity(
@@ -104,5 +73,29 @@ class BaseEmbedding(TransformerComponent, ABC):
         """Get embedding similarity."""
         return similarity(embedding1, embedding2, mode)
 
-    def __call__(self, documents: List[Document]) -> List[Document]:
-        return self.get_documents_embedding(documents)
+    @abstractmethod
+    def embed_text(self, input: str | list[str]) -> list[Embedding]:
+        """
+        Embed one or more text strings.
+
+        Args:
+            input: Single text string or list of text strings to embed
+        """
+
+    def embed_documents(self, documents: list[Document]) -> list[Document]:
+        """
+        Embed a list of documents and assign the computed embeddings to the 'embedding' attribute.
+
+        Args:
+            documents (list[Document]): List of documents to compute embeddings.
+        """
+        texts = [document.get_content() for document in documents]
+        embeddings = self.embed_text(texts)
+
+        for document, embedding in zip(documents, embeddings):
+            document.embedding = embedding
+
+        return documents
+
+    def __call__(self, documents: list[Document]) -> list[Document]:
+        return self.embed_documents(documents)

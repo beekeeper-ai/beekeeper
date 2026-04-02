@@ -1,18 +1,18 @@
 import logging
 import os
 from pathlib import Path
-from typing import List
+from typing import Any
 
 from beekeeper.core.document import Document
-from beekeeper.core.loaders import BaseReader
+from beekeeper.core.loaders import BaseLoader
 
 logging.getLogger("pypdf").setLevel(logging.ERROR)
 
 
-class PDFReader(BaseReader):
-    """PDF reader using PyPDF."""
+class PDFLoader(BaseLoader):
+    """PDF loader using PyPDF."""
 
-    def load_data(self, input_file: str) -> List[Document]:
+    def load_data(self, input_file: str, **kwargs: Any) -> list[Document]:
         """
         Loads data from the specified file.
 
@@ -20,7 +20,7 @@ class PDFReader(BaseReader):
             input_file (str): File path to load.
 
         Returns:
-            List[Document]: A list of `Document` objects loaded from the file.
+            list[Document]: A list of `Document` objects loaded from the file.
         """
         try:
             import pypdf  # noqa: F401

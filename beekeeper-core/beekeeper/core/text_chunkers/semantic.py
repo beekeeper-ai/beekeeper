@@ -1,15 +1,15 @@
 import re
-from typing import List, Literal, Tuple
+from typing import Literal
 
 import numpy as np
 from beekeeper.core.document import Document
 from beekeeper.core.embeddings import BaseEmbedding
+from beekeeper.core.embeddings.base import similarity
+from beekeeper.core.embeddings.enums import SimilarityMode
 from beekeeper.core.text_chunkers.base import BaseTextChunker
-from beekeeper.core.utils.pairwise import cosine_similarity
-from pydantic.v1 import BaseModel
 
 
-class SemanticChunker(BaseTextChunker, BaseModel):
+class SemanticChunker(BaseTextChunker):
     """
     Python class designed to split text into chunks using semantic understanding.
 
@@ -25,8 +25,8 @@ class SemanticChunker(BaseTextChunker, BaseModel):
 
     Example:
         ```python
-        from beekeeper.core.text_chunkers import SemanticChunker
-        from beekeeper.embeddings.huggingface import HuggingFaceEmbedding
+        from beekeeper.core.text_chunker import SemanticChunker
+        from beekeeper.embedding.huggingface import HuggingFaceEmbedding
 
         embedding = HuggingFaceEmbedding()
         text_chunker = SemanticChunker(embed_model=embedding)
@@ -41,7 +41,7 @@ class SemanticChunker(BaseTextChunker, BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def _combine_sentences(self, sentences: List[dict]) -> List[dict]:
+    def _combine_sentences(self, sentences: list[dict]) -> list[dict]:
         """Combine sentences with neighbors based on buffer size."""
         for i in range(len(sentences)):
             combined_sentence = ""
@@ -65,14 +65,14 @@ class SemanticChunker(BaseTextChunker, BaseModel):
 
     def _calculate_cosine_distances(
         self,
-        single_sentences_list: List[str],
-    ) -> Tuple[List[float], List[dict]]:
+        single_sentences_list: list[str],
+    ) -> tuple[list[float], list[dict]]:
         _sentences = [
             {"sentence": x, "index": i} for i, x in enumerate(single_sentences_list)
         ]
 
         sentences = self._combine_sentences(_sentences)
-        embeddings = self.embed_model.get_texts_embedding(
+        embeddings = self.embed_model.embed_text(
             [x["combined_sentence"] for x in sentences],
         )
 
@@ -84,9 +84,11 @@ class SemanticChunker(BaseTextChunker, BaseModel):
             embedding_current = sentences[i]["combined_sentence_embedding"]
             embedding_next = sentences[i + 1]["combined_sentence_embedding"]
 
-            similarity = cosine_similarity(embedding_current, embedding_next)
+            similarity_score = similarity(
+                embedding_current, embedding_next, SimilarityMode.COSINE
+            )
 
-            distance = 1 - similarity
+            distance = 1 - similarity_score
             distances.append(distance)
 
             # Store distance in the dictionary
@@ -94,12 +96,12 @@ class SemanticChunker(BaseTextChunker, BaseModel):
 
         return distances, sentences
 
-    def _calculate_breakpoint(self, distances: List[float]) -> List:
+    def _calculate_breakpoint(self, distances: list[float]) -> list:
         distance_threshold = np.percentile(distances, self.breakpoint_threshold_amount)
 
         return [i for i, x in enumerate(distances) if x > distance_threshold]
 
-    def chunk_text(self, text: str) -> List[str]:
+    def chunk_text(self, text: str) -> list[str]:
         """
         Split a single string of text into smaller chunks.
 
@@ -107,7 +109,7 @@ class SemanticChunker(BaseTextChunker, BaseModel):
             text (str): Input text to split.
 
         Returns:
-            List[str]: List of text chunks.
+            list[str]: List of text chunks.
         """
         single_sentences_list = re.split(r"(?<=[.?!])\s+", text)
         distances, sentences = self._calculate_cosine_distances(single_sentences_list)
@@ -133,21 +135,21 @@ class SemanticChunker(BaseTextChunker, BaseModel):
 
         return chunks
 
-    def chunk_documents(self, documents: List[Document]) -> List[Document]:
+    def chunk_documents(self, documents: list[Document]) -> list[Document]:
         """
         Split a list of documents into smaller document chunks.
 
         Args:
-            documents (List[Document]): List of `Document` objects to split.
+            documents (list[Document]): List of `Document` objects to split.
 
         Returns:
-            List[Document]: List of chunked documents objects.
+            list[Document]: List of chunked documents objects.
         """
         chunks = []
 
         for document in documents:
             texts = self.chunk_text(document.get_content())
-            metadata = {**document.get_metadata()}
+            metadata = {**document.metadata}
 
             for text in texts:
                 if len(texts) > 1:

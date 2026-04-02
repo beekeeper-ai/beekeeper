@@ -1,23 +1,23 @@
 import json
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import Any
 
 from beekeeper.core.document import Document
-from beekeeper.core.loaders import BaseReader
+from beekeeper.core.loaders import BaseLoader
 
 
-class JSONReader(BaseReader):
+class JSONLoader(BaseLoader):
     """
-    JSON reader.
+    JSON loader.
 
     Attributes:
         jq_schema (str, optional): jq schema to use to extract the data from the JSON.
     """
 
-    jq_schema: Optional[str] = None
+    jq_schema: str | None = None
 
-    def load_data(self, input_file: str) -> List[Document]:
+    def load_data(self, input_file: str, **kwargs: Any) -> list[Document]:
         """
         Loads data from the specified file.
 
@@ -25,7 +25,7 @@ class JSONReader(BaseReader):
             input_file (str): File path to load.
 
         Returns:
-            List[Document]: A list of `Document` objects loaded from the file.
+            list[Document]: A list of `Document` objects loaded from the file.
         """
         try:
             import jq  # noqa: F401

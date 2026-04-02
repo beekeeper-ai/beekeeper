@@ -1,4 +1,4 @@
-# Beekeeper llms extension - LiteLLM
+# Beekeeper integration - LiteLLM LLMs
 
 ## Installation 
 

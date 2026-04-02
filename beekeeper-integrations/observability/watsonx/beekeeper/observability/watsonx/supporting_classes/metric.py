@@ -1,31 +1,6 @@
-from typing import Dict, List, Literal, Optional
+from typing import Literal
 
-from pydantic.v1 import BaseModel
-
-
-class WatsonxLocalMetric(BaseModel):
-    """
-    Provides the IBM watsonx.governance local monitor metric definition.
-
-    Attributes:
-        name (str): The name of the metric.
-        data_type (str): The data type of the metric. Currently supports "string", "integer", "double", and "timestamp".
-        nullable (bool, optional): Indicates whether the metric can be null. Defaults to `False`.
-
-    Example:
-        ```python
-        from beekeeper.observability.watsonx import WatsonxLocalMetric
-
-        WatsonxLocalMetric(name="context_quality", data_type="double")
-        ```
-    """
-
-    name: str
-    data_type: Literal["string", "integer", "double", "timestamp"]
-    nullable: bool = True
-
-    def to_dict(self) -> Dict:
-        return {"name": self.name, "type": self.data_type, "nullable": self.nullable}
+from beekeeper.core.bridge.pydantic import BaseModel
 
 
 class WatsonxMetricThreshold(BaseModel):
@@ -38,37 +13,37 @@ class WatsonxMetricThreshold(BaseModel):
 
     Example:
         ```python
-        from beekeeper.observability.watsonx import WatsonxMetricThreshold
+        from beekeeper.monitors.watsonx import WatsonxMetricThreshold
 
         WatsonxMetricThreshold(threshold_type="lower_limit", default_value=0.8)
         ```
     """
 
     threshold_type: Literal["lower_limit", "upper_limit"]
-    default_value: float = None
+    default_value: float | None = None
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {"type": self.threshold_type, "default": self.default_value}
 
 
-class WatsonxMetric(BaseModel):
+class WatsonxMetricSpec(BaseModel):
     """
     Defines the IBM watsonx.governance global monitor metric.
 
     Attributes:
         name (str): The name of the metric.
-        applies_to (List[str]): A list of task types that the metric applies to. Currently supports:
+        applies_to (list[str]): A list of task types that the metric applies to. Currently supports:
             "summarization", "generation", "question_answering", "extraction", and "retrieval_augmented_generation".
-        thresholds (List[WatsonxMetricThreshold]): A list of metric thresholds associated with the metric.
+        thresholds (list[WatsonxMetricThreshold]): A list of metric thresholds associated with the metric.
 
     Example:
         ```python
-        from beekeeper.observability.watsonx import (
-            WatsonxMetric,
+        from beekeeper.monitors.watsonx import (
+            WatsonxMetricSpec,
             WatsonxMetricThreshold,
         )
 
-        WatsonxMetric(
+        WatsonxMetricSpec(
             name="context_quality",
             applies_to=["retrieval_augmented_generation", "summarization"],
             thresholds=[
@@ -79,7 +54,7 @@ class WatsonxMetric(BaseModel):
     """
 
     name: str
-    applies_to: List[
+    applies_to: list[
         Literal[
             "summarization",
             "generation",
@@ -88,9 +63,9 @@ class WatsonxMetric(BaseModel):
             "retrieval_augmented_generation",
         ]
     ]
-    thresholds: Optional[List[WatsonxMetricThreshold]] = None
+    thresholds: list[WatsonxMetricThreshold] | None = None
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         from ibm_watson_openscale.base_classes.watson_open_scale_v2 import (
             ApplicabilitySelection,
             MetricThreshold,

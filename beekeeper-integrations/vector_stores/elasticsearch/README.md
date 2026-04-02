@@ -1,4 +1,4 @@
-# Beekeeper vector_stores extension - Elasticsearch
+# Beekeeper integration - Elasticsearch Vector Store
 
 ## Installation 
 

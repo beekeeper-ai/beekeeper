@@ -1,22 +1,18 @@
-from enum import Enum
 from typing import Any
 
-from pydantic import BaseModel, Field
-
-
-class MessageRole(str, Enum):
-    ASSISTANT = "assistant"
-    SYSTEM = "system"
-    USER = "user"
-    TOOL = "tool"
+from beekeeper.core.bridge.pydantic import BaseModel, Field
+from beekeeper.core.llms.enums import MessageRole
 
 
 class ChatMessage(BaseModel):
     """Chat message."""
 
     model_config = {"use_enum_values": True}
-    role: MessageRole | str = None
-    content: str | None = None
+
+    role: MessageRole | str = Field(
+        ..., description="Role of the message sender (system, user, assistant, or tool)"
+    )
+    content: str | None = Field(default=None, description="Content of the message")
 
     def to_dict(self) -> dict:
         """Convert ChatMessage to dict."""
@@ -34,40 +30,38 @@ class ChatMessage(BaseModel):
             try:
                 return cls.model_validate(value)
             except Exception as e:
-                raise ValueError(
-                    "Unexpected 'ChatMessage' dict. Received: '{}'.".format(e)
-                )
+                raise ValueError(f"Unexpected 'ChatMessage' dict. Received: '{e}'.")
 
         raise TypeError(
             f"Unexpected 'ChatMessage' type. Expected dict or ChatMessage, but received {type(value).__name__}."
         )
 
 
-class CompletionResponse(BaseModel):
-    """Completion response."""
-
-    text: str = Field(..., description="Generated text response")
-
-    input_token_count: int | None = None
-    generated_token_count: int | None = None
-    raw: Any | None = None
-
-
-class GenerateResponse(BaseModel):
-    """Generate response."""
-
-    text: str = Field(..., description="Generated text response")
-
-    input_token_count: int
-    generated_token_count: int
-    raw: Any | None = None
-
-
 class ChatResponse(BaseModel):
     """Chat completion response."""
 
-    message: ChatMessage
+    message: ChatMessage = Field(..., description="The generated chat message response")
+    input_token_count: int | None = Field(
+        default=None, ge=0, description="Number of tokens in the input"
+    )
+    generated_token_count: int | None = Field(
+        default=None, ge=0, description="Number of tokens generated in the response"
+    )
+    raw: Any | None = Field(
+        default=None, description="Raw response from the LLM provider"
+    )
 
-    input_token_count: int | None = None
-    generated_token_count: int | None = None
-    raw: Any | None = None
+
+class CompletionResponse(BaseModel):
+    """Completion response."""
+
+    text: str = Field(..., min_length=1, description="Generated text response")
+    input_token_count: int | None = Field(
+        default=None, ge=0, description="Number of tokens in the input"
+    )
+    generated_token_count: int | None = Field(
+        default=None, ge=0, description="Number of tokens generated in the response"
+    )
+    raw: Any | None = Field(
+        default=None, description="Raw response from the LLM provider"
+    )

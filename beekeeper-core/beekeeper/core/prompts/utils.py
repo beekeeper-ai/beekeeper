@@ -2,21 +2,41 @@ import re
 
 
 class SafeFormatter(dict):
-    """A dictionary that returns the placeholder as a string if a key is missing."""
+    """
+    A dictionary that returns the placeholder as a string if a key is missing.
 
-    def __missing__(self, key):
+    This allows partial formatting of template strings where some variables
+    may not be provided.
+    """
+
+    def __missing__(self, key: str) -> str:
+        """Returns the placeholder string when a key is missing."""
         return "{" + key + "}"
 
 
-def extract_template_vars(template_str: str, input_text: str):
+def extract_template_vars(template_str: str, input_text: str) -> dict[str, str]:
     """
-    Extracts variables values from template string into a dictionary.
-    Support fuzzy changes between `template_str` and `input_text`.
+    Extracts variable values from template string into a dictionary.
+    Supports fuzzy matching with whitespace normalization between
+    `template_str` and `input_text`.
+
+    Args:
+        template_str: Template string with {variable} placeholders
+        input_text: Text to extract values from
+
+    Example:
+        ```python
+        result = extract_template_vars(
+            template_str="Hello {name}, you are {age} years old",
+            input_text="Hello Alice, you are 25 years old",
+        )
+        # {'name': 'Alice', 'age': '25'}
+        ```
     """
     parts = re.split(r"({.*?})", template_str)
 
     regex_pattern = ""
-    template_vars = []
+    template_vars: list[str] = []
 
     for part in parts:
         if part.startswith("{") and part.endswith("}"):

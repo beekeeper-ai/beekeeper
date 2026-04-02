@@ -1,9 +1,9 @@
 from typing import Any
 
-from beekeeper.core.llms import BaseLLM, ChatMessage, ChatResponse, GenerateResponse
+from beekeeper.core.bridge.pydantic import Field
+from beekeeper.core.llms import BaseLLM, ChatMessage, ChatResponse, CompletionResponse
 from beekeeper.core.llms.decorators import llm_chat_callback, llm_completion_callback
 from beekeeper.llms.watsonx.supporting_classes.enums import Region
-from pydantic import Field
 
 
 class WatsonxLLM(BaseLLM):
@@ -64,7 +64,7 @@ class WatsonxLLM(BaseLLM):
         guardrails: bool = False,
         params: dict[str, Any] = {},
         **kwargs: Any,
-    ) -> GenerateResponse:
+    ) -> CompletionResponse:
         """
         Creates a completion for the provided prompt and parameters. Using OpenAI's standard endpoint (/completions).
 
@@ -81,7 +81,7 @@ class WatsonxLLM(BaseLLM):
             params={**self.params, **params},
         )
 
-        return GenerateResponse(
+        return CompletionResponse(
             text=response["results"][0].get("generated_text"),
             input_token_count=response["results"][0].get("input_token_count"),
             generated_token_count=response["results"][0].get("generated_token_count"),

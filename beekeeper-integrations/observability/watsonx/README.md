@@ -1,4 +1,4 @@
-# Beekeeper observability integration - watsonx
+# Beekeeper integration - watsonx Observability
 
 ## Installation 
 

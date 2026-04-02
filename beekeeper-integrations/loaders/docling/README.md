@@ -1,4 +1,4 @@
-# Beekeeper loaders extension - Docling
+# Beekeeper integration - Docling Loader
 
 ## Installation 
 

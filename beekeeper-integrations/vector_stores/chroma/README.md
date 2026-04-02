@@ -1,4 +1,4 @@
-# Beekeeper vector_stores extension - Chroma
+# Beekeeper integration - Chroma Vector Store
 
 ## Installation 
 
