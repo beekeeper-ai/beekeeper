@@ -147,7 +147,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-ai"
-version = "2.0.0b2"
+version = "2.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "beekeeper-core" },
@@ -163,17 +163,17 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beekeeper-core", specifier = ">=2.0.0b2,<3.0.0" },
-    { name = "beekeeper-embeddings-huggingface", specifier = ">=2.0.0b2,<3.0.0" },
-    { name = "beekeeper-llms-litellm", specifier = ">=2.0.0b1,<3.0.0" },
-    { name = "beekeeper-loaders-file", specifier = ">=2.0.0b1,<3.0.0" },
+    { name = "beekeeper-core", specifier = ">=2.0.0,<3.0.0" },
+    { name = "beekeeper-embeddings-huggingface", specifier = ">=2.0.0,<3.0.0" },
+    { name = "beekeeper-llms-litellm", specifier = ">=2.0.0,<3.0.0" },
+    { name = "beekeeper-loaders-file", specifier = ">=2.0.0,<3.0.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.15.8" },
 ]
 provides-extras = ["dev"]
 
 [[package]]
 name = "beekeeper-core"
-version = "2.0.0b2"
+version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "deprecated" },
@@ -182,41 +182,41 @@ dependencies = [
     { name = "pydantic" },
     { name = "tiktoken" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/12/4f/53c240aad655bcc7037ff0f44f5f15e3b037ba168ac13c85abe107f5014d/beekeeper_core-2.0.0b2.tar.gz", hash = "sha256:2bf3e391a45a216ff297e126af6fa5e43545a5a98e93e78f474b3710f8cfc9e7", size = 18895, upload-time = "2026-03-28T13:46:13.14Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d1/f2/1abf3bba753bad4626116bd6d65eb3f395c7cf37d72518d624d5492f2551/beekeeper_core-2.0.0.tar.gz", hash = "sha256:74803cc6f9251c6fdb279aaea3e677f5524a5f1d916cd52559092a004dbc4b8b", size = 18812, upload-time = "2026-04-01T22:49:53.063Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ea/dc/4b74e4797bbc348933dc0d697d7b4471502fa1db0a88e34b0843e21895d9/beekeeper_core-2.0.0b2-py3-none-any.whl", hash = "sha256:ca6eb438ac79f6df6db9654c0dc98a68e84b7dcb8c47310c9b6bb349a2a9b377", size = 36242, upload-time = "2026-03-28T13:46:14.157Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/da/9ee6e18eb879ad107255caa2407e5551a4bcda46d95558b829647d30d917/beekeeper_core-2.0.0-py3-none-any.whl", hash = "sha256:73e7cc62056dc72ea2bf6dccb54d38560915fd06977e6ed631d7d7b41cc14e73", size = 36119, upload-time = "2026-04-01T22:49:54.359Z" },
 ]
 
 [[package]]
 name = "beekeeper-embeddings-huggingface"
-version = "2.0.0b2"
+version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beekeeper-core" },
     { name = "hf-xet" },
     { name = "sentence-transformers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5c/7f/4cf2e1b14b3f7a93085a8d6f58edd7b6eed1efbb38db65621bd7c2054277/beekeeper_embeddings_huggingface-2.0.0b2.tar.gz", hash = "sha256:12c385af811ebef8e6aa28c1999be7e6f0c759434d85476b860d5e1a6177c1ce", size = 2158, upload-time = "2026-03-28T13:21:44.211Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ce/03/b6aa68ebe51ec586329c10fa0a1eed2938141236a4f685de702eb8307334/beekeeper_embeddings_huggingface-2.0.0.tar.gz", hash = "sha256:1322c56cb68c8f9866ecf616af539e3c3703192bfb460e1e3faa8f18731866e1", size = 2168, upload-time = "2026-04-02T01:30:11.107Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/28/14/c1c9e429f706a56d3cd0c28f9ff3f4f72f91ff735413167e9a8220c0090c/beekeeper_embeddings_huggingface-2.0.0b2-py3-none-any.whl", hash = "sha256:95c49447b28736407a7bd94c08814ebd945c167cb75251ba25ef3053ad1a19b5", size = 2337, upload-time = "2026-03-28T13:21:44.972Z" },
+    { url = "https://files.pythonhosted.org/packages/c7/8d/785e46862c3d1b1279301a399cbb1b8e12cf8672b3f815ee0382922385ef/beekeeper_embeddings_huggingface-2.0.0-py3-none-any.whl", hash = "sha256:5bad878c4de2d257520f4f66a2532e18865b29c83f9c9489dd577775aa694d63", size = 2340, upload-time = "2026-04-02T01:30:11.913Z" },
 ]
 
 [[package]]
 name = "beekeeper-llms-litellm"
-version = "2.0.0b1"
+version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beekeeper-core" },
     { name = "litellm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/2d/f9/10399a21e5d7aac4de37798a4f457e2147b29ef167a0f94639f808c97dab/beekeeper_llms_litellm-2.0.0b1.tar.gz", hash = "sha256:a8492bf7f2500cb3865b973ba25ecc559b6e84806103fa1a70d99b6960947318", size = 2870, upload-time = "2026-03-27T19:54:36.004Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bd/db/4f3837dc940e681fa8d90426161c2d0c7da07bb8d29d9165cdc61ba3e981/beekeeper_llms_litellm-2.0.0.tar.gz", hash = "sha256:6d3352e154c6d90f665365b4514926fda222a2d90a6f0bfba1a2456f55549e4f", size = 2870, upload-time = "2026-04-02T01:33:03.778Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8b/72/90809629e3091e520b27f7adb2ecf7b726b71162023f14266a3a944e211a/beekeeper_llms_litellm-2.0.0b1-py3-none-any.whl", hash = "sha256:e2f4eaa1bf3daca80cb9f21b9ee0273a589e5cc882b2357540ad0894cafa2e8f", size = 2932, upload-time = "2026-03-27T19:54:34.873Z" },
+    { url = "https://files.pythonhosted.org/packages/4c/48/b4cdc706f4f1632c2ee3bf1b7dfd3bb2e412f25ca77d9fcb8af86aaed3d6/beekeeper_llms_litellm-2.0.0-py3-none-any.whl", hash = "sha256:5552ecea61cbf167552636887072d9206ce9c839efa8618c1c1dfc401bcbae6a", size = 2920, upload-time = "2026-04-02T01:33:02.879Z" },
 ]
 
 [[package]]
 name = "beekeeper-loaders-file"
-version = "2.0.0b1"
+version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -225,9 +225,9 @@ dependencies = [
     { name = "jq" },
     { name = "pypdf" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/94/93/6eea1cdcc1767f177b83deef1e02aaa52b6187c7be5e33fa165156607f24/beekeeper_loaders_file-2.0.0b1.tar.gz", hash = "sha256:ff8f3645038502aa4dc73ce4bcfa7d1e3ebe46484580701588f3ffe6a8df8013", size = 3256, upload-time = "2026-03-27T19:57:15.06Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e0/ff/e3b639c19cec3c67837a385364f6d53485b7cd00244ef6079fae72a5a8fe/beekeeper_loaders_file-2.0.0.tar.gz", hash = "sha256:8889f797fe242b8492057b2035291217a133c88a859bd87176ec1b937c59691c", size = 3255, upload-time = "2026-04-02T01:34:29.723Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/60/c5/496c85d65d2870f6aa1812460acd1641954ae122593c44b800e58f2ecd02/beekeeper_loaders_file-2.0.0b1-py3-none-any.whl", hash = "sha256:b04e4f5e8db16ffda74d59c3027132e900ba3707f4a73757eedbf8aed307d70a", size = 5284, upload-time = "2026-03-27T19:57:16.299Z" },
+    { url = "https://files.pythonhosted.org/packages/68/b0/1395f6ad832660d10ec3fe2b30f7304f5c01b48ca9d5b05a44e6b901108f/beekeeper_loaders_file-2.0.0-py3-none-any.whl", hash = "sha256:a878cdcf7b3f5c38062a9e848ce4c758ccefea6a0aa7da375296433d149fcd7d", size = 5266, upload-time = "2026-04-02T01:34:30.733Z" },
 ]
 
 [[package]]

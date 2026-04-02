@@ -121,7 +121,7 @@ class WatsonxCustomMetricsManager(BaseModel):
                     delay=30,
                 ),
             )
-        else: # Known issue with watsonx schedule. Long repeat interval as workaround.
+        else:  # Known issue with watsonx schedule. Long repeat interval as workaround.
             _monitor_runtime = MonitorRuntime(type="custom_metrics_provider")
             _monitor_schedule = MonitorInstanceSchedule(
                 repeat_interval=10,
