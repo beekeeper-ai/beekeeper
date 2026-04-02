@@ -68,6 +68,7 @@ nav:
   - Text Chunkers: text_chunkers/
   - Vector Stores: vector_stores/
   - Workflow: workflow/
+  - Migration Guide: migration_guide/
 
 theme:
   name: material
