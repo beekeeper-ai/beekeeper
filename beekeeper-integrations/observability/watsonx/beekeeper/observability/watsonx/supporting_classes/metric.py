@@ -1,6 +1,6 @@
 from typing import Literal
 
-from beekeeper.core.bridge.pydantic import BaseModel
+from novastack.core.bridge.pydantic import BaseModel
 
 
 class WatsonxMetricThreshold(BaseModel):

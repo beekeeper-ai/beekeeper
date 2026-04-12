@@ -2,9 +2,9 @@ import os
 import tempfile
 from typing import Any
 
-from beekeeper.core.bridge.pydantic import Field, PrivateAttr
-from beekeeper.core.document import Document
-from beekeeper.core.loaders import BaseLoader, DirectoryLoader
+from novastack.core.bridge.pydantic import Field, PrivateAttr
+from novastack.core.document import Document
+from novastack.core.loaders import BaseLoader, DirectoryLoader
 
 
 class IBMCOSLoader(BaseLoader):

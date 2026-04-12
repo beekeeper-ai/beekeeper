@@ -1,6 +1,6 @@
 from typing import Any, Literal
 
-from beekeeper.core.bridge.pydantic import BaseModel
+from novastack.core.bridge.pydantic import BaseModel
 
 
 class CloudPakforDataCredentials(BaseModel):

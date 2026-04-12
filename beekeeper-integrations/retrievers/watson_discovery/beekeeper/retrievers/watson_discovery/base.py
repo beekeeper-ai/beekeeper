@@ -1,9 +1,9 @@
 from logging import getLogger
 from typing import Any
 
-from beekeeper.core.bridge.pydantic import Field, PrivateAttr
-from beekeeper.core.document import Document, DocumentWithScore
-from beekeeper.core.retrievers import BaseRetriever
+from novastack.core.bridge.pydantic import Field, PrivateAttr
+from novastack.core.document import Document, DocumentWithScore
+from novastack.core.retrievers import BaseRetriever
 
 logger = getLogger(__name__)
 

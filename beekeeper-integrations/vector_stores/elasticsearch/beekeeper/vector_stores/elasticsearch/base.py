@@ -2,10 +2,10 @@ import uuid
 from logging import getLogger
 from typing import Any, Literal
 
-from beekeeper.core.bridge.pydantic import Field, PrivateAttr
-from beekeeper.core.document import Document, DocumentWithScore
-from beekeeper.core.embeddings import BaseEmbedding
-from beekeeper.core.vector_stores import BaseVectorStore
+from novastack.core.bridge.pydantic import Field, PrivateAttr
+from novastack.core.document import Document, DocumentWithScore
+from novastack.core.embeddings import BaseEmbedding
+from novastack.core.vector_stores import BaseVectorStore
 
 logger = getLogger(__name__)
 

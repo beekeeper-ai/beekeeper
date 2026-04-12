@@ -2,9 +2,9 @@ from datetime import datetime
 from logging import getLogger
 from typing import Any
 
-from beekeeper.core.bridge.pydantic import Field, PrivateAttr
-from beekeeper.core.document import Document
-from beekeeper.core.loaders import BaseLoader
+from novastack.core.bridge.pydantic import Field, PrivateAttr
+from novastack.core.document import Document
+from novastack.core.loaders import BaseLoader
 
 logger = getLogger(__name__)
 

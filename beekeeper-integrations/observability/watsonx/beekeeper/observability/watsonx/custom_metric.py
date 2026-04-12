@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import Any, Literal
 
-from beekeeper.core.bridge.pydantic import BaseModel, PrivateAttr, SecretStr
+from novastack.core.bridge.pydantic import BaseModel, PrivateAttr, SecretStr
 from beekeeper.observability.watsonx.supporting_classes.clients import (
     WosClientFactory,
 )

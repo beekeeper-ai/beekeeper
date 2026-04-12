@@ -1,8 +1,8 @@
 from typing import Any
 
-from beekeeper.core.bridge.pydantic import Field
-from beekeeper.core.llms import BaseLLM, ChatMessage, ChatResponse, CompletionResponse
-from beekeeper.core.llms.decorators import llm_chat_callback, llm_completion_callback
+from novastack.core.bridge.pydantic import Field
+from novastack.core.llms import BaseLLM, ChatMessage, ChatResponse, CompletionResponse
+from novastack.core.llms.decorators import llm_chat_callback, llm_completion_callback
 
 import litellm
 

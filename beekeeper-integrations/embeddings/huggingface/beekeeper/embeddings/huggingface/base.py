@@ -1,7 +1,7 @@
 from typing import Any, Literal
 
-from beekeeper.core.bridge.pydantic import Field, PrivateAttr
-from beekeeper.core.embeddings import BaseEmbedding, Embedding
+from novastack.core.bridge.pydantic import Field, PrivateAttr
+from novastack.core.embeddings import BaseEmbedding, Embedding
 
 
 class HuggingFaceEmbedding(BaseEmbedding):

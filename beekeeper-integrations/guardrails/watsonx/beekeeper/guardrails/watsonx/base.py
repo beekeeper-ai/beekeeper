@@ -1,9 +1,9 @@
 from typing import Any
 
 import requests
-from beekeeper.core.bridge.pydantic import Field, PrivateAttr
-from beekeeper.core.guardrails import BaseGuardrail, GuardrailResponse
-from beekeeper.core.prompts import PromptTemplate
+from novastack.core.bridge.pydantic import Field, PrivateAttr
+from novastack.core.guardrails import BaseGuardrail, GuardrailResponse
+from novastack.core.prompts import PromptTemplate
 from beekeeper.guardrails.watsonx.supporting_classes.enums import Direction, Region
 
 

@@ -12,28 +12,12 @@ wheels = [
 ]
 
 [[package]]
-name = "beekeeper-core"
-version = "2.0.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "deprecated" },
-    { name = "nltk" },
-    { name = "numpy" },
-    { name = "pydantic" },
-    { name = "tiktoken" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/d1/f2/1abf3bba753bad4626116bd6d65eb3f395c7cf37d72518d624d5492f2551/beekeeper_core-2.0.0.tar.gz", hash = "sha256:74803cc6f9251c6fdb279aaea3e677f5524a5f1d916cd52559092a004dbc4b8b", size = 18812, upload-time = "2026-04-01T22:49:53.063Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/2d/da/9ee6e18eb879ad107255caa2407e5551a4bcda46d95558b829647d30d917/beekeeper_core-2.0.0-py3-none-any.whl", hash = "sha256:73e7cc62056dc72ea2bf6dccb54d38560915fd06977e6ed631d7d7b41cc14e73", size = 36119, upload-time = "2026-04-01T22:49:54.359Z" },
-]
-
-[[package]]
 name = "beekeeper-guardrails-watsonx"
-version = "2.0.0"
+version = "2.0.1"
 source = { editable = "." }
 dependencies = [
-    { name = "beekeeper-core" },
     { name = "ibm-cloud-sdk-core" },
+    { name = "novastack-core" },
 ]
 
 [package.optional-dependencies]
@@ -43,8 +27,8 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "beekeeper-core", specifier = ">=2.0.0,<3.0.0" },
     { name = "ibm-cloud-sdk-core", specifier = ">=3.24.4,<3.25.0" },
+    { name = "novastack-core", specifier = ">=1.0.0,<1.0.1" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.15.8" },
 ]
 provides-extras = ["dev"]
@@ -194,6 +178,22 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/74/a1/b3b4adf15585a5bc4c357adde150c01ebeeb642173ded4d871e89468767c/nltk-3.9.4.tar.gz", hash = "sha256:ed03bc098a40481310320808b2db712d95d13ca65b27372f8a403949c8b523d0", size = 2946864, upload-time = "2026-03-24T06:13:40.641Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9d/91/04e965f8e717ba0ab4bdca5c112deeab11c9e750d94c4d4602f050295d39/nltk-3.9.4-py3-none-any.whl", hash = "sha256:f2fa301c3a12718ce4a0e9305c5675299da5ad9e26068218b69d692fda84828f", size = 1552087, upload-time = "2026-03-24T06:13:38.47Z" },
+]
+
+[[package]]
+name = "novastack-core"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "deprecated" },
+    { name = "nltk" },
+    { name = "numpy" },
+    { name = "pydantic" },
+    { name = "tiktoken" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/9c/b8/200dff4ef9896033acf74f57a4537b3d93cebfc13ab073aaa5cf80cc3dba/novastack_core-1.0.0.tar.gz", hash = "sha256:e6e6ff80323c9b40a96a7fec3aee40261cb8966db047be441b8a92662766299c", size = 18013, upload-time = "2026-04-09T21:20:01.864Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b3/56/4f404c6ba697c0f48c9f17a9e6ad88523b1da38e8ab227635c3d4227acbb/novastack_core-1.0.0-py3-none-any.whl", hash = "sha256:410330f8029c58b3a9322e1590e098a9c4e81f4072a6a1b4809c05fa5fa895fc", size = 33060, upload-time = "2026-04-09T21:20:03.419Z" },
 ]
 
 [[package]]

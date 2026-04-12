@@ -4,10 +4,10 @@ import uuid
 from typing import Any
 
 import certifi
-from beekeeper.core.bridge.pydantic import PrivateAttr, SecretStr
-from beekeeper.core.observability import PromptObservability
-from beekeeper.core.observability.types import PayloadRecord
-from beekeeper.core.prompts import PromptTemplate
+from novastack.core.bridge.pydantic import PrivateAttr, SecretStr
+from novastack.core.observability import PromptObservability
+from novastack.core.observability.types import PayloadRecord
+from novastack.core.prompts import PromptTemplate
 from beekeeper.observability.watsonx.supporting_classes.clients import (
     AIGovFactsClientFactory,
     WMLClientFactory,

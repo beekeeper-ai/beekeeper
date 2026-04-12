@@ -3,8 +3,8 @@ import os
 from pathlib import Path
 from typing import Any, Literal
 
-from beekeeper.core.document import Document
-from beekeeper.core.loaders import BaseLoader
+from novastack.core.document import Document
+from novastack.core.loaders import BaseLoader
 
 logging.getLogger("docling-core").setLevel(logging.ERROR)
 
