@@ -2,7 +2,6 @@ import datetime
 import uuid
 from typing import Any, Literal
 
-from novastack.core.bridge.pydantic import BaseModel, PrivateAttr, SecretStr
 from beekeeper.observability.watsonx.supporting_classes.clients import (
     WosClientFactory,
 )
@@ -15,6 +14,7 @@ from beekeeper.observability.watsonx.supporting_classes.metric import (
     WatsonxMetricSpec,
 )
 from beekeeper.observability.watsonx.utils.instrumentation import suppress_output
+from novastack.core.bridge.pydantic import BaseModel, PrivateAttr, SecretStr
 
 
 class WatsonxCustomMetricsManager(BaseModel):

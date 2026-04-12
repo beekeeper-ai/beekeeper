@@ -1,3 +1,5 @@
+import warnings
+
 from beekeeper.observability.watsonx.custom_metric import (
     WatsonxCustomMetricsManager,
 )
@@ -15,14 +17,13 @@ from beekeeper.observability.watsonx.supporting_classes.metric import (
     WatsonxMetricSpec,
     WatsonxMetricThreshold,
 )
-import warnings
 
 warnings.warn(
     "The 'beekeeper.observability' package has been moved to 'novastack.observability.watsonx'. "
     "Please update your imports to use 'novastack.observability.watsonx' instead. "
     "This package will be removed in a future version.",
     DeprecationWarning,
-    stacklevel=2
+    stacklevel=2,
 )
 
 __all__ = [

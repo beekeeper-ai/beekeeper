@@ -5,5 +5,5 @@ warnings.warn(
     "Please install to use 'pip install novastack' instead. "
     "This package will be removed in a future version.",
     DeprecationWarning,
-    stacklevel=2
+    stacklevel=2,
 )

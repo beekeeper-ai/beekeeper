@@ -5,5 +5,5 @@ warnings.warn(
     "Please update your imports to use 'novastack.core' instead. "
     "This package will be removed in a future version.",
     DeprecationWarning,
-    stacklevel=2
+    stacklevel=2,
 )

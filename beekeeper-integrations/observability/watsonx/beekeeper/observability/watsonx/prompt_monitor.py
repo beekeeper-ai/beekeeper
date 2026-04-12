@@ -4,10 +4,6 @@ import uuid
 from typing import Any
 
 import certifi
-from novastack.core.bridge.pydantic import PrivateAttr, SecretStr
-from novastack.core.observability import PromptObservability
-from novastack.core.observability.types import PayloadRecord
-from novastack.core.prompts import PromptTemplate
 from beekeeper.observability.watsonx.supporting_classes.clients import (
     AIGovFactsClientFactory,
     WMLClientFactory,
@@ -19,6 +15,10 @@ from beekeeper.observability.watsonx.supporting_classes.credentials import (
 from beekeeper.observability.watsonx.supporting_classes.enums import Region, TaskType
 from beekeeper.observability.watsonx.utils.data_utils import validate_and_filter_dict
 from beekeeper.observability.watsonx.utils.instrumentation import suppress_output
+from novastack.core.bridge.pydantic import PrivateAttr, SecretStr
+from novastack.core.observability import PromptObservability
+from novastack.core.observability.types import PayloadRecord
+from novastack.core.prompts import PromptTemplate
 
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
 
@@ -223,7 +223,9 @@ class WatsonxPromptMonitor(PromptObservability):
 
         Example:
             ```python
-            from beekeeper.observability.watsonx.supporting_classes.enums import TaskType
+            from beekeeper.observability.watsonx.supporting_classes.enums import (
+                TaskType,
+            )
 
             wxgov_client.create_prompt_monitor(
                 name="IBM prompt template",

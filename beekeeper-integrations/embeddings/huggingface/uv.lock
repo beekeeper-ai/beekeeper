@@ -35,7 +35,7 @@ wheels = [
 
 [[package]]
 name = "beekeeper-embeddings-huggingface"
-version = "2.0.1"
+version = "2.0.2"
 source = { editable = "." }
 dependencies = [
     { name = "hf-xet" },

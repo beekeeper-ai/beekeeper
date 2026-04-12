@@ -1,9 +1,9 @@
 from typing import Any
 
+from beekeeper.llms.watsonx.supporting_classes.enums import Region
 from novastack.core.bridge.pydantic import Field
 from novastack.core.llms import BaseLLM, ChatMessage, ChatResponse, CompletionResponse
 from novastack.core.llms.decorators import llm_chat_callback, llm_completion_callback
-from beekeeper.llms.watsonx.supporting_classes.enums import Region
 
 
 class WatsonxLLM(BaseLLM):
